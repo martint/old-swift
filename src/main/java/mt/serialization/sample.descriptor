@@ -1,0 +1,24 @@
+namespace users
+
+structure Person {
+	// structure definitions can be nested. They inherit the enclosing namespace: users.Person.PhoneNumber
+	structure PhoneNumber {
+
+		// enums can be nested. They inherit the enclosng namespace: users.Person.PhoneNumber.PhoneType 
+		enum PhoneType {
+			MOBILE = 0,
+			HOME = 1,
+			WORK = 2
+		}
+
+		1: phone string,
+		2: type PhoneType (default = HOME)
+	}
+
+	1: name string,
+	2: height decimal,
+	3: email string,
+	4: password_hash bytes,
+	5: phones list<PhoneNumber>
+	6: age integer (min = 0, max = 150)     // serializer knows it can encode in a single byte, unsigned 
+}
