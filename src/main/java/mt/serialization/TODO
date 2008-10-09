@@ -1,0 +1,3 @@
+* Enum to java enum mapping
+* FieldDescriptor for list/map/enum types
+* Mechanism to report truncation / coercion errors

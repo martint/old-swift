@@ -1,5 +1,10 @@
 package mt.serialization;
 
+import mt.serialization.schema.Schema;
+
+import java.io.DataOutput;
+import java.util.Map;
+
 /**
  * boolean => Type.BOOLEAN
  * byte/short/int/long/BigInteger => Type.INTEGER
@@ -8,26 +13,29 @@ package mt.serialization;
  * byte[]/ByteBuffer => Type.BYTES
  * Object => Type.STRUCTURE
  */
-public class Serializer
+public abstract class Serializer<T>
 {
-	public static Serializer getInstance(Scheme scheme)
+	public Serializer(Schema schema)
 	{
-		throw new UnsupportedOperationException("Not yet implemented"); // TODO: implement this
+
+	}
+	
+	public abstract void serialize(T object, String structName, DataOutput out);
+
+	// factory methods
+	public static Serializer<Map<String, ?>> newMapSerializer(Schema schema)
+	{
+		return new MapSerializer(schema);
 	}
 
-	public <T> ClassSerializer<T> forClass(Class<T> clazz)
+	public static Serializer<Object> newReflectiveSerializer(Schema schema)
 	{
-		throw new UnsupportedOperationException("Not yet implemented"); // TODO: implement this
+		return new ReflectionSerializer(schema);
 	}
 
-	public <T> ClassSerializer<T> forType(String type)
+	public static Serializer<Object> newDynamicCodeGenSerializer(Schema schema)
 	{
-		throw new UnsupportedOperationException("Not yet implemented"); // TODO: implement this
+		return new DynamicCodeGenSerializer(schema);
 	}
-
 }
 
-/**
- * Reflection-based serializer
- * Dynamically compiled serializer (reflection for determining what to serialize)
- */

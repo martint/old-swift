@@ -16,9 +16,8 @@ structure Person {
 	}
 
 	1: name string,
-	2: height decimal,
-	3: email string,
-	4: password_hash bytes,
-	5: phones list<PhoneNumber>
-	6: age integer (min = 0, max = 150)     // serializer knows it can encode in a single byte, unsigned 
+	2: password_hash bytes,
+	3: phones list<PhoneNumber>,
+	4: age integer (min = 0, max = 150),     // serializer knows it can encode in a single byte, unsigned
+	5: height decimal
 }
