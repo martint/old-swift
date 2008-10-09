@@ -1,8 +1,8 @@
 package mt.serialization;
 
+import mt.serialization.protocol.Protocol;
 import mt.serialization.schema.Schema;
 
-import java.io.DataOutput;
 import java.util.Map;
 
 /**
@@ -17,10 +17,9 @@ public abstract class Serializer<T>
 {
 	public Serializer(Schema schema)
 	{
-
 	}
 	
-	public abstract void serialize(T object, String structName, DataOutput out);
+	public abstract void serialize(T object, String structName, Protocol protocol);
 
 	// factory methods
 	public static Serializer<Map<String, ?>> newMapSerializer(Schema schema)

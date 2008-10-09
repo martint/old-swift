@@ -1,11 +1,10 @@
 package mt.serialization;
 
+import mt.serialization.protocol.Protocol;
 import mt.serialization.schema.FieldDescriptor;
 import mt.serialization.schema.Schema;
 import org.testng.annotations.Test;
 
-import java.io.DataOutput;
-import java.io.DataOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +15,7 @@ public class TestSerialization
 		throws Exception
 	{
 		Schema schema = getSchema();
-		DataOutput out = getOutput();
+		Protocol protocol = getProtocol();
 
 		Person person = new Person();
 		person.setName("Martin Traverso");
@@ -36,7 +35,7 @@ public class TestSerialization
 		// if it encounters a fields of type "structure", it recurses:
 		//    -> this.serialize(person.getPhone, field.getType().getName())
 		// where field.getType().getName() would return "ning.Phone", for instance
-		serializer.serialize(person, "ning.Person", out);
+		serializer.serialize(person, "ning.Person", protocol);
 	}
 
 	@Test
@@ -44,7 +43,7 @@ public class TestSerialization
 		throws Exception
 	{
 		Schema schema = getSchema();
-		DataOutput out = getOutput();
+		Protocol protocol = getProtocol();
 
 		Person person = new Person();
 		person.setName("Martin Traverso");
@@ -65,7 +64,7 @@ public class TestSerialization
 
 		// discovery is done via reflection (a la ReflectionSerializer) & invokers are compiled
 		// at serialization time to avoid reflective calls (sort of like method inlining)
-		serializer.serialize(person, "ning.Person", out);
+		serializer.serialize(person, "ning.Person", protocol);
 	}
 
 	@Test
@@ -73,7 +72,7 @@ public class TestSerialization
 		throws Exception
 	{                                                                               
 		Schema schema = getSchema();
-		DataOutput out = getOutput();
+		Protocol protocol = getProtocol();
 		
 		Map<String, Object> entry = new HashMap<String, Object>();
 		entry.put("name", "Martin Traverso");
@@ -82,7 +81,7 @@ public class TestSerialization
 		entry.put("password_hash", new byte[160]);
 
 		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);
-		serializer.serialize(entry, "ning.Person", out);
+		serializer.serialize(entry, "ning.Person", protocol);
 	}
 
 	@Test
@@ -120,8 +119,8 @@ public class TestSerialization
 		return result;
 	}
 
-	public DataOutput getOutput()
+	public Protocol getProtocol()
 	{
-		return new DataOutputStream(System.out);
+		throw new UnsupportedOperationException("Not yet implemented"); // TODO: implement this
 	}
 }

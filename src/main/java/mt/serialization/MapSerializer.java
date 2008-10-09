@@ -1,8 +1,8 @@
 package mt.serialization;
 
+import mt.serialization.protocol.Protocol;
 import mt.serialization.schema.Schema;
 
-import java.io.DataOutput;
 import java.util.Map;
 
 class MapSerializer
@@ -13,7 +13,7 @@ class MapSerializer
 		super(schema);
 	}
 
-	public void serialize(Map<String, ?> entry, String structName, DataOutput out)
+	public void serialize(Map<String, ?> object, String structName, Protocol protocol)
 	{
 
 	}

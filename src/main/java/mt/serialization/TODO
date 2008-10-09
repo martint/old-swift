@@ -1,3 +1,12 @@
 * Enum to java enum mapping
 * FieldDescriptor for list/map/enum types
 * Mechanism to report truncation / coercion errors
+
+
+Serializer
+	* uses Protocol, Schema
+	* defines mechanism for turning Object or Map into underlying protocol
+	* works in terms of high-level types
+
+Protocol
+	* defines encoding of high-level types to wire types (int16, int32, int64, byte[], string, etc)

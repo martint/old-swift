@@ -1,8 +1,7 @@
 package mt.serialization;
 
+import mt.serialization.protocol.Protocol;
 import mt.serialization.schema.Schema;
-
-import java.io.DataOutput;
 
 class DynamicCodeGenSerializer
 	extends Serializer<Object>
@@ -12,7 +11,8 @@ class DynamicCodeGenSerializer
 		super(schema);
 	}
 
-	public void serialize(Object object, String structName, DataOutput out)
+	public void serialize(Object object, String structName, Protocol protocol)
 	{
+
 	}
 }
