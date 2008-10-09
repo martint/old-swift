@@ -8,32 +8,33 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library name="org.testng:testng:5.6:jdk15">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.6/testng-5.6-jdk15.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../.m2/repository/org/testng/testng/5.6/testng-5.6-jdk15.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.6/testng-5.6-jdk15-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../.m2/repository/org/testng/testng/5.6/testng-5.6-jdk15-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.6/testng-5.6-jdk15-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../.m2/repository/org/testng/testng/5.6/testng-5.6-jdk15-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library name="junit:junit:3.8.1">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../.m2/repository/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../.m2/repository/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
