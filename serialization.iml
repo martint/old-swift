@@ -16,26 +16,39 @@
     <orderEntry type="module-library">
       <library name="org.testng:testng:5.6:jdk15">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.6/testng-5.6-jdk15.jar!/" />
+          <root url="jar://$MODULE_DIR$/m2/org/testng/testng/5.6/testng-5.6-jdk15.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.6/testng-5.6-jdk15-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/m2/org/testng/testng/5.6/testng-5.6-jdk15-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.6/testng-5.6-jdk15-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/m2/org/testng/testng/5.6/testng-5.6-jdk15-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library name="junit:junit:3.8.1">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/m2/junit/junit/3.8.1/junit-3.8.1.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/m2/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/m2/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="com.facebook.thrift:thrift:20081010">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/m2/com/facebook/thrift/thrift/20081010/thrift-20081010.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/m2/com/facebook/thrift/thrift/20081010/thrift-20081010-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/m2/com/facebook/thrift/thrift/20081010/thrift-20081010-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

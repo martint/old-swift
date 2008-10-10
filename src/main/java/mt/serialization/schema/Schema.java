@@ -1,11 +1,13 @@
 package mt.serialization.schema;
 
-import mt.serialization.schema.FieldDescriptor;
+import java.util.Map;
 
 public class Schema
 {
-	public void add(String name, FieldDescriptor... fields)
+	private Map<String, Structure> structures;
+
+	public Structure getStructure(String name)
 	{
-		
+		return structures.get(name);
 	}
 }

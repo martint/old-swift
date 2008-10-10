@@ -1,6 +1,6 @@
 package mt.serialization;
 
-import mt.serialization.protocol.Protocol;
+import com.facebook.thrift.protocol.TProtocol;
 import mt.serialization.schema.Schema;
 
 class ReflectionSerializer
@@ -11,7 +11,7 @@ class ReflectionSerializer
 		super(schema);
 	}
 
-	public void serialize(Object object, String structName, Protocol protocol)
+	public void serialize(Object object, String structName, TProtocol protocol)
 	{
 
 	}

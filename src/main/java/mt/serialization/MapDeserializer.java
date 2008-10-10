@@ -1,7 +1,7 @@
 package mt.serialization;
 
+import com.facebook.thrift.protocol.TProtocol;
 import mt.serialization.schema.Schema;
-import mt.serialization.protocol.Protocol;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ class MapDeserializer
 		super(schema);
 	}
 
-	public Map<String, ?> deserialize(String structName, Protocol protocol)
+	public Map<String, ?> deserialize(String structName, TProtocol protocol)
 	{
 		throw new UnsupportedOperationException("Not yet implemented"); // TODO: implement this
 	}

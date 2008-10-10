@@ -1,6 +1,7 @@
 package mt.serialization;
 
-import mt.serialization.protocol.Protocol;
+import com.facebook.thrift.protocol.TProtocol;
+import com.facebook.thrift.TException;
 import mt.serialization.schema.Schema;
 
 import java.util.Map;
@@ -15,11 +16,15 @@ import java.util.Map;
  */
 public abstract class Serializer<T>
 {
+	private Schema schema;
+
 	public Serializer(Schema schema)
 	{
+		this.schema = schema;
 	}
 	
-	public abstract void serialize(T object, String structName, Protocol protocol);
+	public abstract void serialize(T object, String structName, TProtocol protocol)
+		throws TException;
 
 	// factory methods
 	public static Serializer<Map<String, ?>> newMapSerializer(Schema schema)
@@ -35,6 +40,11 @@ public abstract class Serializer<T>
 	public static Serializer<Object> newDynamicCodeGenSerializer(Schema schema)
 	{
 		return new DynamicCodeGenSerializer(schema);
+	}
+
+	protected Schema getSchema()
+	{
+		return schema;
 	}
 }
 

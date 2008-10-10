@@ -7,14 +7,26 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>serialization</name>
 	<url>http://maven.apache.org</url>
+	<repositories>
+		<repository>
+			<id>local</id>
+			<url>file://${basedir}/m2</url>
+		</repository>
+	</repositories>
+	
 	<dependencies>
 		<dependency>
-		      <groupId>org.testng</groupId>
-		      <artifactId>testng</artifactId>
-		      <version>5.6</version>
-		      <scope>test</scope>
-		      <classifier>jdk15</classifier>
-		  </dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>5.6</version>
+			<scope>test</scope>
+			<classifier>jdk15</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.facebook.thrift</groupId>
+			<artifactId>thrift</artifactId>
+			<version>20081010</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

@@ -1,7 +1,7 @@
 package mt.serialization;
 
+import com.facebook.thrift.protocol.TProtocol;
 import mt.serialization.schema.Schema;
-import mt.serialization.protocol.Protocol;
 
 import java.util.Map;
 
@@ -16,5 +16,5 @@ public abstract class Deserializer<T>
 		return new MapDeserializer(schema);
 	}
 
-	public abstract T deserialize(String structName, Protocol protocol);
+	public abstract T deserialize(String structName, TProtocol protocol);
 }
