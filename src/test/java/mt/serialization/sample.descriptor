@@ -1,4 +1,4 @@
-namespace users
+namespace ning
 
 structure Person {
 	// structure definitions can be nested. They inherit the enclosing namespace: users.Person.PhoneNumber

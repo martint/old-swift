@@ -4,6 +4,10 @@ import mt.serialization.schema.FieldDescriptor;
 
 import java.io.DataOutput;
 
+/**
+ * TODO: how much info about fields and types do we need to pass around?
+ * TODO: How does ordering affect protocol operation? (e.g., binary protocol where order is known vs json)
+ */
 public interface Protocol
 {
 	void writeInteger(DataOutput out, FieldDescriptor descriptor, int value);
