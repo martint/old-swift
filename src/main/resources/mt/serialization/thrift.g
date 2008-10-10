@@ -85,7 +85,7 @@ base_type        :  'bool' | 'byte' | 'i16' | 'i32' | 'i64' | 'double' |
                             'string' | 'binary' | 'slist'
 	;
 
- container_type   :  map_type | set_type | list_type
+container_type   :  map_type | set_type | list_type
 	;
 map_type         :  'map' cpp_type? '<' field_type ',' field_type '>'
 	;

@@ -28,4 +28,21 @@ public class Structure
 	{
 		return tstruct;
 	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public Field getField(int id)
+	{
+		// TODO: use a map
+		for (Field field : fields) {
+			if (field.getId() == id) {
+				return field;
+			}
+		}
+
+		return null;
+	}
 }

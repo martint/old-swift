@@ -1,8 +1,10 @@
 package mt.serialization;
 
 import com.facebook.thrift.TException;
+import com.facebook.thrift.protocol.TList;
 import com.facebook.thrift.protocol.TMap;
 import com.facebook.thrift.protocol.TProtocol;
+import com.facebook.thrift.protocol.TSet;
 import mt.serialization.schema.BasicType;
 import mt.serialization.schema.Field;
 import mt.serialization.schema.ListType;
@@ -12,10 +14,14 @@ import mt.serialization.schema.SetType;
 import mt.serialization.schema.Structure;
 import mt.serialization.schema.Type;
 
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 class MapSerializer
-	extends Serializer<Map<String, ?>>
+		extends Serializer<Map<String, ?>>
 {
 	public MapSerializer(Schema schema)
 	{
@@ -23,7 +29,7 @@ class MapSerializer
 	}
 
 	public void serialize(Map<String, ?> map, String structName, TProtocol protocol)
-		throws TException
+			throws TException
 	{
 		Structure structure = getSchema().getStructure(structName);
 		protocol.writeStructBegin(structure.toTStruct());
@@ -38,94 +44,165 @@ class MapSerializer
 			}
 
 			protocol.writeFieldBegin(field.toTField());
-
-			Type type = field.getType();
-
-			// TODO: switch on field.getType().getTType() ?
-			if (type == BasicType.BINARY) {
-				if (value instanceof byte[]) {
-					protocol.writeBinary((byte[]) value);
-				}
-				else {
-					throw new IllegalArgumentException("Can't convert %s to BINARY");
-				}
-			}
-			else if (type == BasicType.BOOLEAN) {
-				if (value instanceof Boolean) {
-					protocol.writeBool((Boolean) value);
-				}
-				else {
-					throw new IllegalArgumentException("Can't convert %s to BOOLEAN");
-				}
-			}
-			else if (type == BasicType.BYTE) {
-				if (value instanceof Byte) {
-					protocol.writeByte((Byte) value);
-				}
-				else {
-					throw new IllegalArgumentException("Can't convert %s to BYTE");
-				}
-			}
-			else if (type == BasicType.I16) {
-				if (value instanceof Short) {
-					protocol.writeI16((Short) value);
-				}
-				else {
-					throw new IllegalArgumentException("Can't convert %s to I16");
-				}
-			}
-			else if (type == BasicType.I32) {
-				if (value instanceof Integer) {
-					protocol.writeI32((Integer) value);
-				}
-				else {
-					throw new IllegalArgumentException("Can't convert %s to I32");
-				}
-			}
-			else if (type == BasicType.I64) {
-				if (value instanceof Long) {
-					protocol.writeI64((Long) value);
-				}
-				else {
-					throw new IllegalArgumentException("Can't convert %s to I64");
-				}
-			}
-			else if (type == BasicType.DOUBLE) {
-				if (value instanceof Double) {
-					protocol.writeDouble((Double) value);
-				}
-				else {
-					throw new IllegalArgumentException("Can't convert %s to DOUBLE");
-				}
-			}
-			else if (type == BasicType.STRING) {
-				if (value instanceof String) {
-					protocol.writeString((String) value);
-				}
-				else {
-					throw new IllegalArgumentException("Can't convert %s to STRING");
-				}
-			}
-			else if (type instanceof MapType) {
-				Map<?,?> mapValue = (Map<?,?>) value;
-				MapType mapType = (MapType) type;
-				TMap tmap = new TMap(mapType.getKeyType().getTType(), mapType.getValueType().getTType(), mapValue.size());
-				protocol.writeMapBegin(tmap);
-
-				// TODO
-
-				protocol.writeMapEnd();
-			}
-			else if (type instanceof ListType) {
-				// TODO
-			}
-			else if (type instanceof SetType) {
-				// TODO
-			}
-
+			write(protocol, value, field.getType(), field);
 			protocol.writeFieldEnd();
 		}
+
 		protocol.writeFieldStop();
 		protocol.writeStructEnd();
 	}
+
+	private void write(TProtocol protocol, Object value, Type type, Field field)
+			throws TException
+	{
+		if (type == BasicType.BINARY) {
+			if (value instanceof byte[]) {
+				protocol.writeBinary((byte[]) value);
+			}
+			else if (value instanceof ByteBuffer) {
+				protocol.writeBinary(((ByteBuffer) value).array());
+			}
+			else {
+				throwInvalidTypeException(field, value);
+			}
+		}
+		else if (type == BasicType.BOOLEAN) {
+			if (value instanceof Boolean) {
+				protocol.writeBool((Boolean) value);
+			}
+			else {
+				throwInvalidTypeException(field, value);
+			}
+		}
+		else if (type == BasicType.BYTE) {
+			if (value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof Long || value instanceof BigInteger) {
+				Number number = (Number) value;
+				if (number.shortValue() < Byte.MIN_VALUE || number.shortValue() > Byte.MAX_VALUE) {
+					throwOverflowException(field, number, Byte.MIN_VALUE, Byte.MAX_VALUE);
+				}
+
+				protocol.writeByte(number.byteValue());
+			}
+			else {
+				throwInvalidTypeException(field, value);
+			}
+		}
+		else if (type == BasicType.I16) {
+			if (value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof Long || value instanceof BigInteger) {
+				Number number = (Number) value;
+				if (number.intValue() < Short.MIN_VALUE || number.intValue() > Short.MAX_VALUE) {
+					throwOverflowException(field, number, Short.MIN_VALUE, Short.MAX_VALUE);
+				}
+
+				protocol.writeI16(number.shortValue());
+			}
+			else {
+				throwInvalidTypeException(field, value);
+			}
+		}
+		else if (type == BasicType.I32) {
+			if (value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof Long || value instanceof BigInteger) {
+				Number number = (Number) value;
+				if (number.longValue() < Integer.MIN_VALUE || number.longValue() > Integer.MAX_VALUE) {
+					throwOverflowException(field, number, Integer.MIN_VALUE, Integer.MAX_VALUE);
+				}
+
+				protocol.writeI32(number.intValue());
+			}
+			else {
+				throwInvalidTypeException(field, value);
+			}
+		}
+		else if (type == BasicType.I64) {
+			if (value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof Long) {
+				protocol.writeI64(((Number) value).longValue());
+			}
+			else if (value instanceof BigInteger) {
+				BigInteger number = (BigInteger) value;
+				if (number.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0 || number.compareTo(BigInteger.valueOf(Long.MIN_VALUE)) < 0) {
+					throwOverflowException(field, number, Long.MAX_VALUE, Long.MIN_VALUE);
+				}
+
+				protocol.writeI64(((Number) value).longValue());
+			}
+			else {
+				throwInvalidTypeException(field, value);
+			}
+		}
+		else if (type == BasicType.DOUBLE) {
+			if (value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof Long
+					|| value instanceof Float || value instanceof Double) {
+				protocol.writeDouble(((Number) value).doubleValue());
+			}
+			// TODO: support BigDecimal, BigInteger if they fit
+			else {
+				throwInvalidTypeException(field, value);
+			}
+		}
+		else if (type == BasicType.STRING) {
+			if (value instanceof String) {
+				protocol.writeString((String) value);
+			}
+			else if (value instanceof CharSequence) {
+				protocol.writeString(value.toString());
+			}
+			// TODO: support any object by calling toString
+			else {
+				throwInvalidTypeException(field, value);
+			}
+		}
+		else if (type instanceof MapType) {
+			Map<?, ?> mapValue = (Map<?, ?>) value;
+			MapType mapType = (MapType) type;
+			TMap tmap = new TMap(mapType.getKeyType().getTType(), mapType.getValueType().getTType(), mapValue.size());
+			protocol.writeMapBegin(tmap);
+			for (Map.Entry<?, ?> entry : mapValue.entrySet()) {
+				write(protocol, entry.getKey(), mapType.getKeyType(), field);
+				write(protocol, entry.getValue(), mapType.getValueType(), field);
+			}
+			protocol.writeMapEnd();
+		}
+		else if (type instanceof ListType) {
+			List<?> list = (List<?>) value;
+			ListType listType = (ListType) type;
+			TList tlist = new TList(listType.getValueType().getTType(), list.size());
+			protocol.writeListBegin(tlist);
+			for (Object obj: list) {
+				write(protocol, obj, listType.getValueType(), field);
+			}
+			protocol.writeListEnd();
+		}
+		else if (type instanceof SetType) {
+			Set<?> set = (Set<?>) value;
+			SetType setType = (SetType) type;
+			TSet tset = new TSet(setType.getValueType().getTType(), set.size());
+			protocol.writeSetBegin(tset);
+			for (Object obj: set) {
+				write(protocol, obj, setType.getValueType(), field);
+			}
+			protocol.writeSetEnd();
+		}
+	}
+
+	private void throwInvalidTypeException(Field field, Object value)
+	{
+		throw new IllegalArgumentException(String.format("Can't convert %s (%s, %s) to %s",
+		                                                 field.getName(),
+		                                                 value.getClass().getName(),
+		                                                 value,
+		                                                 field.getType().getSignature()));
+	}
+
+	private void throwOverflowException(Field field, Number value, Number min, Number max)
+	{
+		throw new IllegalArgumentException(String.format("Can't convert %s (%s, %s) to %s. Value is outside of range [%s, %s]",
+		                                                 field.getName(),
+		                                                 value.getClass().getName(),
+		                                                 value,
+		                                                 field.getType().getSignature(),
+		                                                 min,
+		                                                 max));
+
+	}
 }
+
