@@ -11,6 +11,7 @@ import mt.serialization.schema.MapType;
 import mt.serialization.schema.Schema;
 import mt.serialization.schema.SetType;
 import mt.serialization.schema.Structure;
+import mt.serialization.schema.StructureType;
 import org.easymock.classextension.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -277,7 +278,8 @@ public class TestSerialization
 	public void testThriftMapSerialization()
 			throws Exception
 	{
-		Structure struct = new Structure("someStruct",
+		Structure child = new Structure("namespace.child", Arrays.asList(new Field(BasicType.STRING, 1, "field", false)));
+		Structure parent = new Structure("namespace.parent",
 		                                 Arrays.asList(
 				                                 new Field(BasicType.STRING, 1, "aString", false),
 				                                 new Field(BasicType.BOOLEAN, 2, "aBoolean", false),
@@ -289,10 +291,11 @@ public class TestSerialization
 				                                 new Field(new MapType(BasicType.I32, BasicType.STRING), 8, "aMap", false),
 				                                 new Field(new ListType(BasicType.I32), 9, "aList", false),
 				                                 new Field(new SetType(BasicType.STRING), 10, "aSet", false),
-				                                 new Field(BasicType.BINARY, 11, "aBinary", false)
+				                                 new Field(BasicType.BINARY, 11, "aBinary", false),
+		                                         new Field(new StructureType("namespace.child"), 12, "aChild", false)
 		                                 ));
 
-		Schema schema = new Schema(struct);
+		Schema schema = new Schema(parent, child);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("aString", "hello world");
@@ -321,8 +324,15 @@ public class TestSerialization
 		set.add("bar");
 		data.put("aSet", set);
 
+		Map<String, Object> childMap = new HashMap<String, Object>();
+		childMap.put("field", "hello child");
+
+		data.put("aChild", childMap);
+
 		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);
-		serializer.serialize(data, struct.getName(), new TJSONProtocol(new TIOStreamTransport(System.out)));
+//		serializer.serialize(data, parent.getName(), new TBinaryProtocol(new TIOStreamTransport(System.out)));
+//		serializer.serialize(data, parent.getName(), new TSimpleJSONProtocol(new TIOStreamTransport(System.out)));
+		serializer.serialize(data, parent.getName(), new TJSONProtocol(new TIOStreamTransport(System.out)));
 	}
 
 	@Test

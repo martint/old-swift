@@ -12,6 +12,7 @@ import mt.serialization.schema.MapType;
 import mt.serialization.schema.Schema;
 import mt.serialization.schema.SetType;
 import mt.serialization.schema.Structure;
+import mt.serialization.schema.StructureType;
 import mt.serialization.schema.Type;
 
 import java.math.BigInteger;
@@ -182,11 +183,25 @@ class MapSerializer
 			}
 			protocol.writeSetEnd();
 		}
+		else if (type instanceof StructureType) {
+			if (value instanceof Map) {
+				Map<String, ?> child = (Map<String, ?>) value;
+				StructureType structureType = (StructureType) type;
+				String structureName = structureType.getStructureName();
+				serialize(child, structureName, protocol);
+			}
+			else {
+				throwInvalidTypeException(field, value);
+			}
+		}
+		else {
+			throw new IllegalArgumentException(String.format("Don't know how to serialize '%s' (%s)", field.getName(), field.getType().getSignature()));
+		}
 	}
 
 	private void throwInvalidTypeException(Field field, Object value)
 	{
-		throw new IllegalArgumentException(String.format("Can't convert %s (%s, %s) to %s",
+		throw new IllegalArgumentException(String.format("Can't convert '%s' (%s = %s) to %s",
 		                                                 field.getName(),
 		                                                 value.getClass().getName(),
 		                                                 value,
@@ -195,7 +210,7 @@ class MapSerializer
 
 	private void throwOverflowException(Field field, Number value, Number min, Number max)
 	{
-		throw new IllegalArgumentException(String.format("Can't convert %s (%s, %s) to %s. Value is outside of range [%s, %s]",
+		throw new IllegalArgumentException(String.format("Can't convert '%s' (%s = %s) to %s. Value is outside of range [%s, %s]",
 		                                                 field.getName(),
 		                                                 value.getClass().getName(),
 		                                                 value,
