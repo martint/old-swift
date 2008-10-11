@@ -51,11 +51,11 @@ public class TestDeserialization
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("aString", "hello world");
 		data.put("aBoolean", true);
-		data.put("aByte", 1);
-		data.put("aDouble", 3.14);
-		data.put("aI16", 2);
-		data.put("aI32", 3);
-		data.put("aI64", 4l);
+		data.put("aByte", Byte.MAX_VALUE);
+		data.put("aDouble", Math.PI);
+		data.put("aI16", Short.MAX_VALUE);
+		data.put("aI32", Integer.MAX_VALUE);
+		data.put("aI64", Long.MAX_VALUE);
 		data.put("aBinary", new byte[] { 1,2,3,4,5,6,8,9,10 });
 
 		Map<Object, Object> map = new HashMap<Object, Object>();
@@ -63,19 +63,19 @@ public class TestDeserialization
 		map.put(2, "bleh");
 		data.put("aMap", map);
 
-		List<Object> list = new ArrayList<Object>();
-		list.add(1);
-		list.add(2);
-		list.add(3);
+		List<Integer> list = new ArrayList<Integer>();
+		list.add(100);
+		list.add(200);
+		list.add(300);
 		data.put("aList", list);
 
-		Set<Object> set = new HashSet<Object>();
+		Set<String> set = new HashSet<String>();
 		set.add("hello");
 		set.add("foo");
 		set.add("bar");
 		data.put("aSet", set);
 
-		Map<String, Object> childMap = new HashMap<String, Object>();
+		Map<String, String> childMap = new HashMap<String, String>();
 		childMap.put("field", "hello child");
 
 		data.put("aChild", childMap);

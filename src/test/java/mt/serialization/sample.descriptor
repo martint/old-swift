@@ -4,7 +4,7 @@ structure Person {
 	// structure definitions can be nested. They inherit the enclosing namespace: users.Person.PhoneNumber
 	structure PhoneNumber {
 
-		// enums can be nested. They inherit the enclosng namespace: users.Person.PhoneNumber.PhoneType 
+		// enums can be nested. They inherit the enclosing namespace: users.Person.PhoneNumber.PhoneType 
 		enum PhoneType {
 			MOBILE = 0,
 			HOME = 1,

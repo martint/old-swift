@@ -23,14 +23,14 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 		<dependency>
-			<groupId>com.facebook.thrift</groupId>
-			<artifactId>thrift</artifactId>
-			<version>20081010</version>
-		</dependency>
-		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymockclassextension</artifactId>
 			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.facebook.thrift</groupId>
+			<artifactId>thrift</artifactId>
+			<version>20081010</version>
 		</dependency>
 	</dependencies>
 	<build>
