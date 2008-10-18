@@ -10,8 +10,8 @@ import mt.serialization.schema.ListType;
 import mt.serialization.schema.MapType;
 import mt.serialization.schema.Schema;
 import mt.serialization.schema.SetType;
-import mt.serialization.schema.Structure;
 import mt.serialization.schema.StructureType;
+import mt.serialization.schema.StructureTypeRef;
 import org.easymock.classextension.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -42,7 +42,7 @@ public class TestSerialization
 	public void testSerializeBoolean()
 			throws Exception
 	{
-		Structure struct = new Structure("someStruct",
+		StructureType struct = new StructureType("someStruct",
 		                                 Arrays.asList(
 				                                 new Field(BasicType.BOOLEAN, 1, "value", false)
 		                                 ));
@@ -70,7 +70,7 @@ public class TestSerialization
 	public void testSerializeByte()
 			throws Exception
 	{
-		Structure struct = new Structure("someStruct",
+		StructureType struct = new StructureType("someStruct",
 		                                 Arrays.asList(
 				                                 new Field(BasicType.BYTE, 1, "value", false)
 		                                 ));
@@ -103,7 +103,7 @@ public class TestSerialization
 	public void testSerializeI16()
 			throws Exception
 	{
-		Structure struct = new Structure("someStruct",
+		StructureType struct = new StructureType("someStruct",
 		                                 Arrays.asList(
 				                                 new Field(BasicType.I16, 1, "value", false)
 		                                 ));
@@ -136,7 +136,7 @@ public class TestSerialization
 	public void testSerializeI32()
 			throws Exception
 	{
-		Structure struct = new Structure("someStruct",
+		StructureType struct = new StructureType("someStruct",
 		                                 Arrays.asList(
 				                                 new Field(BasicType.I32, 1, "value", false)
 		                                 ));
@@ -169,7 +169,7 @@ public class TestSerialization
 	public void testSerializeI64()
 			throws Exception
 	{
-		Structure struct = new Structure("someStruct",
+		StructureType struct = new StructureType("someStruct",
 		                                 Arrays.asList(
 				                                 new Field(BasicType.I64, 1, "value", false)
 		                                 ));
@@ -203,7 +203,7 @@ public class TestSerialization
 	public void testSerializeBinary()
 			throws Exception
 	{
-		Structure struct = new Structure("someStruct",
+		StructureType struct = new StructureType("someStruct",
 		                                 Arrays.asList(
 				                                 new Field(BasicType.BINARY, 1, "value", false)
 		                                 ));
@@ -245,7 +245,7 @@ public class TestSerialization
 	public void testSerializeString()
 			throws Exception
 	{
-		Structure struct = new Structure("someStruct",
+		StructureType struct = new StructureType("someStruct",
 		                                 Arrays.asList(
 				                                 new Field(BasicType.STRING, 1, "value", false)
 		                                 ));
@@ -278,8 +278,8 @@ public class TestSerialization
 	public void testThriftMapSerialization()
 			throws Exception
 	{
-		Structure child = new Structure("namespace.child", Arrays.asList(new Field(BasicType.STRING, 1, "field", false)));
-		Structure parent = new Structure("namespace.parent",
+		StructureType child = new StructureType("namespace.child", Arrays.asList(new Field(BasicType.STRING, 1, "field", false)));
+		StructureType parent = new StructureType("namespace.parent",
 		                                 Arrays.asList(
 				                                 new Field(BasicType.STRING, 1, "aString", false),
 				                                 new Field(BasicType.BOOLEAN, 2, "aBoolean", false),
@@ -292,7 +292,7 @@ public class TestSerialization
 				                                 new Field(new ListType(BasicType.I32), 9, "aList", false),
 				                                 new Field(new SetType(BasicType.STRING), 10, "aSet", false),
 				                                 new Field(BasicType.BINARY, 11, "aBinary", false),
-		                                         new Field(new StructureType("namespace.child"), 12, "aChild", false)
+		                                         new Field(new StructureTypeRef("namespace.child"), 12, "aChild", false)
 		                                 ));
 
 		Schema schema = new Schema(parent, child);
@@ -426,7 +426,7 @@ public class TestSerialization
 		*/
 	}
 
-	private void testWithinBounds(Structure struct, Serializer<Map<String, ?>> serializer, Number max, Number min)
+	private void testWithinBounds(StructureType struct, Serializer<Map<String, ?>> serializer, Number max, Number min)
 			throws TException
 	{
 		for (Number value : Arrays.asList(BigInteger.valueOf(max.longValue()).add(BigInteger.ONE), BigInteger.valueOf(min.longValue()).subtract(BigInteger.ONE))) {

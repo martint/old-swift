@@ -9,7 +9,6 @@ import mt.serialization.schema.ListType;
 import mt.serialization.schema.MapType;
 import mt.serialization.schema.Schema;
 import mt.serialization.schema.SetType;
-import mt.serialization.schema.Structure;
 import mt.serialization.schema.StructureType;
 import org.testng.annotations.Test;
 
@@ -29,8 +28,8 @@ public class TestDeserialization
 	public void testDeserializeBoolean()
 			throws Exception
 	{
-		Structure child = new Structure("namespace.child", Arrays.asList(new Field(BasicType.STRING, 1, "field", false)));
-		Structure parent = new Structure("namespace.parent",
+		StructureType child = new StructureType("namespace.child", Arrays.asList(new Field(BasicType.STRING, 1, "field", false)));
+		StructureType parent = new StructureType("namespace.parent",
 		                                 Arrays.asList(
 				                                 new Field(BasicType.STRING, 1, "aString", false),
 				                                 new Field(BasicType.BOOLEAN, 2, "aBoolean", false),
@@ -43,7 +42,7 @@ public class TestDeserialization
 				                                 new Field(new ListType(BasicType.I32), 9, "aList", false),
 				                                 new Field(new SetType(BasicType.STRING), 10, "aSet", false),
 				                                 new Field(BasicType.BINARY, 11, "aBinary", false),
-		                                         new Field(new StructureType("namespace.child"), 12, "aChild", false)
+		                                         new Field(child, 12, "aChild", false)
 		                                 ));
 
 		Schema schema = new Schema(parent, child);
@@ -90,9 +89,53 @@ public class TestDeserialization
 
 		// deserialize
 		TProtocol inputProtocol = new TBinaryProtocol(new TIOStreamTransport(new ByteArrayInputStream(bao.toByteArray())));
-		Deserializer<Map<String, ?>> deserializer = Deserializer.newMapDeserializer(schema);
+		MapDeserializer deserializer = new MapDeserializer(schema);
 		Map<String, ?> result = deserializer.deserialize(parent.getName(), inputProtocol);
 		System.out.println(result);
+	}
+
+	@Test
+	public void testReflectionDeserializer()
+		throws Exception
+	{
+		StructureType parent = new StructureType("namespace.parent",
+		                                 Arrays.asList(
+				                                 new Field(BasicType.STRING, 1, "aString", false),
+				                                 new Field(BasicType.BOOLEAN, 2, "aBoolean", false),
+				                                 new Field(BasicType.BYTE, 3, "aByte", false),
+				                                 new Field(BasicType.DOUBLE, 4, "aDouble", false),
+				                                 new Field(BasicType.I16, 5, "aI16", false),
+				                                 new Field(BasicType.I32, 6, "aI32", false),
+				                                 new Field(BasicType.I64, 7, "aI64", false),
+				                                 new Field(BasicType.BINARY, 11, "aBinary", false)
+		                                 ));
+
+		Schema schema = new Schema(parent);
+
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("aString", "hello world");
+		data.put("aBoolean", true);
+		data.put("aByte", Byte.MAX_VALUE);
+		data.put("aDouble", Math.PI);
+		data.put("aI16", Short.MAX_VALUE);
+		data.put("aI32", Integer.MAX_VALUE);
+		data.put("aI64", Long.MAX_VALUE);
+		data.put("aBinary", new byte[] { 1,2,3,4,5,6,8,9,10 });
+
+		// serialize
+		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);
+		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		TProtocol outputProtocol = new TBinaryProtocol(new TIOStreamTransport(bao));
+		serializer.serialize(data, parent.getName(), outputProtocol);
+
+		System.out.println(new String(bao.toByteArray()));
+
+		// deserialize
+		TProtocol inputProtocol = new TBinaryProtocol(new TIOStreamTransport(new ByteArrayInputStream(bao.toByteArray())));
+		ReflectionDeserializer deserializer = new ReflectionDeserializer(schema);
+		X result = deserializer.deserialize(parent.getName(), X.class, inputProtocol);
+		System.out.println(result);
+
 	}
 
 	@Test
@@ -102,7 +145,7 @@ public class TestDeserialization
 		Schema schema = getSchema();
 		TProtocol protocol = getProtocol();
 
-		Deserializer<Map<String, ?>> deserializer = Deserializer.newMapDeserializer(schema);
+		MapDeserializer deserializer = new MapDeserializer(schema);
 		Map<String, ?> entry = deserializer.deserialize("ning.Person", protocol);
 
 		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);

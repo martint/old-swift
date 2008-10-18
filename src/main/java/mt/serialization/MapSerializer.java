@@ -11,7 +11,6 @@ import mt.serialization.schema.ListType;
 import mt.serialization.schema.MapType;
 import mt.serialization.schema.Schema;
 import mt.serialization.schema.SetType;
-import mt.serialization.schema.Structure;
 import mt.serialization.schema.StructureType;
 import mt.serialization.schema.Type;
 
@@ -32,7 +31,7 @@ class MapSerializer
 	public void serialize(Map<String, ?> map, String structName, TProtocol protocol)
 			throws TException
 	{
-		Structure structure = getSchema().getStructure(structName);
+		StructureType structure = getSchema().getStructure(structName);
 		protocol.writeStructBegin(structure.toTStruct());
 		for (Field field : structure.getFields()) {
 			Object value = map.get(field.getName());
@@ -187,7 +186,7 @@ class MapSerializer
 			if (value instanceof Map) {
 				Map<String, ?> child = (Map<String, ?>) value;
 				StructureType structureType = (StructureType) type;
-				String structureName = structureType.getStructureName();
+				String structureName = structureType.getName();
 				serialize(child, structureName, protocol);
 			}
 			else {

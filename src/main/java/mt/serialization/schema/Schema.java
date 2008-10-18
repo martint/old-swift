@@ -5,16 +5,16 @@ import java.util.HashMap;
 
 public class Schema
 {
-	private final Map<String, Structure> structures = new HashMap<String, Structure>();
+	private final Map<String, StructureType> structures = new HashMap<String, StructureType>();
 
-	public Schema(Structure... structures)
+	public Schema(StructureType... structures)
 	{
-		for (Structure structure : structures) {
+		for (StructureType structure : structures) {
 			this.structures.put(structure.getName(), structure);
 		}
 	}
 
-	public Structure getStructure(String name)
+	public StructureType getStructure(String name)
 	{
 		return structures.get(name);
 	}

@@ -1,6 +1,7 @@
 package mt.serialization.schema;
 
 import com.facebook.thrift.protocol.TField;
+import mt.serialization.visitor.Visitor;
 
 public class Field
 {
@@ -44,5 +45,10 @@ public class Field
 	public TField toTField()
 	{
 		return tfield;
+	}
+
+	public void accept(Visitor visitor)
+	{
+		type.accept(visitor);
 	}
 }

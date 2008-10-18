@@ -2,12 +2,15 @@ package mt.serialization.schema;
 
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.TException;
+import mt.serialization.visitor.Visitor;
 
-public interface Type
+public interface Type<T>
 {
 	byte getTType();
 	String getSignature();
 
-	Object read(TProtocol protocol)
+	T read(TProtocol protocol)
 		throws TException;
+
+	void accept(Visitor visitor);
 }
