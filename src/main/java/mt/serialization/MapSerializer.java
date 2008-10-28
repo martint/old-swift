@@ -9,7 +9,6 @@ import mt.serialization.schema.BasicType;
 import mt.serialization.schema.Field;
 import mt.serialization.schema.ListType;
 import mt.serialization.schema.MapType;
-import mt.serialization.schema.Schema;
 import mt.serialization.schema.SetType;
 import mt.serialization.schema.StructureType;
 import mt.serialization.schema.Type;
@@ -19,19 +18,26 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashMap;
 
 class MapSerializer
 		extends Serializer<Map<String, ?>>
 {
-	public MapSerializer(Schema schema)
+	private Map<String, StructureType> structures;
+
+	MapSerializer(StructureType... types)
 	{
-		super(schema);
+		this.structures = new HashMap<String, StructureType>();
+
+		for (StructureType type : types) {
+			structures.put(type.getName(), type);
+		}
 	}
 
 	public void serialize(Map<String, ?> map, String structName, TProtocol protocol)
 			throws TException
 	{
-		StructureType structure = getSchema().getStructure(structName);
+		StructureType structure = structures.get(structName);
 		protocol.writeStructBegin(structure.toTStruct());
 		for (Field field : structure.getFields()) {
 			Object value = map.get(field.getName());
