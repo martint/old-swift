@@ -3,12 +3,12 @@ package mt.serialization;
 import com.facebook.thrift.protocol.TBinaryProtocol;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TIOStreamTransport;
-import mt.serialization.schema.BasicType;
-import mt.serialization.schema.Field;
-import mt.serialization.schema.ListType;
-import mt.serialization.schema.MapType;
-import mt.serialization.schema.SetType;
-import mt.serialization.schema.StructureType;
+import mt.serialization.model.BasicType;
+import mt.serialization.model.Field;
+import mt.serialization.model.ListType;
+import mt.serialization.model.MapType;
+import mt.serialization.model.SetType;
+import mt.serialization.model.StructureType;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
@@ -86,7 +86,7 @@ public class TestDeserialization
 
 		// deserialize
 		TProtocol inputProtocol = new TBinaryProtocol(new TIOStreamTransport(new ByteArrayInputStream(bao.toByteArray())));
-//		MapDeserializer deserializer = new MapDeserializer(schema);
+//		MapDeserializer deserializer = new MapDeserializer(model);
 //		Map<String, ?> result = deserializer.deserialize(parent.getName(), inputProtocol);
 //		System.out.println(result);
 	}

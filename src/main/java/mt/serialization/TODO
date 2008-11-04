@@ -1,7 +1,8 @@
 * Enum to java enum mapping
 * FieldDescriptor for list/map/enum types
 * Mechanism to report truncation / coercion errors
-
+* Autoboxing support (setter/getters that accept Integer vs int, etc) 
+* Bind bean to Thrift fields via annotations
 
 Serializer
 	* uses Protocol, Schema
@@ -10,3 +11,6 @@ Serializer
 
 Protocol
 	* defines encoding of high-level types to wire types (int16, int32, int64, byte[], string, etc)
+
+StreamReader that calls visitStructure, visitField, etc, that does event-based parsing of Thrift streams
+

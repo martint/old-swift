@@ -4,7 +4,7 @@ import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TJSONProtocol;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TIOStreamTransport;
-import mt.serialization.schema.StructureType;
+import mt.serialization.model.StructureType;
 import org.easymock.classextension.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -34,7 +34,7 @@ public class TestSerialization
 //		                                 Arrays.asList(
 //				                                 new Field(BasicType.BOOLEAN, 1, "value", false)
 //		                                 ));
-//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);
+//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(model);
 //
 //		for (Boolean value : Arrays.asList(true, false, Boolean.TRUE, Boolean.FALSE)) {
 //			TProtocol protocol = EasyMock.createMock(TProtocol.class);
@@ -61,8 +61,8 @@ public class TestSerialization
 //		                                 Arrays.asList(
 //				                                 new Field(BasicType.BYTE, 1, "value", false)
 //		                                 ));
-//		Schema schema = new Schema(struct);
-//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);
+//		Schema model = new Schema(struct);
+//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(model);
 //
 //		Number max = Byte.MAX_VALUE;
 //		Number min = Byte.MIN_VALUE;
@@ -94,8 +94,8 @@ public class TestSerialization
 //		                                 Arrays.asList(
 //				                                 new Field(BasicType.I16, 1, "value", false)
 //		                                 ));
-//		Schema schema = new Schema(struct);
-//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);
+//		Schema model = new Schema(struct);
+//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(model);
 //
 //		Number max = Short.MAX_VALUE;
 //		Number min = Short.MIN_VALUE;
@@ -127,8 +127,8 @@ public class TestSerialization
 //		                                 Arrays.asList(
 //				                                 new Field(BasicType.I32, 1, "value", false)
 //		                                 ));
-//		Schema schema = new Schema(struct);
-//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);
+//		Schema model = new Schema(struct);
+//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(model);
 //
 //		Number max = Integer.MAX_VALUE;
 //		Number min = Integer.MIN_VALUE;
@@ -160,8 +160,8 @@ public class TestSerialization
 //		                                 Arrays.asList(
 //				                                 new Field(BasicType.I64, 1, "value", false)
 //		                                 ));
-//		Schema schema = new Schema(struct);
-//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);
+//		Schema model = new Schema(struct);
+//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(model);
 //
 //		Number max = Long.MAX_VALUE;
 //		Number min = Long.MIN_VALUE;
@@ -194,8 +194,8 @@ public class TestSerialization
 //		                                 Arrays.asList(
 //				                                 new Field(BasicType.BINARY, 1, "value", false)
 //		                                 ));
-//		Schema schema = new Schema(struct);
-//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);
+//		Schema model = new Schema(struct);
+//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(model);
 //
 //		byte[] buffer = new byte[10];
 //
@@ -236,8 +236,8 @@ public class TestSerialization
 //		                                 Arrays.asList(
 //				                                 new Field(BasicType.STRING, 1, "value", false)
 //		                                 ));
-//		Schema schema = new Schema(struct);
-//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);
+//		Schema model = new Schema(struct);
+//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(model);
 //
 //		TProtocol protocol = EasyMock.createMock(TProtocol.class);
 //		protocol.writeStructBegin(struct.toTStruct());
@@ -282,7 +282,7 @@ public class TestSerialization
 //		                                         new Field(child, 12, "aChild", false)
 //		                                 ));
 //
-//		Schema schema = new Schema(parent, child);
+//		Schema model = new Schema(parent, child);
 //
 //		Map<String, Object> data = new HashMap<String, Object>();
 //		data.put("aString", "hello world");
@@ -316,7 +316,7 @@ public class TestSerialization
 //
 //		data.put("aChild", childMap);
 //
-//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);
+//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(model);
 ////		serializer.serialize(data, parent.getName(), new TBinaryProtocol(new TIOStreamTransport(System.out)));
 ////		serializer.serialize(data, parent.getName(), new TSimpleJSONProtocol(new TIOStreamTransport(System.out)));
 //		serializer.serialize(data, parent.getName(), new TJSONProtocol(new TIOStreamTransport(System.out)));
@@ -326,7 +326,7 @@ public class TestSerialization
 	public void testReflectionSerializer()
 			throws Exception
 	{
-//		Schema schema = getSchema();
+//		Schema model = getSchema();
 //
 //		Person person = new Person();
 //		person.setName("Martin Traverso");
@@ -340,7 +340,7 @@ public class TestSerialization
 //
 //		person.setPhone(phone);
 //
-//		Serializer<Object> serializer = Serializer.newReflectiveSerializer(schema);
+//		Serializer<Object> serializer = Serializer.newReflectiveSerializer(model);
 //
 //		// introspects "person" by referring to the fields in ning.Person
 //		// if it encounters a fields of type "structure", it recurses:
@@ -352,7 +352,7 @@ public class TestSerialization
 	public void testDynamicCodeGenSerializer()
 			throws Exception
 	{
-//		Schema schema = getSchema();
+//		Schema model = getSchema();
 //
 //		Person person = new Person();
 //		person.setName("Martin Traverso");
@@ -369,7 +369,7 @@ public class TestSerialization
 //		// Pass DataOut on call to serialize() so that we can reuse the instance and avoid
 //		// regeneration of code. I.e., this serializer does a lot of bookkeeping and is fairly heavyweight
 //		// Also, it should be stateless, save for the codegen caches so that it can be accessed concurrently
-//		Serializer<Object> serializer = Serializer.newDynamicCodeGenSerializer(schema);
+//		Serializer<Object> serializer = Serializer.newDynamicCodeGenSerializer(model);
 //
 //		// discovery is done via reflection (a la ReflectionSerializer) & invokers are compiled
 //		// at serialization time to avoid reflective calls (sort of like method inlining)
@@ -379,7 +379,7 @@ public class TestSerialization
 	public void testMapSerializer()
 			throws Exception
 	{
-//		Schema schema = getSchema();
+//		Schema model = getSchema();
 //
 //		Map<String, Object> entry = new HashMap<String, Object>();
 //		entry.put("name", "Martin Traverso");
@@ -387,7 +387,7 @@ public class TestSerialization
 //		entry.put("age", 31);
 //		entry.put("password_hash", new byte[160]);
 //
-//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(schema);
+//		Serializer<Map<String, ?>> serializer = Serializer.newMapSerializer(model);
 //		serializer.serialize(entry, "ning.Person", protocol);
 	}
 

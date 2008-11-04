@@ -3,12 +3,12 @@ package mt.serialization;
 import com.facebook.thrift.protocol.TBinaryProtocol;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TIOStreamTransport;
-import mt.serialization.schema.BasicType;
-import mt.serialization.schema.Field;
-import mt.serialization.schema.ListType;
-import mt.serialization.schema.MapType;
-import mt.serialization.schema.SetType;
-import mt.serialization.schema.StructureType;
+import mt.serialization.model.BasicType;
+import mt.serialization.model.Field;
+import mt.serialization.model.ListType;
+import mt.serialization.model.MapType;
+import mt.serialization.model.SetType;
+import mt.serialization.model.StructureType;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
@@ -135,7 +135,8 @@ public void testSimple()
 		if (i >= warmup) {
 			compiledToMBean -= System.nanoTime();
 		}
-		compiledDeserializerToMBean.deserialize(simpleType.getName(), protocol);
+		Object x = compiledDeserializerToMBean.deserialize(simpleType.getName(), protocol);
+		System.out.println(x);
 		if (i >= warmup) {
 			compiledToMBean += System.nanoTime();
 		}
@@ -148,7 +149,7 @@ public void testSimple()
 	                   "\tdynamic->bean:    " + dynamicToBean + " ms\n" +
 	                   "\tthrift:           " + thrift + " ms\n" +
 	                   "\tthrift w/ methods:" + thriftWithMethods + " ms\n" +
-	                   "\tcompiled->mbean:  " + compiledToMBean + " ms");
+	                   "\tcompiled->bean:  " + compiledToMBean + " ms");
 }
 
 
@@ -171,8 +172,8 @@ public void testSimple()
 				                                 new Field(new ListType(BasicType.I32), 9, "aList", false),
 				                                 new Field(new SetType(BasicType.STRING), 10, "aSet", false),
 				                                 new Field(BasicType.BINARY, 11, "aBinary", false),
-		                                         new Field(child, 12, "aChild", false),
-		                                         new Field(new ListType(new ListType(BasicType.I32)), 13, "aListOfLists", false)
+		                                         new Field(child, 12, "aChild", false)
+//		                                         new Field(new ListType(new ListType(BasicType.I32)), 13, "aListOfLists", false)
 		                                 ));
 
 
@@ -234,5 +235,49 @@ public void testSimple()
 
 	}
 
+
+
+	@Test
+	public void testList()
+		throws Exception
+	{
+		StructureType parent = new StructureType("namespace.parent",
+		                                 Arrays.asList(
+				                                 new Field(new ListType(BasicType.BOOLEAN), 1, "listOfBooleans", false),
+				                                 new Field(new ListType(BasicType.BYTE), 2, "listOfBytes", false),
+				                                 new Field(new ListType(BasicType.I16), 3, "listOfShorts", false),
+				                                 new Field(new ListType(BasicType.I32), 4, "listOfInts", false),
+				                                 new Field(new ListType(BasicType.I64), 5, "listOfLongs", false),
+				                                 new Field(new ListType(BasicType.DOUBLE), 6, "listOfDoubles", false),
+				                                 new Field(new ListType(new ListType(BasicType.I32)), 7, "aListOfLists", false)
+
+		                                 ));
+
+
+		Map<String, Object> data = new HashMap<String, Object>();
+
+		data.put("listOfBooleans", Arrays.asList(true));
+		data.put("listOfBytes", Arrays.asList(Byte.valueOf((byte) 1)));
+		data.put("listOfShorts", Arrays.asList(Short.valueOf((short) 1)));
+		data.put("listOfInts", Arrays.asList(1));
+		data.put("listOfLongs", Arrays.asList(1L));
+		data.put("listOfDoubles", Arrays.asList(1.0));
+		data.put("aListOfLists", Arrays.asList(Arrays.asList(1)));
+
+		// serialize
+		Serializer<Map<String, ?>> serializer = new MapSerializer(parent);
+		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		TProtocol outputProtocol = new TBinaryProtocol(new TIOStreamTransport(bao));
+		serializer.serialize(data, parent.getName(), outputProtocol);
+
+
+		System.out.println(new String(bao.toByteArray()));
+
+		// deserialize to javabean
+		Deserializer deserializerToJavabean = new Deserializer();
+		deserializerToJavabean.bind(parent, Parent.class);
+		Parent parentObject = deserializerToJavabean.deserialize(parent.getName(), new TBinaryProtocol(new TIOStreamTransport(new ByteArrayInputStream(bao.toByteArray()))));
+		System.out.println(parentObject);
+	}
 
 }

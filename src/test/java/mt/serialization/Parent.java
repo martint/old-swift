@@ -1,6 +1,5 @@
 package mt.serialization;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +19,43 @@ public class Parent
 	private Set<String> aSet;
 	private byte[] aBinary;
 	private List<List<Integer>> aListOfLists;
+
+	private List<Boolean> listOfBooleans;
+	private List<Byte> listOfBytes;
+	private List<Short> listOfShorts;
+	private List<Integer> listOfInts;
+	private List<Long> listOfLongs;
+	private List<Double> listOfDoubles;
+
+	public void setListOfBooleans(List<Boolean> listOfBooleans)
+	{
+		this.listOfBooleans = listOfBooleans;
+	}
+
+	public void setListOfBytes(List<Byte> listOfBytes)
+	{
+		this.listOfBytes = listOfBytes;
+	}
+
+	public void setListOfShorts(List<Short> listOfShorts)
+	{
+		this.listOfShorts = listOfShorts;
+	}
+
+	public void setListOfInts(List<Integer> listOfInts)
+	{
+		this.listOfInts = listOfInts;
+	}
+
+	public void setListOfLongs(List<Long> listOfLongs)
+	{
+		this.listOfLongs = listOfLongs;
+	}
+
+	public void setListOfDoubles(List<Double> listOfDoubles)
+	{
+		this.listOfDoubles = listOfDoubles;
+	}
 
 	public void setAChild(Simple aChild)
 	{
@@ -91,25 +127,5 @@ public class Parent
 	public void setAListOfLists(List<List<Integer>> aListOfLists)
 	{
 		this.aListOfLists = aListOfLists;
-	}
-
-
-	@Override public String toString()
-	{
-		return "Parent{" +
-		       "aString='" + aString + '\'' +
-		       ", aBoolean=" + aBoolean +
-		       ", aList=" + aList +
-		       ", aChild=" + aChild +
-		       ", aByte=" + aByte +
-		       ", aDouble=" + aDouble +
-		       ", aI16=" + aI16 +
-		       ", aI32=" + aI32 +
-		       ", aI64=" + aI64 +
-		       ", aMap=" + aMap +
-		       ", aSet=" + aSet +
-		       ", aBinary=" + (aBinary == null ? null : Arrays.asList(aBinary)) +
-		       ", aListOfLists=" + aListOfLists +
-		       '}';
 	}
 }

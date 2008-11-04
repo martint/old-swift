@@ -1,6 +1,6 @@
 package mt.serialization;
 
-import mt.serialization.schema.StructureType;
+import mt.serialization.model.StructureType;
 
 import java.util.Map;
 import java.util.Set;

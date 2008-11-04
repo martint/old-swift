@@ -1,5 +1,7 @@
 package mt.serialization;
 
+import mt.serialization.parser.ThriftLexer;
+import mt.serialization.parser.ThriftParser;
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.TokenStream;

@@ -1,7 +1,7 @@
 package mt.serialization;
 
-import mt.serialization.schema.Field;
-import mt.serialization.schema.StructureType;
+import mt.serialization.model.Field;
+import mt.serialization.model.StructureType;
 
 public class MissingFieldException
 	extends RuntimeException

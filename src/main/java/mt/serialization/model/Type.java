@@ -1,4 +1,4 @@
-package mt.serialization.schema;
+package mt.serialization.model;
 
 public interface Type<T>
 {

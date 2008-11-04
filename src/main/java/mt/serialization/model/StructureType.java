@@ -1,4 +1,4 @@
-package mt.serialization.schema;
+package mt.serialization.model;
 
 import com.facebook.thrift.protocol.TStruct;
 import com.facebook.thrift.protocol.TType;
@@ -14,6 +14,7 @@ public class StructureType
 	private String name;
 	private Map<Integer, Field> fields = new HashMap<Integer, Field>();
 
+	@Deprecated
 	private final TStruct tstruct;
 
 	public StructureType(String name, List<Field> fields)
@@ -34,6 +35,7 @@ public class StructureType
 		return fields.values();
 	}
 
+	@Deprecated
 	public TStruct toTStruct()
 	{
 		return tstruct;

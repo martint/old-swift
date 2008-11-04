@@ -1,6 +1,8 @@
 package mt.serialization;
 
-import mt.serialization.schema.StructureType;
+import mt.serialization.parser.ThriftLexer;
+import mt.serialization.parser.ThriftParser;
+import mt.serialization.model.StructureType;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;

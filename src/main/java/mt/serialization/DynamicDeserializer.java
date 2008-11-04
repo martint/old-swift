@@ -5,13 +5,13 @@ import com.facebook.thrift.protocol.TField;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.protocol.TProtocolUtil;
 import com.facebook.thrift.protocol.TType;
-import mt.serialization.schema.BasicType;
-import mt.serialization.schema.Field;
-import mt.serialization.schema.ListType;
-import mt.serialization.schema.MapType;
-import mt.serialization.schema.SetType;
-import mt.serialization.schema.StructureType;
-import mt.serialization.schema.Type;
+import mt.serialization.model.BasicType;
+import mt.serialization.model.Field;
+import mt.serialization.model.ListType;
+import mt.serialization.model.MapType;
+import mt.serialization.model.SetType;
+import mt.serialization.model.StructureType;
+import mt.serialization.model.Type;
 
 class DynamicDeserializer<T>
 	implements StructureDeserializer<T>

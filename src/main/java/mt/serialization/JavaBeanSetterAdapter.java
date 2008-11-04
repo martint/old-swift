@@ -1,6 +1,6 @@
 package mt.serialization;
 
-import mt.serialization.schema.StructureType;
+import mt.serialization.model.StructureType;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;

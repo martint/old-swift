@@ -32,7 +32,7 @@ document: header* definition*;
 
 header:	include | namespace;
 
-include: 'include' LITERAL -> ^(INCLUDE<Include> LITERAL)
+include: 'include' LITERAL -> ^(INCLUDE LITERAL)
 	;
 
 namespace:	'namespace' namespace_scope IDENTIFIER -> ^(NAMESPACE namespace_scope IDENTIFIER)
