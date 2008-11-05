@@ -149,7 +149,7 @@ public class Deserializer
 		                                                 + targetClassName + ";",
 		                                                 null, new String[] { "com/facebook/thrift/TException" });
 
-		MethodBuilderContext context = new MethodBuilderContext(1);
+		MethodBuilderContext context = new MethodBuilderContext();
 		context.bindLocal("this", 0);
 		context.bindLocal("deserializer", 1);
 		context.newLocal("protocol");
@@ -251,7 +251,7 @@ public class Deserializer
 		methodVisitor.visitVarInsn(ALOAD, context.getLocal("target"));
 		methodVisitor.visitInsn(ARETURN);
 
-		methodVisitor.visitMaxs(3, context.getMaxLocals()); // TODO: what should these be?
+		methodVisitor.visitMaxs(1, 1); // TODO: what should these be?
 		methodVisitor.visitEnd();
 	}
 
@@ -578,49 +578,35 @@ public class Deserializer
 	{
 		private Map<String, Integer> locals = new HashMap<String, Integer>();
 
-		private int maxLocals;
-		private int maxStack;
+		private int maxSlot;
 
-		private MethodBuilderContext(int maxLocals)
+		private MethodBuilderContext()
 		{
-			this.maxLocals = maxLocals;
 		}
 
 		public void bindLocal(String name, int slot)
 		{
 			locals.put(name, slot);
-			maxLocals = Math.max(maxLocals, slot);
+			maxSlot = Math.max(slot, maxSlot);
 		}
 
 		public int newAnonymousLocal()
 		{
-			int local = ++maxLocals;
-
-			return local;
+			return ++maxSlot;
 		}
 
 		public int newLocal(String name)
 		{
-			int local = ++maxLocals;
+			int slot = newAnonymousLocal();
 
-			locals.put(name, local);
+			locals.put(name, slot);
 
-			return local;
+			return slot;
 		}
 
 		public int getLocal(String name)
 		{
 			return locals.get(name);
-		}
-
-		public int getMaxLocals()
-		{
-			return maxLocals;
-		}
-
-		public int getMaxStack()
-		{
-			return maxStack;
 		}
 	}
 }
