@@ -6,11 +6,9 @@ import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
-import org.testng.annotations.Test;
 
 public class TestParser
 {
-	@Test
 	public void testParser()
 		throws Exception
 	{
@@ -52,7 +50,6 @@ public class TestParser
 		System.out.println(tree.toStringTree());
 	}
 
-	@Test
 	public void testParserComplex()
 		throws Exception
 	{
