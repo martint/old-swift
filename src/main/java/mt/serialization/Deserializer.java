@@ -150,11 +150,11 @@ public class Deserializer
 		                                                 null, new String[] { "com/facebook/thrift/TException" });
 
 		MethodBuilderContext context = new MethodBuilderContext();
-		context.bindLocal("this", 0);
-		context.bindLocal("deserializer", 1);
-		context.newLocal("protocol");
-		context.newLocal("target");
-		context.newLocal("tfield");
+		context.bindSlot("this", 0);
+		context.bindSlot("deserializer", 1);
+		context.newSlot("protocol");
+		context.newSlot("target");
+		context.newSlot("tfield");
 
 		methodVisitor.visitCode();
 
@@ -162,10 +162,10 @@ public class Deserializer
 		methodVisitor.visitTypeInsn(NEW, targetClassName);
 		methodVisitor.visitInsn(DUP);
 		methodVisitor.visitMethodInsn(INVOKESPECIAL, targetClassName, "<init>", "()V");
-		methodVisitor.visitVarInsn(ASTORE, context.getLocal("target"));
+		methodVisitor.visitVarInsn(ASTORE, context.getSlot("target"));
 
 		// protocol.readStructBegin()
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readStructBegin",
 		                              "()Lcom/facebook/thrift/protocol/TStruct;");
 		methodVisitor.visitInsn(POP); // discard return value
@@ -175,13 +175,13 @@ public class Deserializer
 		methodVisitor.visitLabel(whileLabel);
 
 		// TField tfield = protocol.readFieldBegin()
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readFieldBegin",
 		                              "()Lcom/facebook/thrift/protocol/TField;");
-		methodVisitor.visitVarInsn(ASTORE, context.getLocal("tfield"));
+		methodVisitor.visitVarInsn(ASTORE, context.getSlot("tfield"));
 
 		// tfield.type
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("tfield"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("tfield"));
 		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TField", "type", "B");
 
 		methodVisitor.visitFieldInsn(GETSTATIC, "com/facebook/thrift/protocol/TType", "STOP", "B");
@@ -191,7 +191,7 @@ public class Deserializer
 		methodVisitor.visitJumpInsn(IF_ICMPEQ, endWhile);
 
 		// tfield.id
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("tfield"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("tfield"));
 		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TField", "id", "S");
 
 		List<Field> fields = new ArrayList<Field>(type.getFields());
@@ -212,12 +212,12 @@ public class Deserializer
 			methodVisitor.visitLabel(labels[i]);
 
 			// if (tfield.type == ###)
-			methodVisitor.visitVarInsn(ALOAD, context.getLocal("tfield"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("tfield"));
 			methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TField", "type", "B");
 			methodVisitor.visitIntInsn(BIPUSH, field.getType().getTType());
 			methodVisitor.visitJumpInsn(IF_ICMPNE, fieldSkipped);
 
-			methodVisitor.visitVarInsn(ALOAD, context.getLocal("target"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("target"));
 			if (Map.class.isAssignableFrom(targetClass)) {
 				methodVisitor.visitLdcInsn(field.getName());
 				generateReadElement(methodVisitor, context, field.getType());
@@ -232,8 +232,8 @@ public class Deserializer
 		}
 
 		methodVisitor.visitLabel(fieldSkipped);
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("tfield"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("tfield"));
 		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TField", "type", "B");
 		methodVisitor.visitMethodInsn(INVOKESTATIC, "com/facebook/thrift/protocol/TProtocolUtil", "skip",
 		                              "(Lcom/facebook/thrift/protocol/TProtocol;B)V");
@@ -244,11 +244,11 @@ public class Deserializer
 		methodVisitor.visitLabel(endWhile);
 
 		// protocol.readStructEnd()
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readStructEnd", "()V");
 
 		// return result
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("target"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("target"));
 		methodVisitor.visitInsn(ARETURN);
 
 		methodVisitor.visitMaxs(1, 1); // TODO: what should these be?
@@ -333,10 +333,10 @@ public class Deserializer
 	private void generateReadList(MethodVisitor methodVisitor, MethodBuilderContext context, ListType listType)
 	{
 		// protocol.readListBegin()
-		int tlistSizeLocal = context.newAnonymousLocal();
-		int loopCounterLocal = context.newAnonymousLocal();
+		int tlistSizeLocal = context.newAnonymousSlot();
+		int loopCounterLocal = context.newAnonymousSlot();
 
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readListBegin",
 		                              "()Lcom/facebook/thrift/protocol/TList;");
 		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TList", "size", "I");
@@ -372,8 +372,11 @@ public class Deserializer
 		methodVisitor.visitJumpInsn(GOTO, loop);
 
 		methodVisitor.visitLabel(done);
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readListEnd", "()V");
+
+		context.release(tlistSizeLocal);
+		context.release(loopCounterLocal);
 	}
 
 	private void generateConvertToObject(MethodVisitor methodVisitor, Type type)
@@ -401,45 +404,45 @@ public class Deserializer
 	private void generateReadElement(MethodVisitor methodVisitor, MethodBuilderContext context, Type type)
 	{
 		if (type == BasicType.BOOLEAN) {
-			methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readBool", "()Z");
 		}
 		else if (type == BasicType.BYTE) {
-			methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readByte", "()B");
 		}
 		else if (type == BasicType.I16) {
-			methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readI16", "()S");
 		}
 		else if (type == BasicType.I32) {
-			methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readI32", "()I");
 		}
 		else if (type == BasicType.I64) {
-			methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readI64", "()J");
 		}
 		else if (type == BasicType.DOUBLE) {
-			methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readDouble", "()D");
 		}
 		else if (type == BasicType.BINARY) {
-			methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readBinary",
 			                              "()[B");
 		}
 		else if (type == BasicType.STRING) {
-			methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readString",
 			                              "()Ljava/lang/String;");
 		}
 		else if (type instanceof StructureType) {
 			StructureType structureType = (StructureType) type;
 
-			methodVisitor.visitVarInsn(ALOAD, context.getLocal("deserializer"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("deserializer"));
 			methodVisitor.visitLdcInsn(structureType.getName());
-			methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, org.objectweb.asm.Type.getInternalName(Deserializer.class),
 			                              "deserialize",
 			                              "(Ljava/lang/String;Lcom/facebook/thrift/protocol/TProtocol;)Ljava/lang/Object;");
@@ -461,10 +464,10 @@ public class Deserializer
 	private void generateReadSet(MethodVisitor methodVisitor, MethodBuilderContext context, SetType type)
 	{
 		// protocol.readListBegin()
-		int tsetSizeLocal = context.newAnonymousLocal();
-		int loopCounterLocal = context.newAnonymousLocal();
+		int tsetSizeLocal = context.newAnonymousSlot();
+		int loopCounterLocal = context.newAnonymousSlot();
 
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readSetBegin",
 		                              "()Lcom/facebook/thrift/protocol/TSet;");
 		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TSet", "size", "I");
@@ -500,17 +503,20 @@ public class Deserializer
 		methodVisitor.visitJumpInsn(GOTO, loop);
 
 		methodVisitor.visitLabel(done);
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readSetEnd", "()V");
+
+		context.release(tsetSizeLocal);
+		context.release(loopCounterLocal);
 	}
 
 	private void generateReadMap(MethodVisitor methodVisitor, MethodBuilderContext context, MapType type)
 	{
 		// protocol.readListBegin()
-		int tmapSizeLocal = context.newAnonymousLocal();
-		int loopCounterLocal = context.newAnonymousLocal();
+		int tmapSizeLocal = context.newAnonymousSlot();
+		int loopCounterLocal = context.newAnonymousSlot();
 
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readMapBegin",
 		                              "()Lcom/facebook/thrift/protocol/TMap;");
 		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TMap", "size", "I");
@@ -550,8 +556,11 @@ public class Deserializer
 		methodVisitor.visitJumpInsn(GOTO, loop);
 
 		methodVisitor.visitLabel(done);
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readMapEnd", "()V");
+
+		context.release(tmapSizeLocal);
+		context.release(loopCounterLocal);
 	}
 
 	private static String toCamelCase(String name)
@@ -574,39 +583,4 @@ public class Deserializer
 		return builder.toString();
 	}
 
-	private static class MethodBuilderContext
-	{
-		private Map<String, Integer> locals = new HashMap<String, Integer>();
-
-		private int maxSlot;
-
-		private MethodBuilderContext()
-		{
-		}
-
-		public void bindLocal(String name, int slot)
-		{
-			locals.put(name, slot);
-			maxSlot = Math.max(slot, maxSlot);
-		}
-
-		public int newAnonymousLocal()
-		{
-			return ++maxSlot;
-		}
-
-		public int newLocal(String name)
-		{
-			int slot = newAnonymousLocal();
-
-			locals.put(name, slot);
-
-			return slot;
-		}
-
-		public int getLocal(String name)
-		{
-			return locals.get(name);
-		}
-	}
 }

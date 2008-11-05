@@ -314,6 +314,33 @@ public class TestDeserializer
 		Assert.assertEquals(result.get("nestedListOfIntsField"), data.nestedListOfIntsField);
 	}
 
+	@Test
+	public void testSetAndListToMap()
+		throws Exception
+	{
+		StructureType type = new StructureType(TestStruct.class.getName(),
+		                                       new Field(new SetType(BasicType.I32), 10, "setOfInts", false),
+		                                       new Field(new ListType(BasicType.I32), 9, "listOfInts", false));
+
+		TestStruct data = new TestStruct();
+		data.setOfIntsField = new HashSet<Integer>(Arrays.asList(Integer.MAX_VALUE));
+		data.__isset.setOfIntsField = true;
+
+		data.listOfIntsField = Arrays.asList(Integer.MIN_VALUE);
+		data.__isset.listOfIntsField = true;
+
+		TProtocol protocol = serialize(data);
+
+		Deserializer deserializer = new Deserializer();
+		deserializer.setDebug(true);
+		deserializer.bindToMap(type);
+
+		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
+		Assert.assertEquals(result.size(), 2);
+		Assert.assertEquals(result.get("setOfInts"), data.setOfIntsField);
+		Assert.assertEquals(result.get("listOfInts"), data.listOfIntsField);
+
+	}
 
 	private TProtocol serialize(TestStruct data)
 		throws TException
