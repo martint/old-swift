@@ -413,7 +413,7 @@ public class TestSerialization
 		*/
 	}
 
-	private void testWithinBounds(StructureType struct, Serializer<Map<String, ?>> serializer, Number max, Number min)
+	private void testWithinBounds(StructureType struct, MapSerializer serializer, Number max, Number min)
 			throws TException
 	{
 		for (Number value : Arrays.asList(BigInteger.valueOf(max.longValue()).add(BigInteger.ONE), BigInteger.valueOf(min.longValue()).subtract(BigInteger.ONE))) {

@@ -1,4 +1,6 @@
-package mt.serialization;
+package mt.serialization.other;
+
+import mt.serialization.other.Nested;
 
 import java.util.Arrays;
 

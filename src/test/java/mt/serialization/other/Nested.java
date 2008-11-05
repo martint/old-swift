@@ -1,4 +1,4 @@
-package mt.serialization;
+package mt.serialization.other;
 
 public class Nested
 {

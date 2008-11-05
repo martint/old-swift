@@ -30,18 +30,12 @@ public class Deserializer
 	private Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
 
 	private Map<String, StructureDeserializer<?>> deserializers = new HashMap<String, StructureDeserializer<?>>();
-	private Map<String, TargetAdapter<?>> adapters = new HashMap<String, TargetAdapter<?>>();
 
-	private boolean useCompiler;
+	private boolean debug = false;
 
-	public Deserializer()
+	public void setDebug(boolean debug)
 	{
-		this(true);
-	}
-
-	public Deserializer(boolean useCompiler)
-	{
-		this.useCompiler = useCompiler;
+		this.debug = debug;
 	}
 
 	public void bind(StructureType type, Class clazz)
@@ -60,57 +54,34 @@ public class Deserializer
 		throws TException
 	{
 		StructureDeserializer<T> deserializer = (StructureDeserializer<T>) deserializers.get(name);
-		TargetAdapter<T> adapter = (TargetAdapter<T>) adapters.get(name);
 		Class<T> clazz = (Class<T>) classes.get(name);
 
-		StructureType type = types.get(name);
-
-		// construct adapter
-		if (adapter == null) {
-			if (useCompiler) {
-				// TODO: use compiled adapter
-				adapter = (TargetAdapter<T>) new SimpleSetterAdapter();
-//				throw new UnsupportedOperationException("Not yet implemented"); // TODO: implement this
-			}
-			else {
-				if (Map.class.isAssignableFrom(clazz)) {
-					adapter = (TargetAdapter<T>) new MapSetterAdapter(type);
-				}
-				else {
-					adapter = new JavaBeanSetterAdapter<T>(type, clazz);
-				}
-			}
-
-			adapters.put(name, adapter);
+		if (clazz == null) {
+			throw new IllegalStateException(String.format("Type '%s' not bound to a class", name));
 		}
+		
+		StructureType type = types.get(name);
 
 		// construct deserializer
 		if (deserializer == null) {
-			if (useCompiler) {
-				deserializer = compileDeserializer(type, clazz, adapter);
-			}
-			else {
-				deserializer = new DynamicDeserializer<T>(type, adapter);
-			}
-
+			deserializer = compileDeserializer(type, clazz);
 			deserializers.put(name, deserializer);
 		}
 
-
-		T result = deserializer.deserialize(this, protocol);
-
-		return result;
+		return deserializer.deserialize(this, protocol);
 	}
 
 
 	private AtomicInteger sequence = new AtomicInteger();
 
-	private <T> StructureDeserializer<T> compileDeserializer(StructureType type, Class<T> clazz,
-	                                                         TargetAdapter<T> adapter)
+	private <T> StructureDeserializer<T> compileDeserializer(StructureType type, Class<T> clazz)
 	{
-		ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-		CheckClassAdapter checker = new CheckClassAdapter(classWriter);
-		ClassVisitor writer = new TraceClassVisitor(checker, new PrintWriter(System.out));
+		ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS); // TODO: compute this ourselves?
+		ClassVisitor writer = new CheckClassAdapter(classWriter);
+		
+		if (debug) {
+			writer = new TraceClassVisitor(writer, new PrintWriter(System.out));
+		}
 
 		String targetClassName = org.objectweb.asm.Type.getInternalName(clazz);
 		String deserializerClassName =
@@ -124,7 +95,7 @@ public class Deserializer
 		             new String[] { org.objectweb.asm.Type.getInternalName(StructureDeserializer.class) });
 
 		compileConstructor(writer);
-		compileDeserializeMethod(type, writer, targetClassName);
+		compileDeserializeMethod(type, writer, targetClassName, clazz);
 		compileBridgeMethod(writer, targetClassName, deserializerClassName);
 
 		writer.visitEnd();
@@ -169,7 +140,7 @@ public class Deserializer
 		syntheticMethodVisitor.visitEnd();
 	}
 
-	private void compileDeserializeMethod(StructureType type, ClassVisitor writer, String targetClassName)
+	private void compileDeserializeMethod(StructureType type, ClassVisitor writer, String targetClassName, Class targetClass)
 	{
 		MethodVisitor methodVisitor = writer.visitMethod(ACC_PUBLIC, "deserialize",
 		                                                 "(L" +
@@ -246,8 +217,17 @@ public class Deserializer
 			methodVisitor.visitIntInsn(BIPUSH, field.getType().getTType());
 			methodVisitor.visitJumpInsn(IF_ICMPNE, fieldSkipped);
 
-			generateRead(targetClassName, field, methodVisitor, context);
-
+			methodVisitor.visitVarInsn(ALOAD, context.getLocal("target"));
+			if (Map.class.isAssignableFrom(targetClass)) {
+				methodVisitor.visitLdcInsn(field.getName());
+				generateReadElement(methodVisitor, context, field.getType());
+				generateAddToMap(targetClassName, methodVisitor, context, field);
+			}
+			else {
+				generateReadElement(methodVisitor, context, field.getType());
+				generateSetTargetField(targetClassName, methodVisitor, context, field);
+			}
+			
 			methodVisitor.visitJumpInsn(GOTO, whileLabel);
 		}
 
@@ -287,15 +267,15 @@ public class Deserializer
 		constructorVisitor.visitEnd();
 	}
 
-	private void generateRead(String targetClassName, Field field, MethodVisitor methodVisitor,
-	                          MethodBuilderContext context)
-	{
-		methodVisitor.visitVarInsn(ALOAD, context.getLocal("target"));
 
-		generateReadElement(methodVisitor, context, field.getType());
-		generateSetTargetField(targetClassName, methodVisitor, context, field);
+	private void generateAddToMap(String targetClassName, MethodVisitor visitor, MethodBuilderContext context, Field field)
+	{
+		generateConvertToObject(visitor, field.getType());
+		visitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+		visitor.visitInsn(POP);
 	}
 
+	// TODO: autoboxing support: setXXX(Integer) vs setXXX(int)
 	private void generateSetTargetField(String targetClassName, MethodVisitor methodVisitor, MethodBuilderContext context, Field field)
 	{
 		String setter = "set" + toCamelCase(field.getName());
@@ -385,7 +365,7 @@ public class Deserializer
 		generateConvertToObject(methodVisitor, listType.getValueType());
 
 		// entry is left on stack(0). Add to list
-		methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z");
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/util/ArrayList", "add", "(Ljava/lang/Object;)Z");
 		methodVisitor.visitInsn(POP);
 
 		methodVisitor.visitIincInsn(loopCounterLocal, 1);
@@ -456,7 +436,6 @@ public class Deserializer
 		}
 		else if (type instanceof StructureType) {
 			StructureType structureType = (StructureType) type;
-			Class childClass = classes.get(((StructureType) type).getName());
 
 			methodVisitor.visitVarInsn(ALOAD, context.getLocal("deserializer"));
 			methodVisitor.visitLdcInsn(structureType.getName());
@@ -464,18 +443,115 @@ public class Deserializer
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, org.objectweb.asm.Type.getInternalName(Deserializer.class),
 			                              "deserialize",
 			                              "(Ljava/lang/String;Lcom/facebook/thrift/protocol/TProtocol;)Ljava/lang/Object;");
-			methodVisitor.visitTypeInsn(CHECKCAST, org.objectweb.asm.Type.getInternalName(childClass));
 		}
 		else if (type instanceof ListType) {
 			ListType listType = (ListType) type;
 			generateReadList(methodVisitor, context, listType);
 		}
 		else if (type instanceof SetType) {
-
+			SetType setType = (SetType) type;
+			generateReadSet(methodVisitor, context, setType);
 		}
 		else if (type instanceof MapType) {
-
+			MapType mapType = (MapType) type;
+			generateReadMap(methodVisitor, context, mapType);
 		}
+	}
+
+	private void generateReadSet(MethodVisitor methodVisitor, MethodBuilderContext context, SetType type)
+	{
+		// protocol.readListBegin()
+		int tsetSizeLocal = context.newAnonymousLocal();
+		int loopCounterLocal = context.newAnonymousLocal();
+
+		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readSetBegin",
+		                              "()Lcom/facebook/thrift/protocol/TSet;");
+		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TSet", "size", "I");
+		methodVisitor.visitVarInsn(ISTORE, tsetSizeLocal);
+
+		// result = new ArrayList(tlist.size)
+		methodVisitor.visitTypeInsn(NEW, "java/util/HashSet");
+		methodVisitor.visitInsn(DUP);
+		methodVisitor.visitVarInsn(ILOAD, tsetSizeLocal);
+		methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/util/HashSet", "<init>", "(I)V");
+
+		// i = 0
+		methodVisitor.visitInsn(ICONST_0);
+		methodVisitor.visitVarInsn(ISTORE, loopCounterLocal); // #4 = loop counter
+
+		Label done = new Label();
+		Label loop = new Label();
+		methodVisitor.visitLabel(loop);
+		methodVisitor.visitVarInsn(ILOAD, loopCounterLocal);
+		methodVisitor.visitVarInsn(ILOAD, tsetSizeLocal);
+		methodVisitor.visitJumpInsn(IF_ICMPGE, done);
+
+		methodVisitor.visitInsn(DUP); // ArrayList
+
+		generateReadElement(methodVisitor, context, type.getValueType());
+		generateConvertToObject(methodVisitor, type.getValueType());
+
+		// entry is left on stack(0). Add to list
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/util/HashSet", "add", "(Ljava/lang/Object;)Z");
+		methodVisitor.visitInsn(POP);
+
+		methodVisitor.visitIincInsn(loopCounterLocal, 1);
+		methodVisitor.visitJumpInsn(GOTO, loop);
+
+		methodVisitor.visitLabel(done);
+		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readSetEnd", "()V");
+	}
+
+	private void generateReadMap(MethodVisitor methodVisitor, MethodBuilderContext context, MapType type)
+	{
+		// protocol.readListBegin()
+		int tmapSizeLocal = context.newAnonymousLocal();
+		int loopCounterLocal = context.newAnonymousLocal();
+
+		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readMapBegin",
+		                              "()Lcom/facebook/thrift/protocol/TMap;");
+		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TMap", "size", "I");
+		methodVisitor.visitVarInsn(ISTORE, tmapSizeLocal);
+
+		// result = new ArrayList(tlist.size)
+		methodVisitor.visitTypeInsn(NEW, "java/util/LinkedHashMap");
+		methodVisitor.visitInsn(DUP);
+		methodVisitor.visitVarInsn(ILOAD, tmapSizeLocal);
+		methodVisitor.visitInsn(ICONST_2); // allocate 2 * tmap.size to avoid rehashing while building map
+		methodVisitor.visitInsn(IMUL);
+		methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/util/LinkedHashMap", "<init>", "(I)V");
+
+		// i = 0
+		methodVisitor.visitInsn(ICONST_0);
+		methodVisitor.visitVarInsn(ISTORE, loopCounterLocal); // #4 = loop counter
+
+		Label done = new Label();
+		Label loop = new Label();
+		methodVisitor.visitLabel(loop);
+		methodVisitor.visitVarInsn(ILOAD, loopCounterLocal);
+		methodVisitor.visitVarInsn(ILOAD, tmapSizeLocal);
+		methodVisitor.visitJumpInsn(IF_ICMPGE, done);
+
+		methodVisitor.visitInsn(DUP); // Map
+
+		generateReadElement(methodVisitor, context, type.getKeyType());
+		generateConvertToObject(methodVisitor, type.getKeyType());
+		generateReadElement(methodVisitor, context, type.getValueType());
+		generateConvertToObject(methodVisitor, type.getValueType());
+
+		// entry is left on stack(0). Add to list
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/util/LinkedHashMap", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+		methodVisitor.visitInsn(POP);
+
+		methodVisitor.visitIincInsn(loopCounterLocal, 1);
+		methodVisitor.visitJumpInsn(GOTO, loop);
+
+		methodVisitor.visitLabel(done);
+		methodVisitor.visitVarInsn(ALOAD, context.getLocal("protocol"));
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readMapEnd", "()V");
 	}
 
 	private static String toCamelCase(String name)
@@ -512,7 +588,6 @@ public class Deserializer
 
 		public void bindLocal(String name, int slot)
 		{
-			System.out.println(String.format("binding named local [%s] to %d", name, slot));
 			locals.put(name, slot);
 			maxLocals = Math.max(maxLocals, slot);
 		}
@@ -520,7 +595,6 @@ public class Deserializer
 		public int newAnonymousLocal()
 		{
 			int local = ++maxLocals;
-			System.out.println(String.format("binding anonymous local %d", local));
 
 			return local;
 		}
@@ -528,8 +602,6 @@ public class Deserializer
 		public int newLocal(String name)
 		{
 			int local = ++maxLocals;
-
-			System.out.println(String.format("binding named local [%s] to %d", name, local));
 
 			locals.put(name, local);
 

@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.HashMap;
 
 class MapSerializer
-		extends Serializer<Map<String, ?>>
 {
 	private Map<String, StructureType> structures;
 

@@ -77,7 +77,7 @@ public class TestDeserialization
 		data.put("aChild", childMap);
 
 		// serialize
-		Serializer<Map<String, ?>> serializer = new MapSerializer(parent, child);
+		MapSerializer serializer = new MapSerializer(parent, child);
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		TProtocol outputProtocol = new TBinaryProtocol(new TIOStreamTransport(bao));
 		serializer.serialize(data, parent.getName(), outputProtocol);

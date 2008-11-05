@@ -17,7 +17,14 @@ public class StructureType
 	@Deprecated
 	private final TStruct tstruct;
 
+
+	@Deprecated
 	public StructureType(String name, List<Field> fields)
+	{
+		this(name, fields.toArray(new Field[0]));	
+	}
+
+	public StructureType(String name, Field... fields)
 	{
 		this.name = name;
 		for (Field field : fields) {
