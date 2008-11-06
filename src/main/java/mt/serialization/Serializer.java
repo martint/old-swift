@@ -176,7 +176,7 @@ public class Serializer
 				generateGetFromMap(methodVisitor, context, field);
 			}
 			else {
-//				generateReadElement(methodVisitor, context, field.getType());
+				generateGetField(targetClassName, methodVisitor, context, field);
 			}
 			// ... writeXXX(element)
 			generateWriteElement(methodVisitor, context, field.getType());
@@ -302,7 +302,6 @@ public class Serializer
 		}
 	}
 
-	// TODO: autoboxing support: setXXX(Integer) vs setXXX(int)
 	private void generateGetField(String targetClassName, MethodVisitor methodVisitor, MethodBuilderContext context, Field field)
 	{
 		String getter;
@@ -365,35 +364,11 @@ public class Serializer
 
 	private void pushValue(MethodVisitor methodVisitor, int value)
 	{
-		switch (value) {
-			case -1:
-				methodVisitor.visitInsn(ICONST_M1);
-				break;
-			case 0:
-				methodVisitor.visitInsn(ICONST_0);
-				break;
-			case 1:
-				methodVisitor.visitInsn(ICONST_1);
-				break;
-			case 2:
-				methodVisitor.visitInsn(ICONST_2);
-				break;
-			case 3:
-				methodVisitor.visitInsn(ICONST_3);
-				break;
-			case 4:
-				methodVisitor.visitInsn(ICONST_4);
-				break;
-			case 5:
-				methodVisitor.visitInsn(ICONST_5);
-				break;
-			default:
-				if (value <= Byte.MAX_VALUE) {
-					methodVisitor.visitIntInsn(BIPUSH, value);
-				}
-				else {
-					methodVisitor.visitIntInsn(SIPUSH, value);
-				}
+		if (value <= Byte.MAX_VALUE) {
+			pushValue(methodVisitor, (byte) value);
+		}
+		else {
+			methodVisitor.visitIntInsn(SIPUSH, value);
 		}
 	}
 
