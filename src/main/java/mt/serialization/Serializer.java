@@ -173,18 +173,13 @@ public class Serializer
 			// protocol. ...
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			if (Map.class.isAssignableFrom(clazz)) {
-				methodVisitor.visitVarInsn(ALOAD, context.getSlot("object"));
-				methodVisitor.visitTypeInsn(CHECKCAST, targetClassName);
-				methodVisitor.visitLdcInsn(field.getName());
-				generateGetFromMap(targetClassName, methodVisitor, context, field);
-
-				// ... writeXXX(map.get("field name"))
-				generateWriteElement(methodVisitor, context, field.getType());
+				generateGetFromMap(methodVisitor, context, field);
 			}
 			else {
 //				generateReadElement(methodVisitor, context, field.getType());
-//				generateSetTargetField(targetClassName, methodVisitor, context, field);
 			}
+			// ... writeXXX(element)
+			generateWriteElement(methodVisitor, context, field.getType());
 
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeFieldEnd", "()V");
@@ -257,16 +252,21 @@ public class Serializer
 		}
 	}
 
-	private void generateGetFromMap(String targetClassName, MethodVisitor methodVisitor, MethodBuilderContext context,
+	private void generateGetFromMap(MethodVisitor methodVisitor, MethodBuilderContext context,
 	                                Field field)
 	{
-		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
+		// ((Map) object).get("field name")
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("object"));
+		methodVisitor.visitTypeInsn(CHECKCAST, "java/util/Map");
+		methodVisitor.visitLdcInsn(field.getName());
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/util/Map", "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
+		
 		generateCast(methodVisitor, field.getType());
 	}
 
 	/**
-	 * Generates code to (optionally) convert the object at the top of the stack to primitive, depending on the 
-	 * type of the field
+	 * Downcast from Object -> concrete type, depending on the type passed to the method. Unboxes boxed versions
+	 * of primitive types
  	 */
 	private void generateCast(MethodVisitor methodVisitor, Type type)
 	{
