@@ -1,11 +1,11 @@
-* Mechanism to report truncation / coercion errors
-* Autoboxing support (setter/getters that accept Integer vs int, etc) 
-* Bind bean to Thrift fields via annotations
+* Autoboxing support (setter/getters that accept Integer vs int, etc)
+* Type coercion & mechanism to report truncation/coercion errors
+* Annotation-based bindings?
+* Serializer
 
-Serializer
-	* uses Protocol, Schema
-	* defines mechanism for turning Object or Map into underlying protocol
-	* works in terms of high-level types
+* Figure out thread-safety story for serializer/deserializer
 
-Protocol
-	* defines encoding of high-level types to wire types (int16, int32, int64, byte[], string, etc)
+* Ability to pass in instance of object to populate on deserialization (to avoid object creation)
+* Support required vs optional fields
+
+* Parser 

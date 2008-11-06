@@ -62,4 +62,9 @@ class MethodBuilderContext
 
 		reusableSlots.add(slot);
 	}
+
+	public boolean isInUse(int slot)
+	{
+		return usedSlots.contains(slot);
+	}
 }

@@ -9,6 +9,7 @@ import mt.serialization.model.MapType;
 import mt.serialization.model.SetType;
 import mt.serialization.model.StructureType;
 import mt.serialization.model.Type;
+import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
@@ -77,23 +78,24 @@ public class Deserializer
 
 	private <T> StructureDeserializer<T> compileDeserializer(StructureType type, Class<T> clazz)
 	{
-		ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS); // TODO: compute this ourselves?
-		ClassVisitor writer = new CheckClassAdapter(classWriter);
-		
+		ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES); // TODO: compute this ourselves?
+		ClassVisitor writer = classWriter;
+
 		if (debug) {
-			writer = new TraceClassVisitor(writer, new PrintWriter(System.out));
+			writer = new CheckClassAdapter(classWriter);
+//			writer = new TraceClassVisitor(writer, new PrintWriter(System.out));
 		}
 
-		String targetClassName = getInternalName(clazz);
+		String targetClassName = Util.getInternalName(clazz);
 		String deserializerClassName =
-			"mt/serialization/generated/" + clazz.getSimpleName() + "_" + sequence.incrementAndGet();
+			"mt/serialization/generated/Deserializer" + clazz.getSimpleName() + "_" + sequence.incrementAndGet();
 
 		// class metadata
 		writer.visit(V1_6, ACC_PUBLIC + ACC_SUPER, deserializerClassName,
-		             "Ljava/lang/Object;L" + getInternalName(StructureDeserializer.class) +
+		             "Ljava/lang/Object;L" + Util.getInternalName(StructureDeserializer.class) +
 		             "<L" + targetClassName + ";>;",
 		             "java/lang/Object",
-		             new String[] { getInternalName(StructureDeserializer.class) });
+		             new String[] { Util.getInternalName(StructureDeserializer.class) });
 
 		compileConstructor(writer);
 		compileDeserializeMethod(type, writer, targetClassName, clazz);
@@ -101,6 +103,10 @@ public class Deserializer
 
 		writer.visitEnd();
 
+		if (debug) {
+			ClassReader reader = new ClassReader(classWriter.toByteArray());
+			reader.accept(new TraceClassVisitor(new PrintWriter(System.out)), 0);
+		}
 
 		ByteArrayClassLoader loader = new ByteArrayClassLoader();
 		try {
@@ -132,7 +138,7 @@ public class Deserializer
 		syntheticMethodVisitor.visitVarInsn(ALOAD, 2);
 		syntheticMethodVisitor.visitMethodInsn(INVOKEVIRTUAL, deserializerClassName,
 		                                       "deserialize",
-		                                       "(L" + getInternalName(Deserializer.class)
+		                                       "(L" + Util.getInternalName(Deserializer.class)
 		                                       + ";Lcom/facebook/thrift/protocol/TProtocol;)L" + targetClassName + ";");
 		syntheticMethodVisitor.visitInsn(ARETURN);
 		syntheticMethodVisitor.visitMaxs(3, 3);
@@ -143,7 +149,7 @@ public class Deserializer
 	{
 		MethodVisitor methodVisitor = writer.visitMethod(ACC_PUBLIC, "deserialize",
 		                                                 "(L" +
-		                                                 getInternalName(Deserializer.class)
+		                                                 Util.getInternalName(Deserializer.class)
 		                                                 + ";Lcom/facebook/thrift/protocol/TProtocol;)L"
 		                                                 + targetClassName + ";",
 		                                                 null, new String[] { "com/facebook/thrift/TException" });
@@ -151,7 +157,7 @@ public class Deserializer
 		MethodBuilderContext context = new MethodBuilderContext();
 		context.bindSlot("this", 0);
 		context.bindSlot("deserializer", 1);
-		context.newSlot("protocol");
+		context.bindSlot("protocol", 2);
 		context.newSlot("target");
 		context.newSlot("tfield");
 
@@ -277,7 +283,7 @@ public class Deserializer
 	// TODO: autoboxing support: setXXX(Integer) vs setXXX(int)
 	private void generateSetTargetField(String targetClassName, MethodVisitor methodVisitor, MethodBuilderContext context, Field field)
 	{
-		String setter = "set" + toCamelCase(field.getName());
+		String setter = "set" + Util.toCamelCase(field.getName());
 
 		if (field.getType() == BasicType.BOOLEAN) {
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, setter, "(Z)V");
@@ -305,25 +311,25 @@ public class Deserializer
 		}
 		else if (field.getType() instanceof StructureType) {
 			Class childClass = classes.get(((StructureType) field.getType()).getName());
-			methodVisitor.visitTypeInsn(CHECKCAST, getInternalName(childClass));
+			methodVisitor.visitTypeInsn(CHECKCAST, Util.getInternalName(childClass));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName,
-			                              setter, "(L" + getInternalName(childClass) + ";)V");
+			                              setter, "(L" + Util.getInternalName(childClass) + ";)V");
 		}
 		else if (field.getType() instanceof ListType) {
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName,
 			                              setter,
-			                              "(L" + getInternalName(java.util.List.class) + ";)V");
+			                              "(L" + Util.getInternalName(java.util.List.class) + ";)V");
 		}
 		else if (field.getType() instanceof SetType) {
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName,
 			                              setter,
-			                              "(L" + getInternalName(java.util.Set.class) + ";)V");
+			                              "(L" + Util.getInternalName(java.util.Set.class) + ";)V");
 
 		}
 		else if (field.getType() instanceof MapType) {
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName,
 			                              setter,
-			                              "(L" + getInternalName(java.util.Map.class) + ";)V");
+			                              "(L" + Util.getInternalName(java.util.Map.class) + ";)V");
 		}
 
 	}
@@ -442,7 +448,7 @@ public class Deserializer
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("deserializer"));
 			methodVisitor.visitLdcInsn(structureType.getName());
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getInternalName(Deserializer.class),
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, Util.getInternalName(Deserializer.class),
 			                              "deserialize",
 			                              "(Ljava/lang/String;Lcom/facebook/thrift/protocol/TProtocol;)Ljava/lang/Object;");
 		}
@@ -560,31 +566,6 @@ public class Deserializer
 
 		context.release(tmapSizeLocal);
 		context.release(loopCounterLocal);
-	}
-
-	private static String toCamelCase(String name)
-	{
-		StringBuilder builder = new StringBuilder(name.length());
-		for (int i = 0; i < name.length(); ++i) {
-			char c = name.charAt(i);
-			if (i == 0 && c != '_') {
-				builder.append(Character.toUpperCase(c));
-			}
-			else if (c == '_' && i < name.length() - 1) {
-				++i;
-				builder.append(Character.toUpperCase(name.charAt(i)));
-			}
-			else if (c != '_') {
-				builder.append(c);
-			}
-		}
-
-		return builder.toString();
-	}
-
-	private static String getInternalName(Class clazz)
-	{
-		return org.objectweb.asm.Type.getInternalName(clazz);
 	}
 
 }
