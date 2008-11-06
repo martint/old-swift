@@ -1,18 +1,17 @@
 package mt.serialization;
 
 import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TField;
-import com.facebook.thrift.protocol.TProtocol;
-import com.facebook.thrift.protocol.TStruct;
 
 public class TestX
 {
-	void x(TProtocol protocol)
+	void x(boolean value)
 		throws TException
 	{
-		protocol.writeStructBegin(new TStruct("test"));
-
-		TField field = new TField();
-
+		if (value) {
+			System.out.println("x");
+		}
+		else {
+			System.out.println("y");
+		}
 	}
 }

@@ -49,6 +49,16 @@ class MethodBuilderContext
 		return nameToSlot.get(name);
 	}
 
+	public void release(String name)
+	{
+		Integer slot = getSlot(name);
+		if (slot == null) {
+			throw new IllegalArgumentException(String.format("Slot '%s' not bound", name));
+		}
+
+		release(slot);
+	}
+	
 	public void release(int slot)
 	{
 		boolean removed = usedSlots.remove(slot);

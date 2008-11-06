@@ -6,6 +6,8 @@ import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TIOStreamTransport;
 import mt.serialization.model.BasicType;
 import mt.serialization.model.Field;
+import mt.serialization.model.ListType;
+import mt.serialization.model.SetType;
 import mt.serialization.model.StructureType;
 import mt.serialization.test.TestStruct;
 import org.testng.Assert;
@@ -15,7 +17,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TestSerializer
 {
@@ -31,7 +36,9 @@ public class TestSerializer
 		                                       new Field(BasicType.I64, 5, "longField", false),
 		                                       new Field(BasicType.DOUBLE, 6, "doubleField", false),
 		                                       new Field(BasicType.STRING, 7, "stringField", false),
-		                                       new Field(BasicType.BINARY, 8, "binaryField", false)
+		                                       new Field(BasicType.BINARY, 8, "binaryField", false),
+		                                       new Field(new ListType(BasicType.I32), 9, "listOfInts", false),
+		                                       new Field(new SetType(BasicType.I32), 10, "setOfInts", false)
         );
 
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -43,6 +50,8 @@ public class TestSerializer
 		data.put("doubleField", Double.MAX_VALUE);
 		data.put("stringField", "Hello World");
 		data.put("binaryField", "Bye bye".getBytes("UTF-8"));
+		data.put("listOfInts", Arrays.asList(Integer.MIN_VALUE, Integer.MAX_VALUE));
+		data.put("setOfInts", new HashSet<Integer>(Arrays.asList(Integer.MIN_VALUE, Integer.MAX_VALUE)));
 
 		Serializer serializer = new Serializer();
 		serializer.setDebug(true);
@@ -78,6 +87,11 @@ public class TestSerializer
 		Assert.assertTrue(result.__isset.binaryField);
 		Assert.assertTrue(Arrays.equals(result.binaryField, (byte[]) data.get("binaryField")));
 
+		Assert.assertTrue(result.__isset.listOfIntsField);
+		Assert.assertEquals(result.listOfIntsField, (List) data.get("listOfInts"));
+
+		Assert.assertTrue(result.__isset.setOfIntsField);
+		Assert.assertEquals(result.setOfIntsField, (Set) data.get("setOfInts"));
 	}
 
 	@Test
