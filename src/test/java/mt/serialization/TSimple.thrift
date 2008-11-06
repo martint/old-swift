@@ -1,7 +1,6 @@
 // a comment
 namespace java mt.serialization
 
-include 'test'
 
 struct TNested
 {
@@ -11,7 +10,7 @@ struct TNested
 struct TSimple
 {
 	1:required bool aBool;
-	2:byte aByte;
+	2:optional byte aByte;
 	3:i16 aI16;
 	4:i32 aI32;
 	5:i64 aI64;

@@ -2,8 +2,13 @@ package mt.serialization;
 
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TProtocol;
+import mt.serialization.model.BasicType;
 import mt.serialization.model.Field;
+import mt.serialization.model.ListType;
+import mt.serialization.model.MapType;
+import mt.serialization.model.SetType;
 import mt.serialization.model.StructureType;
+import mt.serialization.model.Type;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -14,7 +19,9 @@ import org.objectweb.asm.util.TraceClassVisitor;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -163,11 +170,28 @@ public class Serializer
 			methodVisitor.visitVarInsn(ALOAD, fieldSlot);
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeFieldBegin", "(Lcom/facebook/thrift/protocol/TField;)V");
 
-			// TODO: write data
-			
+			// protocol. ...
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
+			if (Map.class.isAssignableFrom(clazz)) {
+				methodVisitor.visitVarInsn(ALOAD, context.getSlot("object"));
+				methodVisitor.visitTypeInsn(CHECKCAST, targetClassName);
+				methodVisitor.visitLdcInsn(field.getName());
+				generateGetFromMap(targetClassName, methodVisitor, context, field);
+
+				// ... writeXXX(map.get("field name"))
+				generateWriteElement(methodVisitor, context, field.getType());
+			}
+			else {
+//				generateReadElement(methodVisitor, context, field.getType());
+//				generateSetTargetField(targetClassName, methodVisitor, context, field);
+			}
+
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeFieldEnd", "()V");
 		}
+
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeFieldStop", "()V");
 
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeStructEnd", "()V");
@@ -176,6 +200,167 @@ public class Serializer
 		methodVisitor.visitInsn(RETURN);
 		methodVisitor.visitMaxs(1, 1); // TODO: compute these
 		methodVisitor.visitEnd();
+	}
+
+	private void generateWriteElement(MethodVisitor methodVisitor, MethodBuilderContext context, Type type)
+	{
+		if (type == BasicType.BOOLEAN) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeBool", "(Z)V");
+		}
+		else if (type == BasicType.BYTE) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeByte", "(B)V");
+		}
+		else if (type == BasicType.I16) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeI16", "(S)V");
+		}
+		else if (type == BasicType.I32) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeI32", "(I)V");
+		}
+		else if (type == BasicType.I64) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeI64", "(J)V");
+		}
+		else if (type == BasicType.DOUBLE) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeDouble", "(D)V");
+		}
+		else if (type == BasicType.BINARY) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeBinary", "([B)V");
+		}
+		else if (type == BasicType.STRING) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeString",
+			                              "(Ljava/lang/String;)V");
+		}
+		else if (type instanceof StructureType) {
+			// TODO
+//			StructureType structureType = (StructureType) type;
+//
+//			methodVisitor.visitVarInsn(ALOAD, context.getSlot("deserializer"));
+//			methodVisitor.visitLdcInsn(structureType.getName());
+//			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
+//			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, Util.getInternalName(Deserializer.class),
+//			                              "deserialize",
+//			                              "(Ljava/lang/String;Lcom/facebook/thrift/protocol/TProtocol;)Ljava/lang/Object;");
+		}
+		else if (type instanceof ListType) {
+			// TODO
+//			ListType listType = (ListType) type;
+//			generateReadList(methodVisitor, context, listType);
+		}
+		else if (type instanceof SetType) {
+			// TODO
+//			SetType setType = (SetType) type;
+//			generateReadSet(methodVisitor, context, setType);
+		}
+		else if (type instanceof MapType) {
+			// TODO
+//			MapType mapType = (MapType) type;
+//			generateReadMap(methodVisitor, context, mapType);
+		}
+	}
+
+	private void generateGetFromMap(String targetClassName, MethodVisitor methodVisitor, MethodBuilderContext context,
+	                                Field field)
+	{
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
+		generateCast(methodVisitor, field.getType());
+	}
+
+	/**
+	 * Generates code to (optionally) convert the object at the top of the stack to primitive, depending on the 
+	 * type of the field
+ 	 */
+	private void generateCast(MethodVisitor methodVisitor, Type type)
+	{
+		if (type == BasicType.BOOLEAN) {
+			methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z");
+		}
+		else if (type == BasicType.BYTE) {
+			methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Byte");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "()B");
+		}
+		else if (type == BasicType.I16) {
+			methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Short");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S");
+		}
+		else if (type == BasicType.I32) {
+			methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Integer");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Integer", "intValue", "()I");
+		}
+		else if (type == BasicType.I64) {
+			methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Long");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Long", "longValue", "()J");
+		}
+		else if (type == BasicType.DOUBLE) {
+			methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Double");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D");
+		}
+		else if (type == BasicType.STRING) {
+			methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/String");
+		}
+		else if (type == BasicType.BINARY) {
+			methodVisitor.visitTypeInsn(CHECKCAST, "[B");
+		}
+	}
+
+	// TODO: autoboxing support: setXXX(Integer) vs setXXX(int)
+	private void generateGetField(String targetClassName, MethodVisitor methodVisitor, MethodBuilderContext context, Field field)
+	{
+		String getter;
+		if (field.getType() == BasicType.BOOLEAN) {
+			getter = "is" + Util.toCamelCase(field.getName());
+		}
+		else {
+			getter = "get" + Util.toCamelCase(field.getName());
+		}
+
+		if (field.getType() == BasicType.BOOLEAN) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, getter, "()Z");
+		}
+		else if (field.getType() == BasicType.BYTE) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, getter, "()B");
+		}
+		else if (field.getType() == BasicType.I16) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, getter, "()S");
+		}
+		else if (field.getType() == BasicType.I32) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, getter, "()I");
+		}
+		else if (field.getType() == BasicType.I64) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, getter, "()J");
+		}
+		else if (field.getType() == BasicType.DOUBLE) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, getter, "()D");
+		}
+		else if (field.getType() == BasicType.BINARY) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, getter, "()[B");
+		}
+		else if (field.getType() == BasicType.STRING) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, getter, "()Ljava/lang/String;");
+		}
+		else if (field.getType() instanceof StructureType) {
+			// TODO
+			Class childClass = classes.get(((StructureType) field.getType()).getName());
+			methodVisitor.visitTypeInsn(CHECKCAST, Util.getInternalName(childClass));
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName,
+			                              getter, "(L" + Util.getInternalName(childClass) + ";)V");
+		}
+		else if (field.getType() instanceof ListType) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName,
+			                              getter,
+			                              "()L" + Util.getInternalName(List.class) + ";");
+		}
+		else if (field.getType() instanceof SetType) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName,
+			                              getter,
+			                              "()L" + Util.getInternalName(Set.class) + ";");
+
+		}
+		else if (field.getType() instanceof MapType) {
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName,
+			                              getter,
+			                              "()(L" + Util.getInternalName(java.util.Map.class) + ";");
+		}
+
 	}
 
 	private void pushValue(MethodVisitor methodVisitor, int value)

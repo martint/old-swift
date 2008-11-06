@@ -8,11 +8,17 @@ package mt.serialization;
 import com.facebook.thrift.TBase;
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TField;
+import com.facebook.thrift.protocol.TList;
+import com.facebook.thrift.protocol.TMap;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.protocol.TProtocolUtil;
 import com.facebook.thrift.protocol.TStruct;
 import com.facebook.thrift.protocol.TType;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TSimple implements TBase, java.io.Serializable {
   public boolean aBool;
@@ -28,7 +34,13 @@ public class TSimple implements TBase, java.io.Serializable {
   public byte[] aBinary;
   public static final int ABINARY = 6;
   public String aString;
-  public static final int ASTRING = 8;
+  public static final int ASTRING = 7;
+  public Map<Integer,String> mapOfI32s;
+  public static final int MAPOFI32S = 8;
+  public TNested nested;
+  public static final int NESTED = 9;
+  public List<List<byte[]>> listOfListOfBinaries;
+  public static final int LISTOFLISTOFBINARIES = 10;
 
   public final Isset __isset = new Isset();
   public static final class Isset implements java.io.Serializable {
@@ -39,6 +51,9 @@ public class TSimple implements TBase, java.io.Serializable {
     public boolean aI64 = false;
     public boolean aBinary = false;
     public boolean aString = false;
+    public boolean mapOfI32s = false;
+    public boolean nested = false;
+    public boolean listOfListOfBinaries = false;
   }
 
   public TSimple() {
@@ -51,7 +66,10 @@ public class TSimple implements TBase, java.io.Serializable {
     int aI32,
     long aI64,
     byte[] aBinary,
-    String aString)
+    String aString,
+    Map<Integer,String> mapOfI32s,
+    TNested nested,
+    List<List<byte[]>> listOfListOfBinaries)
   {
     this();
     this.aBool = aBool;
@@ -68,6 +86,12 @@ public class TSimple implements TBase, java.io.Serializable {
     this.__isset.aBinary = (aBinary != null);
     this.aString = aString;
     this.__isset.aString = (aString != null);
+    this.mapOfI32s = mapOfI32s;
+    this.__isset.mapOfI32s = (mapOfI32s != null);
+    this.nested = nested;
+    this.__isset.nested = (nested != null);
+    this.listOfListOfBinaries = listOfListOfBinaries;
+    this.__isset.listOfListOfBinaries = (listOfListOfBinaries != null);
   }
 
   public boolean equals(Object that) {
@@ -91,8 +115,8 @@ public class TSimple implements TBase, java.io.Serializable {
         return false;
     }
 
-    boolean this_present_aByte = true;
-    boolean that_present_aByte = true;
+    boolean this_present_aByte = true && (this.__isset.aByte);
+    boolean that_present_aByte = true && (that.__isset.aByte);
     if (this_present_aByte || that_present_aByte) {
       if (!(this_present_aByte && that_present_aByte))
         return false;
@@ -142,6 +166,33 @@ public class TSimple implements TBase, java.io.Serializable {
       if (!(this_present_aString && that_present_aString))
         return false;
       if (!this.aString.equals(that.aString))
+        return false;
+    }
+
+    boolean this_present_mapOfI32s = true && (this.mapOfI32s != null);
+    boolean that_present_mapOfI32s = true && (that.mapOfI32s != null);
+    if (this_present_mapOfI32s || that_present_mapOfI32s) {
+      if (!(this_present_mapOfI32s && that_present_mapOfI32s))
+        return false;
+      if (!this.mapOfI32s.equals(that.mapOfI32s))
+        return false;
+    }
+
+    boolean this_present_nested = true && (this.nested != null);
+    boolean that_present_nested = true && (that.nested != null);
+    if (this_present_nested || that_present_nested) {
+      if (!(this_present_nested && that_present_nested))
+        return false;
+      if (!this.nested.equals(that.nested))
+        return false;
+    }
+
+    boolean this_present_listOfListOfBinaries = true && (this.listOfListOfBinaries != null);
+    boolean that_present_listOfListOfBinaries = true && (that.listOfListOfBinaries != null);
+    if (this_present_listOfListOfBinaries || that_present_listOfListOfBinaries) {
+      if (!(this_present_listOfListOfBinaries && that_present_listOfListOfBinaries))
+        return false;
+      if (!this.listOfListOfBinaries.equals(that.listOfListOfBinaries))
         return false;
     }
 
@@ -219,6 +270,63 @@ public class TSimple implements TBase, java.io.Serializable {
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case MAPOFI32S:
+          if (field.type == TType.MAP) {
+            {
+              TMap _map0 = iprot.readMapBegin();
+              this.mapOfI32s = new HashMap<Integer,String>(2*_map0.size);
+              for (int _i1 = 0; _i1 < _map0.size; ++_i1)
+              {
+                int _key2;
+                String _val3;
+                _key2 = iprot.readI32();
+                _val3 = iprot.readString();
+                this.mapOfI32s.put(_key2, _val3);
+              }
+              iprot.readMapEnd();
+            }
+            this.__isset.mapOfI32s = true;
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case NESTED:
+          if (field.type == TType.STRUCT) {
+            this.nested = new TNested();
+            this.nested.read(iprot);
+            this.__isset.nested = true;
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case LISTOFLISTOFBINARIES:
+          if (field.type == TType.LIST) {
+            {
+              TList _list4 = iprot.readListBegin();
+              this.listOfListOfBinaries = new ArrayList<List<byte[]>>(_list4.size);
+              for (int _i5 = 0; _i5 < _list4.size; ++_i5)
+              {
+                List<byte[]> _elem6 = new ArrayList<byte[]>();
+                {
+                  TList _list7 = iprot.readListBegin();
+                  _elem6 = new ArrayList<byte[]>(_list7.size);
+                  for (int _i8 = 0; _i8 < _list7.size; ++_i8)
+                  {
+                    byte[] _elem9 = null;
+                    _elem9 = iprot.readBinary();
+                    _elem6.add(_elem9);
+                  }
+                  iprot.readListEnd();
+                }
+                this.listOfListOfBinaries.add(_elem6);
+              }
+              iprot.readListEnd();
+            }
+            this.__isset.listOfListOfBinaries = true;
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -278,6 +386,49 @@ public class TSimple implements TBase, java.io.Serializable {
       oprot.writeString(this.aString);
       oprot.writeFieldEnd();
     }
+    if (this.mapOfI32s != null) {
+      field.name = "mapOfI32s";
+      field.type = TType.MAP;
+      field.id = MAPOFI32S;
+      oprot.writeFieldBegin(field);
+      {
+        oprot.writeMapBegin(new TMap(TType.I32, TType.STRING, this.mapOfI32s.size()));
+        for (int _iter10 : this.mapOfI32s.keySet())        {
+          oprot.writeI32(_iter10);
+          oprot.writeString(this.mapOfI32s.get(_iter10));
+        }
+        oprot.writeMapEnd();
+      }
+      oprot.writeFieldEnd();
+    }
+    if (this.nested != null) {
+      field.name = "nested";
+      field.type = TType.STRUCT;
+      field.id = NESTED;
+      oprot.writeFieldBegin(field);
+      this.nested.write(oprot);
+      oprot.writeFieldEnd();
+    }
+    if (this.listOfListOfBinaries != null) {
+      field.name = "listOfListOfBinaries";
+      field.type = TType.LIST;
+      field.id = LISTOFLISTOFBINARIES;
+      oprot.writeFieldBegin(field);
+      {
+        oprot.writeListBegin(new TList(TType.LIST, this.listOfListOfBinaries.size()));
+        for (List<byte[]> _iter11 : this.listOfListOfBinaries)        {
+          {
+            oprot.writeListBegin(new TList(TType.STRING, _iter11.size()));
+            for (byte[] _iter12 : _iter11)            {
+              oprot.writeBinary(_iter12);
+            }
+            oprot.writeListEnd();
+          }
+        }
+        oprot.writeListEnd();
+      }
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -290,10 +441,12 @@ public class TSimple implements TBase, java.io.Serializable {
     sb.append("aBool:");
     sb.append(this.aBool);
     first = false;
-    if (!first) sb.append(", ");
-    sb.append("aByte:");
-    sb.append(this.aByte);
-    first = false;
+    if (__isset.aByte) {
+      if (!first) sb.append(", ");
+      sb.append("aByte:");
+      sb.append(this.aByte);
+      first = false;
+    }
     if (!first) sb.append(", ");
     sb.append("aI16:");
     sb.append(this.aI16);
@@ -313,6 +466,18 @@ public class TSimple implements TBase, java.io.Serializable {
     if (!first) sb.append(", ");
     sb.append("aString:");
     sb.append(this.aString);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("mapOfI32s:");
+    sb.append(this.mapOfI32s);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("nested:");
+    sb.append(this.nested);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("listOfListOfBinaries:");
+    sb.append(this.listOfListOfBinaries);
     first = false;
     sb.append(")");
     return sb.toString();

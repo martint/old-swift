@@ -25,6 +25,7 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/testng/testng/5.6/testng-5.6-jdk15-sources.jar!/" />
+          <root url="intellijad://intellijad" />
         </SOURCES>
       </library>
     </orderEntry>
