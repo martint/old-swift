@@ -36,11 +36,11 @@ tokens {
 
 
 @parser::header {
-       package mt.serialization.parser;
+       package mt.swift.parser;
 }
 
 @lexer::header {
-       package mt.serialization.parser;
+       package mt.swift.parser;
 }
 
 document: header* definition*;
