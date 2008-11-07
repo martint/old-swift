@@ -1,6 +1,6 @@
 package mt.serialization;
 
-public class Util
+class Util
 {
 	public static String toCamelCase(String name)
 	{
