@@ -25,22 +25,13 @@ import java.util.Map;
 
 public class TestSerializeBean
 {
-	private final Field BOOLEAN_FIELD = new Field(BasicType.BOOLEAN, 1, "booleanField", false);
-	private final Field BYTE_FIELD = new Field(BasicType.BYTE, 2, "byteField", false);
-	private final Field I16_FIELD = new Field(BasicType.I16, 3, "shortField", false);
-	private final Field I32_FIELD = new Field(BasicType.I32, 4, "intField", false);
-	private final Field I64_FIELD = new Field(BasicType.I64, 5, "longField", false);
-	private final Field DOUBLE_FIELD = new Field(BasicType.DOUBLE, 6, "doubleField", false);
-	private final Field STRING_FIELD = new Field(BasicType.STRING, 7, "stringField", false);
-	private final Field BINARY_FIELD = new Field(BasicType.BINARY, 8, "binaryField", false);
-
 	// TODO: test composite structures
 	
 	@Test
 	public void testBoolean()
 		throws Exception
 	{
-		Field field = BOOLEAN_FIELD;
+		Field field = Fields.BOOLEAN_FIELD;
 		for (final Boolean value : Arrays.asList(true, false)) {
 			TestStruct bean = new TestStruct();
 			bean.setBooleanField(value);
@@ -64,7 +55,7 @@ public class TestSerializeBean
 	public void testByte()
 		throws Exception
 	{
-		Field field = BYTE_FIELD;
+		Field field = Fields.BYTE_FIELD;
 		for (final Byte value : Arrays.asList((byte) 0, Byte.MIN_VALUE, Byte.MAX_VALUE)) {
 			TestStruct bean = new TestStruct();
 			bean.setByteField(value);
@@ -88,7 +79,7 @@ public class TestSerializeBean
 	public void testShort()
 		throws Exception
 	{
-		Field field = I16_FIELD;
+		Field field = Fields.I16_FIELD;
 		for (final Short value : Arrays.asList((short) 0, Short.MIN_VALUE, Short.MAX_VALUE)) {
 			TestStruct bean = new TestStruct();
 			bean.setShortField(value);
@@ -112,7 +103,7 @@ public class TestSerializeBean
 	public void testI32()
 		throws Exception
 	{
-		Field field = I32_FIELD;
+		Field field = Fields.I32_FIELD;
 		for (final Integer value : Arrays.asList(0, Integer.MIN_VALUE, Integer.MAX_VALUE)) {
 			TestStruct bean = new TestStruct();
 			bean.setIntField(value);
@@ -137,7 +128,7 @@ public class TestSerializeBean
 	public void testI64()
 		throws Exception
 	{
-		Field field = I64_FIELD;
+		Field field = Fields.I64_FIELD;
 		for (final Long value : Arrays.asList(0L, Long.MIN_VALUE, Long.MAX_VALUE)) {
 			TestStruct bean = new TestStruct();
 			bean.setLongField(value);
@@ -161,7 +152,7 @@ public class TestSerializeBean
 	public void testDouble()
 		throws Exception
 	{
-		Field field = DOUBLE_FIELD;
+		Field field = Fields.DOUBLE_FIELD;
 		for (final Double value : Arrays.asList(0.0, Double.MIN_VALUE, Double.MAX_VALUE, Double.NaN,
 		                                        Double.NEGATIVE_INFINITY,
 		                                        Double.POSITIVE_INFINITY)) {
@@ -187,7 +178,7 @@ public class TestSerializeBean
 	public void testBinary()
 		throws Exception
 	{
-		Field field = BINARY_FIELD;
+		Field field = Fields.BINARY_FIELD;
 
 		final byte[] value = "hello world".getBytes("UTF-8");
 
@@ -212,7 +203,7 @@ public class TestSerializeBean
 	public void testString()
 		throws Exception
 	{
-		Field field = STRING_FIELD;
+		Field field = Fields.STRING_FIELD;
 
 		final String value = "hello world";
 
