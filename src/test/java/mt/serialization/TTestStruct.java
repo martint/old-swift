@@ -3,7 +3,7 @@
  *
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  */
-package mt.serialization.test;
+package mt.serialization;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import java.util.HashSet;
 import com.facebook.thrift.*;
 
 import com.facebook.thrift.protocol.*;
+import mt.serialization.TNestedStruct;
 
 public class TTestStruct
 	implements TBase, java.io.Serializable {

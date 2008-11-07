@@ -3,12 +3,12 @@ package mt.serialization;
 import org.objectweb.asm.MethodVisitor;
 import static org.objectweb.asm.Opcodes.*;
 
-public class MethodVisitorWrapper
+class MethodVisitorWrapper
 {
 	private MethodVisitor visitor;
-	private MethodBuilderContext context;
+	private FrameRegisterManager context;
 
-	public MethodVisitorWrapper(MethodVisitor visitor, MethodBuilderContext context)
+	public MethodVisitorWrapper(MethodVisitor visitor, FrameRegisterManager context)
 	{
 		this.visitor = visitor;
 		this.context = context;

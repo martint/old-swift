@@ -12,7 +12,7 @@ public class StructureType
 	implements Type<Map<String, ?>>
 {
 	private String name;
-	private Map<Integer, Field> fields = new HashMap<Integer, Field>();
+	private Map<Short, Field> fields = new HashMap<Short, Field>();
 
 	@Deprecated
 	private final TStruct tstruct;

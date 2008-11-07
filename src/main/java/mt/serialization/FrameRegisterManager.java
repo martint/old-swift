@@ -7,7 +7,7 @@ import java.util.TreeSet;
 import java.util.List;
 import java.util.ArrayList;
 
-class MethodBuilderContext
+class FrameRegisterManager
 {
 	private Map<String, Integer> nameToSlot = new HashMap<String, Integer>();
 	private Map<Integer, String> slotToName = new HashMap<Integer, String>();

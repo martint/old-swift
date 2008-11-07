@@ -1,4 +1,4 @@
-namespace java mt.serialization.test
+namespace java mt.serialization
 
 struct TNestedStruct
 {

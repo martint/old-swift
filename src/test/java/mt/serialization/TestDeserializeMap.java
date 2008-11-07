@@ -10,25 +10,22 @@ import mt.serialization.model.ListType;
 import mt.serialization.model.MapType;
 import mt.serialization.model.SetType;
 import mt.serialization.model.StructureType;
-import mt.serialization.other.Nested;
-import mt.serialization.other.Simple;
-import mt.serialization.test.TNestedStruct;
-import mt.serialization.test.TTestStruct;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class TestDeserializer
+public class TestDeserializeMap
 {
+	// TODO: test protocol using easymock
+	
 	@Test
-	public void testBooleanToMap()
+	public void testBoolean()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -49,7 +46,7 @@ public class TestDeserializer
 	}
 
 	@Test
-	public void testByteToMap()
+	public void testByte()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -71,7 +68,7 @@ public class TestDeserializer
 
 
 	@Test
-	public void testShortToMap()
+	public void testShort()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -92,7 +89,7 @@ public class TestDeserializer
 	}
 
 	@Test
-	public void testIntToMap()
+	public void testInt()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -113,7 +110,7 @@ public class TestDeserializer
 	}
 
 	@Test
-	public void testLongToMap()
+	public void testLong()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -134,7 +131,7 @@ public class TestDeserializer
 	}
 
 	@Test
-	public void testDoubleToMap()
+	public void testDouble()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -156,7 +153,7 @@ public class TestDeserializer
 
 
 	@Test
-	public void testStringToMap()
+	public void testString()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -177,7 +174,7 @@ public class TestDeserializer
 	}
 
 	@Test
-	public void testBinaryToMap()
+	public void testBinary()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -198,7 +195,7 @@ public class TestDeserializer
 	}
 
 	@Test
-	public void testListOfIntsToMap()
+	public void testListOfInts()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -219,7 +216,7 @@ public class TestDeserializer
 	}
 
 	@Test
-	public void testSetOfIntsToMap()
+	public void testSetOfInts()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -240,7 +237,7 @@ public class TestDeserializer
 	}
 
 	@Test
-	public void testMapOfIntsIntsToMap()
+	public void testMapOfIntsInts()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -264,7 +261,7 @@ public class TestDeserializer
 
 
 	@Test
-	public void testNestedStructToMap()
+	public void testNestedStruct()
 		throws Exception
 	{
 		StructureType nested = new StructureType(TNestedStruct.class.getName(),
@@ -293,7 +290,7 @@ public class TestDeserializer
 
 
 	@Test
-	public void testNestedListOfIntsToMap()
+	public void testNestedListOfInts()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -315,7 +312,7 @@ public class TestDeserializer
 	}
 
 	@Test
-	public void testSetAndListToMap()
+	public void testSetAndList()
 		throws Exception
 	{
 		StructureType type = new StructureType(TTestStruct.class.getName(),
@@ -332,7 +329,6 @@ public class TestDeserializer
 		TProtocol protocol = serialize(data);
 
 		Deserializer deserializer = new Deserializer();
-		deserializer.setDebug(true);
 		deserializer.bindToMap(type);
 
 		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
@@ -351,111 +347,4 @@ public class TestDeserializer
 
 		return new TBinaryProtocol(new TIOStreamTransport(new ByteArrayInputStream(bao.toByteArray())));
 	}
-
-	public void testPerformance()
-		throws Exception
-	{
-		StructureType nestedType = new StructureType("namespace.nested",
-		                                             Arrays.asList(new Field(BasicType.STRING, 1, "value", false)));
-
-		StructureType simpleType = new StructureType("namespace.simple",
-		                                             Arrays.asList(
-			                                             new Field(BasicType.BOOLEAN, 1, "aBool", false),
-			                                             new Field(BasicType.BYTE, 2, "aByte", false),
-			                                             new Field(BasicType.I16, 3, "aI16", false),
-			                                             new Field(BasicType.I32, 4, "aI32", false),
-			                                             new Field(BasicType.I64, 5, "aI64", false),
-			                                             new Field(BasicType.DOUBLE, 6, "aDouble", false),
-			                                             new Field(BasicType.BINARY, 7, "aBinary", false),
-			                                             new Field(BasicType.STRING, 8, "aString", false),
-			                                             new Field(nestedType, 9, "aNested", false)
-		                                             ));
-
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("aBool", true);
-		data.put("aByte", Byte.MAX_VALUE);
-		data.put("aI16", (short) 1);
-		data.put("aI32", Integer.MAX_VALUE);
-		data.put("aI64", Long.MAX_VALUE);
-		data.put("aDouble", Math.PI);
-		data.put("aString", "hello world");
-		data.put("aBinary", new byte[] { 1, 2, 3, 4 });
-
-		Map<String, String> nested = new HashMap<String, String>();
-		nested.put("value", "hello nested");
-
-		data.put("aNested", nested);
-
-		// serialize
-		MapSerializer serializer = new MapSerializer(simpleType, nestedType);
-		ByteArrayOutputStream bao = new ByteArrayOutputStream();
-		TProtocol outputProtocol = new TBinaryProtocol(new TIOStreamTransport(bao));
-		serializer.serialize(data, simpleType.getName(), outputProtocol);
-
-		System.out.println(new String(bao.toByteArray()));
-
-		Deserializer compiledDeserializerToMBean = new Deserializer();
-		compiledDeserializerToMBean.bind(simpleType, Simple.class);
-		compiledDeserializerToMBean.bind(nestedType, Nested.class);
-
-		Deserializer compiledDeserializerToMap = new Deserializer();
-		compiledDeserializerToMap.bindToMap(simpleType);
-		compiledDeserializerToMap.bindToMap(nestedType);
-
-		TSimple tsimple = new TSimple();
-		TSimpleWithMethods tsimpleWithMethods = new TSimpleWithMethods();
-		int max = 1000000;
-		int warmup = 100000;
-
-		long thrift = 0;
-		long thriftWithMethods = 0;
-		long compiledToMBean = 0;
-		long compiledToMap = 0;
-
-		for (int i = 0; i < max; ++i) {
-			TProtocol protocol;
-
-			protocol = new TBinaryProtocol(new TIOStreamTransport(new ByteArrayInputStream(bao.toByteArray())));
-			if (i >= warmup) {
-				thrift -= System.nanoTime();
-			}
-			tsimple.read(protocol);
-			if (i >= warmup) {
-				thrift += System.nanoTime();
-			}
-
-			protocol = new TBinaryProtocol(new TIOStreamTransport(new ByteArrayInputStream(bao.toByteArray())));
-			if (i >= warmup) {
-				thriftWithMethods -= System.nanoTime();
-			}
-			tsimpleWithMethods.read(protocol);
-			if (i >= warmup) {
-				thriftWithMethods += System.nanoTime();
-			}
-
-			protocol = new TBinaryProtocol(new TIOStreamTransport(new ByteArrayInputStream(bao.toByteArray())));
-			if (i >= warmup) {
-				compiledToMBean -= System.nanoTime();
-			}
-			compiledDeserializerToMBean.deserialize(simpleType.getName(), protocol);
-			if (i >= warmup) {
-				compiledToMBean += System.nanoTime();
-			}
-
-			protocol = new TBinaryProtocol(new TIOStreamTransport(new ByteArrayInputStream(bao.toByteArray())));
-			if (i >= warmup) {
-				compiledToMap -= System.nanoTime();
-			}
-			compiledDeserializerToMap.deserialize(simpleType.getName(), protocol);
-			if (i >= warmup) {
-				compiledToMap += System.nanoTime();
-			}
-		}
-		System.out.println(max - warmup + ",\n" +
-		                   "\tthrift:           " + thrift + " ms\n" +
-		                   "\tthrift w/ methods:" + thriftWithMethods + " ms\n" +
-		                   "\tcompiled->bean:  " + compiledToMBean + " ms\n" +
-		                   "\tcompiled->map:  " + compiledToMap + " ms");
-	}
-
 }

@@ -1,3 +1,4 @@
 *.iws
 /target
 /test-output
+/m2

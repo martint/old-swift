@@ -125,7 +125,7 @@ public class Serializer
 		                                                 + ";Lcom/facebook/thrift/protocol/TProtocol;)V",
 		                                                 null, new String[] { "com/facebook/thrift/TException" });
 
-		MethodBuilderContext context = new MethodBuilderContext();
+		FrameRegisterManager context = new FrameRegisterManager();
 		context.bindSlot("this", 0);
 		context.bindSlot("object", 1);
 		context.bindSlot("serializer", 2);
@@ -203,7 +203,7 @@ public class Serializer
 	 * @param context
 	 * @param type
 	 */
-	private void generateWriteElement(MethodVisitor methodVisitor, MethodBuilderContext context, Type type)
+	private void generateWriteElement(MethodVisitor methodVisitor, FrameRegisterManager context, Type type)
 	{
 		if (type == BasicType.BOOLEAN) {
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
@@ -280,7 +280,7 @@ public class Serializer
 	}
 
 	
-	private void generateWriteList(MethodVisitor methodVisitor, MethodBuilderContext context, ListType listType)
+	private void generateWriteList(MethodVisitor methodVisitor, FrameRegisterManager context, ListType listType)
 	{
 		// top of stack is list we're serializing
 		int listSlot = context.newAnonymousSlot();
@@ -313,7 +313,7 @@ public class Serializer
 		context.release(listSlot);
 	}
 
-	private void generateWriteSet(MethodVisitor methodVisitor, MethodBuilderContext context, SetType setType)
+	private void generateWriteSet(MethodVisitor methodVisitor, FrameRegisterManager context, SetType setType)
 	{
 		// top of stack is list we're serializing
 		int setSlot = context.newAnonymousSlot();
@@ -347,7 +347,7 @@ public class Serializer
 	}
 
 
-	private void generateWriteMap(MethodVisitor methodVisitor, MethodBuilderContext context, MapType mapType)
+	private void generateWriteMap(MethodVisitor methodVisitor, FrameRegisterManager context, MapType mapType)
 	{
 		// top of stack is list we're serializing
 		int mapSlot = context.newAnonymousSlot();
@@ -427,7 +427,7 @@ public class Serializer
 	 * @param context
 	 * @param elementType
 	 */
-	private void generateWriteIteratorElements(MethodVisitor methodVisitor, MethodBuilderContext context,
+	private void generateWriteIteratorElements(MethodVisitor methodVisitor, FrameRegisterManager context,
 	                                           Type elementType)
 	{
 		Label loopLabel = new Label();
@@ -488,7 +488,7 @@ public class Serializer
 	 * @param context
 	 * @param field
 	 */
-	private void generateGetFromMap(MethodVisitor methodVisitor, MethodBuilderContext context,
+	private void generateGetFromMap(MethodVisitor methodVisitor, FrameRegisterManager context,
 	                                Field field)
 	{
 		// ((Map) object).get("field name")
@@ -548,7 +548,7 @@ public class Serializer
 	 * @param context
 	 * @param field
 	 */
-	private void generateGetField(String targetClassName, MethodVisitor methodVisitor, MethodBuilderContext context, Field field)
+	private void generateGetField(String targetClassName, MethodVisitor methodVisitor, FrameRegisterManager context, Field field)
 	{
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("object"));
 		methodVisitor.visitTypeInsn(CHECKCAST, targetClassName);

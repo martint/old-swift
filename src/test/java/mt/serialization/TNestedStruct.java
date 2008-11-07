@@ -3,7 +3,7 @@
  *
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  */
-package mt.serialization.test;
+package mt.serialization;
 
 import com.facebook.thrift.*;
 

@@ -154,7 +154,7 @@ public class Deserializer
 		                                                 + targetClassName + ";",
 		                                                 null, new String[] { "com/facebook/thrift/TException" });
 
-		MethodBuilderContext context = new MethodBuilderContext();
+		FrameRegisterManager context = new FrameRegisterManager();
 		context.bindSlot("this", 0);
 		context.bindSlot("deserializer", 1);
 		context.bindSlot("protocol", 2);
@@ -273,7 +273,7 @@ public class Deserializer
 	}
 
 
-	private void generateAddToMap(String targetClassName, MethodVisitor visitor, MethodBuilderContext context, Field field)
+	private void generateAddToMap(String targetClassName, MethodVisitor visitor, FrameRegisterManager context, Field field)
 	{
 		generateConvertToObject(visitor, field.getType());
 		visitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
@@ -281,7 +281,7 @@ public class Deserializer
 	}
 
 	// TODO: autoboxing support: setXXX(Integer) vs setXXX(int)
-	private void generateSetTargetField(String targetClassName, MethodVisitor methodVisitor, MethodBuilderContext context, Field field)
+	private void generateSetTargetField(String targetClassName, MethodVisitor methodVisitor, FrameRegisterManager context, Field field)
 	{
 		String setter = "set" + Util.toCamelCase(field.getName());
 
@@ -335,7 +335,7 @@ public class Deserializer
 	}
 
 	// leaves result in stack(0)
-	private void generateReadList(MethodVisitor methodVisitor, MethodBuilderContext context, ListType listType)
+	private void generateReadList(MethodVisitor methodVisitor, FrameRegisterManager context, ListType listType)
 	{
 		// protocol.readListBegin()
 		int tlistSizeLocal = context.newAnonymousSlot();
@@ -406,7 +406,7 @@ public class Deserializer
 		}
 	}
 
-	private void generateReadElement(MethodVisitor methodVisitor, MethodBuilderContext context, Type type)
+	private void generateReadElement(MethodVisitor methodVisitor, FrameRegisterManager context, Type type)
 	{
 		if (type == BasicType.BOOLEAN) {
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
@@ -466,7 +466,7 @@ public class Deserializer
 		}
 	}
 
-	private void generateReadSet(MethodVisitor methodVisitor, MethodBuilderContext context, SetType type)
+	private void generateReadSet(MethodVisitor methodVisitor, FrameRegisterManager context, SetType type)
 	{
 		// protocol.readListBegin()
 		int tsetSizeLocal = context.newAnonymousSlot();
@@ -515,7 +515,7 @@ public class Deserializer
 		context.release(loopCounterLocal);
 	}
 
-	private void generateReadMap(MethodVisitor methodVisitor, MethodBuilderContext context, MapType type)
+	private void generateReadMap(MethodVisitor methodVisitor, FrameRegisterManager context, MapType type)
 	{
 		// protocol.readListBegin()
 		int tmapSizeLocal = context.newAnonymousSlot();
