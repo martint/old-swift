@@ -175,7 +175,7 @@ public class Serializer
 				generateGetFromMap(methodVisitor, context, field);
 			}
 			else {
-//				generateGetField(targetClassName, methodVisitor, context, field);
+				generateGetField(targetClassName, methodVisitor, context, field);
 			}
 			// protocol.writeXXX(element)
 			generateWriteElement(methodVisitor, context, field.getType());
@@ -257,15 +257,13 @@ public class Serializer
 		else if (type instanceof StructureType) {
 			StructureType structureType = (StructureType) type;
 
-			int elementSlot = context.newAnonymousSlot();
-
-//			methodVisitor.visitVarInsn(ALOAD, context.getSlot("deserializer"));
-//			methodVisitor.visitLdcInsn(structureType.getName());
-//			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("serializer"));
+			methodVisitor.visitInsn(SWAP); // element, serializer => serializer, element
+			methodVisitor.visitLdcInsn(structureType.getName());
+			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, Util.getInternalName(Serializer.class), "serialize",
 			                              "(Ljava/lang/Object;Ljava/lang/String;Lcom/facebook/thrift/protocol/TProtocol;)V");
 				
-			context.release(elementSlot);
 		}
 		else if (type instanceof ListType) {
 			ListType listType = (ListType) type;
@@ -542,8 +540,19 @@ public class Serializer
 //		}
 	}
 
+	/**
+	 * Generates code to get the corresponding field from the bean to serialize.
+	 *
+	 * @param targetClassName
+	 * @param methodVisitor
+	 * @param context
+	 * @param field
+	 */
 	private void generateGetField(String targetClassName, MethodVisitor methodVisitor, MethodBuilderContext context, Field field)
 	{
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("object"));
+		methodVisitor.visitTypeInsn(CHECKCAST, targetClassName);
+
 		String getter;
 		if (field.getType() == BasicType.BOOLEAN) {
 			getter = "is" + Util.toCamelCase(field.getName());
@@ -577,11 +586,9 @@ public class Serializer
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, getter, "()Ljava/lang/String;");
 		}
 		else if (field.getType() instanceof StructureType) {
-			// TODO
 			Class childClass = classes.get(((StructureType) field.getType()).getName());
-			methodVisitor.visitTypeInsn(CHECKCAST, Util.getInternalName(childClass));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName,
-			                              getter, "(L" + Util.getInternalName(childClass) + ";)V");
+			                              getter, "()L" + Util.getInternalName(childClass) + ";");
 		}
 		else if (field.getType() instanceof ListType) {
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName,
@@ -597,7 +604,7 @@ public class Serializer
 		else if (field.getType() instanceof MapType) {
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName,
 			                              getter,
-			                              "()(L" + Util.getInternalName(java.util.Map.class) + ";");
+			                              "()L" + Util.getInternalName(java.util.Map.class) + ";");
 		}
 
 	}

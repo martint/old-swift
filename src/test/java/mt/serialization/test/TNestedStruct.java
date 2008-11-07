@@ -5,18 +5,12 @@
  */
 package mt.serialization.test;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
 import com.facebook.thrift.*;
 
 import com.facebook.thrift.protocol.*;
-import com.facebook.thrift.transport.*;
 
-public class NestedStruct implements TBase, java.io.Serializable {
+public class TNestedStruct
+	implements TBase, java.io.Serializable {
   public String value;
   public static final int VALUE = 1;
 
@@ -25,10 +19,10 @@ public class NestedStruct implements TBase, java.io.Serializable {
     public boolean value = false;
   }
 
-  public NestedStruct() {
+  public TNestedStruct() {
   }
 
-  public NestedStruct(
+  public TNestedStruct(
     String value)
   {
     this();
@@ -39,12 +33,12 @@ public class NestedStruct implements TBase, java.io.Serializable {
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof NestedStruct)
-      return this.equals((NestedStruct)that);
+    if (that instanceof TNestedStruct)
+      return this.equals((TNestedStruct)that);
     return false;
   }
 
-  public boolean equals(NestedStruct that) {
+  public boolean equals(TNestedStruct that) {
     if (that == null)
       return false;
 

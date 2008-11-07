@@ -1,11 +1,11 @@
 namespace java mt.serialization.test
 
-struct NestedStruct
+struct TNestedStruct
 {
 	1:string value;
 }
 
-struct TestStruct
+struct TTestStruct
 {                          
 	1:bool booleanField;
 	2:byte byteField;

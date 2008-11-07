@@ -14,9 +14,9 @@ import java.util.HashSet;
 import com.facebook.thrift.*;
 
 import com.facebook.thrift.protocol.*;
-import com.facebook.thrift.transport.*;
 
-public class TestStruct implements TBase, java.io.Serializable {
+public class TTestStruct
+	implements TBase, java.io.Serializable {
   public boolean booleanField;
   public static final int BOOLEANFIELD = 1;
   public byte byteField;
@@ -39,7 +39,7 @@ public class TestStruct implements TBase, java.io.Serializable {
   public static final int SETOFINTSFIELD = 10;
   public Map<Integer,Integer> mapOfIntsIntsField;
   public static final int MAPOFINTSINTSFIELD = 11;
-  public NestedStruct structField;
+  public TNestedStruct structField;
   public static final int STRUCTFIELD = 12;
   public List<List<Integer>> nestedListOfIntsField;
   public static final int NESTEDLISTOFINTSFIELD = 13;
@@ -61,10 +61,10 @@ public class TestStruct implements TBase, java.io.Serializable {
     public boolean nestedListOfIntsField = false;
   }
 
-  public TestStruct() {
+  public TTestStruct() {
   }
 
-  public TestStruct(
+  public TTestStruct(
     boolean booleanField,
     byte byteField,
     short shortField,
@@ -76,7 +76,7 @@ public class TestStruct implements TBase, java.io.Serializable {
     List<Integer> listOfIntsField,
     Set<Integer> setOfIntsField,
     Map<Integer,Integer> mapOfIntsIntsField,
-    NestedStruct structField,
+    TNestedStruct structField,
     List<List<Integer>> nestedListOfIntsField)
   {
     this();
@@ -111,12 +111,12 @@ public class TestStruct implements TBase, java.io.Serializable {
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof TestStruct)
-      return this.equals((TestStruct)that);
+    if (that instanceof TTestStruct)
+      return this.equals((TTestStruct)that);
     return false;
   }
 
-  public boolean equals(TestStruct that) {
+  public boolean equals(TTestStruct that) {
     if (that == null)
       return false;
 
@@ -377,7 +377,7 @@ public class TestStruct implements TBase, java.io.Serializable {
           break;
         case STRUCTFIELD:
           if (field.type == TType.STRUCT) {
-            this.structField = new NestedStruct();
+            this.structField = new TNestedStruct();
             this.structField.read(iprot);
             this.__isset.structField = true;
           } else { 

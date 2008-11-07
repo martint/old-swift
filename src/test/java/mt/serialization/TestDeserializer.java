@@ -12,8 +12,8 @@ import mt.serialization.model.SetType;
 import mt.serialization.model.StructureType;
 import mt.serialization.other.Nested;
 import mt.serialization.other.Simple;
-import mt.serialization.test.NestedStruct;
-import mt.serialization.test.TestStruct;
+import mt.serialization.test.TNestedStruct;
+import mt.serialization.test.TTestStruct;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,10 +31,10 @@ public class TestDeserializer
 	public void testBooleanToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(BasicType.BOOLEAN, 1, "booleanField", false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.booleanField = true;
 		data.__isset.booleanField = true;
 
@@ -52,10 +52,10 @@ public class TestDeserializer
 	public void testByteToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(BasicType.BYTE, 2, "byteField", false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.byteField = Byte.MAX_VALUE;
 		data.__isset.byteField = true;
 
@@ -74,10 +74,10 @@ public class TestDeserializer
 	public void testShortToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(BasicType.I16, 3, "shortField", false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.shortField = Short.MAX_VALUE;
 		data.__isset.shortField = true;
 
@@ -95,10 +95,10 @@ public class TestDeserializer
 	public void testIntToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(BasicType.I32, 4, "intField", false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.intField = Integer.MAX_VALUE;
 		data.__isset.intField = true;
 
@@ -116,10 +116,10 @@ public class TestDeserializer
 	public void testLongToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(BasicType.I64, 5, "longField", false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.longField = Long.MAX_VALUE;
 		data.__isset.longField = true;
 
@@ -137,10 +137,10 @@ public class TestDeserializer
 	public void testDoubleToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(BasicType.DOUBLE, 6, "doubleField", false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.doubleField = Double.MAX_VALUE;
 		data.__isset.doubleField = true;
 
@@ -159,10 +159,10 @@ public class TestDeserializer
 	public void testStringToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(BasicType.STRING, 7, "stringField", false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.stringField = "hello world";
 		data.__isset.stringField = true;
 
@@ -180,10 +180,10 @@ public class TestDeserializer
 	public void testBinaryToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(BasicType.BINARY, 8, "binaryField", false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.binaryField = "hello world".getBytes("UTF-8");
 		data.__isset.stringField = true;
 
@@ -201,10 +201,10 @@ public class TestDeserializer
 	public void testListOfIntsToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(new ListType(BasicType.I32), 9, "listOfInts", false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.listOfIntsField = Arrays.asList(Integer.MAX_VALUE);
 		data.__isset.listOfIntsField = true;
 
@@ -222,10 +222,10 @@ public class TestDeserializer
 	public void testSetOfIntsToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(new SetType(BasicType.I32), 10, "setOfInts", false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.setOfIntsField = new HashSet<Integer>(Arrays.asList(Integer.MAX_VALUE));
 		data.__isset.setOfIntsField = true;
 
@@ -243,11 +243,11 @@ public class TestDeserializer
 	public void testMapOfIntsIntsToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(new MapType(BasicType.I32, BasicType.I32), 11, "mapOfIntsInts",
 		                                                 false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.mapOfIntsIntsField = new LinkedHashMap<Integer, Integer>();
 		data.mapOfIntsIntsField.put(Integer.MAX_VALUE, Integer.MIN_VALUE);
 		data.__isset.mapOfIntsIntsField = true;
@@ -267,14 +267,14 @@ public class TestDeserializer
 	public void testNestedStructToMap()
 		throws Exception
 	{
-		StructureType nested = new StructureType(NestedStruct.class.getName(),
+		StructureType nested = new StructureType(TNestedStruct.class.getName(),
 		                                         new Field(BasicType.STRING, 1, "value", false));
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(nested, 12, "structField",
 		                                                 false));
 
-		TestStruct data = new TestStruct();
-		data.structField = new NestedStruct("hello world");
+		TTestStruct data = new TTestStruct();
+		data.structField = new TNestedStruct("hello world");
 		data.__isset.structField = true;
 
 		TProtocol protocol = serialize(data);
@@ -296,11 +296,11 @@ public class TestDeserializer
 	public void testNestedListOfIntsToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(new ListType(new ListType(BasicType.I32)), 13, "nestedListOfIntsField",
 		                                                 false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.nestedListOfIntsField = Arrays.asList(Arrays.asList(Integer.MAX_VALUE));
 		data.__isset.nestedListOfIntsField = true;
 
@@ -318,11 +318,11 @@ public class TestDeserializer
 	public void testSetAndListToMap()
 		throws Exception
 	{
-		StructureType type = new StructureType(TestStruct.class.getName(),
+		StructureType type = new StructureType(TTestStruct.class.getName(),
 		                                       new Field(new SetType(BasicType.I32), 10, "setOfInts", false),
 		                                       new Field(new ListType(BasicType.I32), 9, "listOfInts", false));
 
-		TestStruct data = new TestStruct();
+		TTestStruct data = new TTestStruct();
 		data.setOfIntsField = new HashSet<Integer>(Arrays.asList(Integer.MAX_VALUE));
 		data.__isset.setOfIntsField = true;
 
@@ -342,7 +342,7 @@ public class TestDeserializer
 
 	}
 
-	private TProtocol serialize(TestStruct data)
+	private TProtocol serialize(TTestStruct data)
 		throws TException
 	{
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
