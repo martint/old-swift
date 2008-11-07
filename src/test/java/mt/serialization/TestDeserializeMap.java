@@ -1,9 +1,7 @@
 package mt.serialization;
 
 import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TBinaryProtocol;
 import com.facebook.thrift.protocol.TProtocol;
-import com.facebook.thrift.transport.TIOStreamTransport;
 import mt.serialization.model.BasicType;
 import mt.serialization.model.Field;
 import mt.serialization.model.ListType;
@@ -13,142 +11,142 @@ import mt.serialization.model.StructureType;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TestDeserializeMap
 {
+	private final Field BOOLEAN_FIELD = new Field(BasicType.BOOLEAN, 1, "booleanField", false);
+	private final Field BYTE_FIELD = new Field(BasicType.BYTE, 2, "byteField", false);
+	private final Field I16_FIELD = new Field(BasicType.I16, 3, "shortField", false);
+	private final Field I32_FIELD = new Field(BasicType.I32, 4, "intField", false);
+	private final Field I64_FIELD = new Field(BasicType.I64, 5, "longField", false);
+	private final Field DOUBLE_FIELD = new Field(BasicType.DOUBLE, 6, "doubleField", false);
+	private final Field STRING_FIELD = new Field(BasicType.STRING, 7, "stringField", false);
+	private final Field BINARY_FIELD = new Field(BasicType.BINARY, 8, "binaryField", false);
+	private final Field LIST_OF_INTS_FIELD = new Field(new ListType(BasicType.I32), 9, "listOfInts", false);
+	private final Field SET_OF_INTS_FIELD = new Field(new SetType(BasicType.I32), 10, "setOfInts", false);
+	private final Field MAP_OF_INTS_INTS_FIELD = new Field(new MapType(BasicType.I32, BasicType.I32), 11, "mapOfIntsInts",
+	          false);
+	private final Field NESTED_LIST_OF_INTS_FIELD = new Field(new ListType(new ListType(BasicType.I32)), 13,
+	          "nestedListOfIntsField",
+	          false);
+
 	// TODO: test protocol using easymock
-	
+
 	@Test
 	public void testBoolean()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(BasicType.BOOLEAN, 1, "booleanField", false));
+		Field field = BOOLEAN_FIELD;
+		StructureType type = new StructureType(TestStruct.class.getName(), field);
 
-		TTestStruct data = new TTestStruct();
-		data.booleanField = true;
-		data.__isset.booleanField = true;
+		for (Boolean value : Arrays.asList(true, false)) {
+			TTestStruct data = new TTestStruct();
+			data.booleanField = value;
+			data.__isset.booleanField = true;
 
-		TProtocol protocol = serialize(data);
-
-		Deserializer deserializer = new Deserializer();
-		deserializer.bindToMap(type);
-
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
-		Assert.assertEquals(result.size(), 1);
-		Assert.assertEquals(result.get("booleanField"), data.booleanField);
+			Map<String, ?> result = deserialize(type, data);
+			Assert.assertEquals(result.size(), 1);
+			Assert.assertEquals(result.get(field.getName()), value);
+		}
 	}
 
 	@Test
 	public void testByte()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(BasicType.BYTE, 2, "byteField", false));
+		Field field = BYTE_FIELD;
+		StructureType type = new StructureType(TestStruct.class.getName(), field);
 
-		TTestStruct data = new TTestStruct();
-		data.byteField = Byte.MAX_VALUE;
-		data.__isset.byteField = true;
+		for (final Byte value : Arrays.asList((byte) 0, Byte.MIN_VALUE, Byte.MAX_VALUE)) {
+			TTestStruct data = new TTestStruct();
+			data.byteField = value;
+			data.__isset.byteField = true;
 
-		TProtocol protocol = serialize(data);
-
-		Deserializer deserializer = new Deserializer();
-		deserializer.bindToMap(type);
-
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
-		Assert.assertEquals(result.size(), 1);
-		Assert.assertEquals(result.get("byteField"), data.byteField);
+			Map<String, ?> result = deserialize(type, data);
+			Assert.assertEquals(result.size(), 1);
+			Assert.assertEquals(result.get(field.getName()), value);
+		}
 	}
 
 
 	@Test
-	public void testShort()
+	public void testI16()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(BasicType.I16, 3, "shortField", false));
+		Field field = I16_FIELD;
+		StructureType type = new StructureType(TestStruct.class.getName(), field);
 
-		TTestStruct data = new TTestStruct();
-		data.shortField = Short.MAX_VALUE;
-		data.__isset.shortField = true;
+		for (final Short value : Arrays.asList((short) 0, Short.MIN_VALUE, Short.MAX_VALUE)) {
+			TTestStruct data = new TTestStruct();
+			data.shortField = value;
+			data.__isset.shortField = true;
 
-		TProtocol protocol = serialize(data);
-
-		Deserializer deserializer = new Deserializer();
-		deserializer.bindToMap(type);
-
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
-		Assert.assertEquals(result.size(), 1);
-		Assert.assertEquals(result.get("shortField"), data.shortField);
+			Map<String, ?> result = deserialize(type, data);
+			Assert.assertEquals(result.size(), 1);
+			Assert.assertEquals(result.get(field.getName()), value);
+		}
 	}
 
 	@Test
-	public void testInt()
+	public void testI32()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(BasicType.I32, 4, "intField", false));
+		Field field = I32_FIELD;
+		StructureType type = new StructureType(TestStruct.class.getName(), field);
 
-		TTestStruct data = new TTestStruct();
-		data.intField = Integer.MAX_VALUE;
-		data.__isset.intField = true;
+		for (final Integer value : Arrays.asList(0, Integer.MIN_VALUE, Integer.MAX_VALUE)) {
+			TTestStruct data = new TTestStruct();
+			data.intField = value;
+			data.__isset.intField = true;
 
-		TProtocol protocol = serialize(data);
-
-		Deserializer deserializer = new Deserializer();
-		deserializer.bindToMap(type);
-
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
-		Assert.assertEquals(result.size(), 1);
-		Assert.assertEquals(result.get("intField"), data.intField);
+			Map<String, ?> result = deserialize(type, data);
+			Assert.assertEquals(result.size(), 1);
+			Assert.assertEquals(result.get(field.getName()), value);
+		}
 	}
 
 	@Test
-	public void testLong()
+	public void testI64()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(BasicType.I64, 5, "longField", false));
+		Field field = I64_FIELD;
+		StructureType type = new StructureType(TestStruct.class.getName(), field);
 
-		TTestStruct data = new TTestStruct();
-		data.longField = Long.MAX_VALUE;
-		data.__isset.longField = true;
+		for (final Long value : Arrays.asList(0L, Long.MIN_VALUE, Long.MAX_VALUE)) {
+			TTestStruct data = new TTestStruct();
+			data.longField = value;
+			data.__isset.longField = true;
 
-		TProtocol protocol = serialize(data);
-
-		Deserializer deserializer = new Deserializer();
-		deserializer.bindToMap(type);
-
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
-		Assert.assertEquals(result.size(), 1);
-		Assert.assertEquals(result.get("longField"), data.longField);
+			Map<String, ?> result = deserialize(type, data);
+			Assert.assertEquals(result.size(), 1);
+			Assert.assertEquals(result.get(field.getName()), value);
+		}
 	}
 
 	@Test
 	public void testDouble()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(BasicType.DOUBLE, 6, "doubleField", false));
+		Field field = DOUBLE_FIELD;
+		StructureType type = new StructureType(TestStruct.class.getName(), field);
 
-		TTestStruct data = new TTestStruct();
-		data.doubleField = Double.MAX_VALUE;
-		data.__isset.doubleField = true;
+		for (final Double value : Arrays.asList(0.0, Double.MIN_VALUE, Double.MAX_VALUE, Double.NaN,
+		                                        Double.NEGATIVE_INFINITY,
+		                                        Double.POSITIVE_INFINITY)) {
+			TTestStruct data = new TTestStruct();
+			data.doubleField = value;
+			data.__isset.doubleField = true;
 
-		TProtocol protocol = serialize(data);
-
-		Deserializer deserializer = new Deserializer();
-		deserializer.bindToMap(type);
-
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
-		Assert.assertEquals(result.size(), 1);
-		Assert.assertEquals(result.get("doubleField"), data.doubleField);
+			Map<String, ?> result = deserialize(type, data);
+			Assert.assertEquals(result.size(), 1);
+			Assert.assertEquals(result.get(field.getName()), value);
+		}
 	}
 
 
@@ -156,107 +154,91 @@ public class TestDeserializeMap
 	public void testString()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(BasicType.STRING, 7, "stringField", false));
+		Field field = STRING_FIELD;
+		StructureType type = new StructureType(TestStruct.class.getName(), field);
+
+		String value = "hello world";
 
 		TTestStruct data = new TTestStruct();
-		data.stringField = "hello world";
+		data.stringField = value;
 		data.__isset.stringField = true;
 
-		TProtocol protocol = serialize(data);
-
-		Deserializer deserializer = new Deserializer();
-		deserializer.bindToMap(type);
-
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
+		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 1);
-		Assert.assertEquals(result.get("stringField"), data.stringField);
+		Assert.assertEquals(result.get(field.getName()), value);
 	}
 
 	@Test
 	public void testBinary()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(BasicType.BINARY, 8, "binaryField", false));
+		Field field = BINARY_FIELD;
+		StructureType type = new StructureType(TestStruct.class.getName(), field);
+
+		byte[] value = "hello world".getBytes("UTF-8");
 
 		TTestStruct data = new TTestStruct();
-		data.binaryField = "hello world".getBytes("UTF-8");
-		data.__isset.stringField = true;
+		data.binaryField = value;
+		data.__isset.binaryField = true;
 
-		TProtocol protocol = serialize(data);
-
-		Deserializer deserializer = new Deserializer();
-		deserializer.bindToMap(type);
-
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
+		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 1);
-		Assert.assertTrue(Arrays.equals((byte[]) result.get("binaryField"), data.binaryField));
+		Assert.assertTrue(Arrays.equals((byte[]) result.get(field.getName()), data.binaryField));
 	}
 
 	@Test
 	public void testListOfInts()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(new ListType(BasicType.I32), 9, "listOfInts", false));
+		Field field = LIST_OF_INTS_FIELD;
+		StructureType type = new StructureType(TestStruct.class.getName(), field);
+
+		List<Integer> value = Arrays.asList(Integer.MAX_VALUE);
 
 		TTestStruct data = new TTestStruct();
-		data.listOfIntsField = Arrays.asList(Integer.MAX_VALUE);
+		data.listOfIntsField = value;
 		data.__isset.listOfIntsField = true;
 
-		TProtocol protocol = serialize(data);
-
-		Deserializer deserializer = new Deserializer();
-		deserializer.bindToMap(type);
-
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
+		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 1);
-		Assert.assertEquals(result.get("listOfInts"), data.listOfIntsField);
+		Assert.assertEquals(result.get(field.getName()), value);
 	}
 
 	@Test
 	public void testSetOfInts()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(new SetType(BasicType.I32), 10, "setOfInts", false));
+		Field field = SET_OF_INTS_FIELD;
+		StructureType type = new StructureType(TestStruct.class.getName(), field);
+
+		Set<Integer> value = new HashSet<Integer>(Arrays.asList(Integer.MAX_VALUE));
 
 		TTestStruct data = new TTestStruct();
-		data.setOfIntsField = new HashSet<Integer>(Arrays.asList(Integer.MAX_VALUE));
+		data.setOfIntsField = value;
 		data.__isset.setOfIntsField = true;
 
-		TProtocol protocol = serialize(data);
-
-		Deserializer deserializer = new Deserializer();
-		deserializer.bindToMap(type);
-
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
+		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 1);
-		Assert.assertEquals(result.get("setOfInts"), data.setOfIntsField);
+		Assert.assertEquals(result.get(field.getName()), value);
 	}
 
 	@Test
 	public void testMapOfIntsInts()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(new MapType(BasicType.I32, BasicType.I32), 11, "mapOfIntsInts",
-		                                                 false));
+		Field field = MAP_OF_INTS_INTS_FIELD;
+		StructureType type = new StructureType(TestStruct.class.getName(), field);
+
+		Map<Integer, Integer> value = new LinkedHashMap<Integer, Integer>();
+		value.put(Integer.MAX_VALUE, Integer.MIN_VALUE);
 
 		TTestStruct data = new TTestStruct();
-		data.mapOfIntsIntsField = new LinkedHashMap<Integer, Integer>();
-		data.mapOfIntsIntsField.put(Integer.MAX_VALUE, Integer.MIN_VALUE);
+		data.mapOfIntsIntsField = value;
 		data.__isset.mapOfIntsIntsField = true;
 
-		TProtocol protocol = serialize(data);
-
-		Deserializer deserializer = new Deserializer();
-		deserializer.bindToMap(type);
-
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
+		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 1);
-		Assert.assertEquals(result.get("mapOfIntsInts"), data.mapOfIntsIntsField);
+		Assert.assertEquals(result.get(field.getName()), value);
 	}
 
 
@@ -264,9 +246,10 @@ public class TestDeserializeMap
 	public void testNestedStruct()
 		throws Exception
 	{
+		// TODO: clean up
 		StructureType nested = new StructureType(TNestedStruct.class.getName(),
 		                                         new Field(BasicType.STRING, 1, "value", false));
-		StructureType type = new StructureType(TTestStruct.class.getName(),
+		StructureType type = new StructureType(TestStruct.class.getName(),
 		                                       new Field(nested, 12, "structField",
 		                                                 false));
 
@@ -274,7 +257,7 @@ public class TestDeserializeMap
 		data.structField = new TNestedStruct("hello world");
 		data.__isset.structField = true;
 
-		TProtocol protocol = serialize(data);
+		TProtocol protocol = TestUtil.serialize(data);
 
 		Deserializer deserializer = new Deserializer();
 		deserializer.bindToMap(type);
@@ -293,31 +276,27 @@ public class TestDeserializeMap
 	public void testNestedListOfInts()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(new ListType(new ListType(BasicType.I32)), 13, "nestedListOfIntsField",
-		                                                 false));
+		Field field = NESTED_LIST_OF_INTS_FIELD;
+		StructureType type = new StructureType(TestStruct.class.getName(), field);
+
+		List<List<Integer>> value = Arrays.asList(Arrays.asList(Integer.MAX_VALUE));
 
 		TTestStruct data = new TTestStruct();
-		data.nestedListOfIntsField = Arrays.asList(Arrays.asList(Integer.MAX_VALUE));
+		data.nestedListOfIntsField = value;
 		data.__isset.nestedListOfIntsField = true;
 
-		TProtocol protocol = serialize(data);
-
-		Deserializer deserializer = new Deserializer();
-		deserializer.bindToMap(type);
-
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
+		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 1);
-		Assert.assertEquals(result.get("nestedListOfIntsField"), data.nestedListOfIntsField);
+		Assert.assertEquals(result.get(field.getName()), value);
 	}
 
 	@Test
 	public void testSetAndList()
 		throws Exception
 	{
-		StructureType type = new StructureType(TTestStruct.class.getName(),
-		                                       new Field(new SetType(BasicType.I32), 10, "setOfInts", false),
-		                                       new Field(new ListType(BasicType.I32), 9, "listOfInts", false));
+		StructureType type = new StructureType(TestStruct.class.getName(),
+		                                       SET_OF_INTS_FIELD,
+		                                       LIST_OF_INTS_FIELD);
 
 		TTestStruct data = new TTestStruct();
 		data.setOfIntsField = new HashSet<Integer>(Arrays.asList(Integer.MAX_VALUE));
@@ -326,25 +305,20 @@ public class TestDeserializeMap
 		data.listOfIntsField = Arrays.asList(Integer.MIN_VALUE);
 		data.__isset.listOfIntsField = true;
 
-		TProtocol protocol = serialize(data);
+		Map<String, ?> result = deserialize(type, data);
+		Assert.assertEquals(result.size(), 2);
+		Assert.assertEquals(result.get(SET_OF_INTS_FIELD.getName()), data.setOfIntsField);
+		Assert.assertEquals(result.get(LIST_OF_INTS_FIELD.getName()), data.listOfIntsField);
+	}
+
+	private Map<String, ?> deserialize(StructureType type, TTestStruct data)
+		throws TException
+	{
+		TProtocol protocol = TestUtil.serialize(data);
 
 		Deserializer deserializer = new Deserializer();
 		deserializer.bindToMap(type);
 
-		Map<String, ?> result = deserializer.deserialize(type.getName(), protocol);
-		Assert.assertEquals(result.size(), 2);
-		Assert.assertEquals(result.get("setOfInts"), data.setOfIntsField);
-		Assert.assertEquals(result.get("listOfInts"), data.listOfIntsField);
-
-	}
-
-	private TProtocol serialize(TTestStruct data)
-		throws TException
-	{
-		ByteArrayOutputStream bao = new ByteArrayOutputStream();
-		TProtocol outputProtocol = new TBinaryProtocol(new TIOStreamTransport(bao));
-		data.write(outputProtocol);
-
-		return new TBinaryProtocol(new TIOStreamTransport(new ByteArrayInputStream(bao.toByteArray())));
+		return deserializer.deserialize(type.getName(), protocol);
 	}
 }
