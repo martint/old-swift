@@ -2,16 +2,17 @@ package mt.serialization;
 
 import com.facebook.thrift.TException;
 
+import java.util.Iterator;
+import java.util.Map;
+
 public class TestX
 {
-	void x(boolean value)
+	void x(Iterator iterator)
 		throws TException
 	{
-		if (value) {
-			System.out.println("x");
-		}
-		else {
-			System.out.println("y");
-		}
+		Map.Entry entry = (Map.Entry) iterator.next();
+		y(((Double)entry.getKey()).doubleValue(), ((Integer) entry.getValue()).intValue());
 	}
+
+	void y(double d, int l) {}
 }

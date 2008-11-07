@@ -78,6 +78,7 @@ public class Serializer
 	private StructureSerializer compileSerializer(StructureType type, Class clazz)
 	{
 		ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES); // TODO: compute this ourselves?
+//		ClassWriter classWriter = new ClassWriter(0); // TODO: compute this ourselves?
 		ClassVisitor writer = classWriter;
 
 		if (debug) {
@@ -195,6 +196,13 @@ public class Serializer
 		methodVisitor.visitEnd();
 	}
 
+	/**
+	 * Generates bytecode to write element at top of stack
+	 *
+	 * @param methodVisitor
+	 * @param context
+	 * @param type
+	 */
 	private void generateWriteElement(MethodVisitor methodVisitor, MethodBuilderContext context, Type type)
 	{
 		if (type == BasicType.BOOLEAN) {
@@ -247,15 +255,17 @@ public class Serializer
 			                              "(Ljava/lang/String;)V");
 		}
 		else if (type instanceof StructureType) {
-			// TODO
-//			StructureType structureType = (StructureType) type;
-//
+			StructureType structureType = (StructureType) type;
+
+			int elementSlot = context.newAnonymousSlot();
+
 //			methodVisitor.visitVarInsn(ALOAD, context.getSlot("deserializer"));
 //			methodVisitor.visitLdcInsn(structureType.getName());
 //			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-//			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, Util.getInternalName(Deserializer.class),
-//			                              "deserialize",
-//			                              "(Ljava/lang/String;Lcom/facebook/thrift/protocol/TProtocol;)Ljava/lang/Object;");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, Util.getInternalName(Serializer.class), "serialize",
+			                              "(Ljava/lang/Object;Ljava/lang/String;Lcom/facebook/thrift/protocol/TProtocol;)V");
+				
+			context.release(elementSlot);
 		}
 		else if (type instanceof ListType) {
 			ListType listType = (ListType) type;
@@ -266,9 +276,8 @@ public class Serializer
 			generateWriteSet(methodVisitor, context, setType);
 		}
 		else if (type instanceof MapType) {
-			// TODO
-//			MapType mapType = (MapType) type;
-//			generateReadMap(methodVisitor, context, mapType);
+			MapType mapType = (MapType) type;
+			generateWriteMap(methodVisitor, context, mapType);
 		}
 	}
 
@@ -284,7 +293,7 @@ public class Serializer
 
 		methodVisitor.visitTypeInsn(NEW, "com/facebook/thrift/protocol/TList");
 		methodVisitor.visitInsn(DUP);
-		pushValue(methodVisitor, listType.getTType());
+		pushValue(methodVisitor, listType.getValueType().getTType());
 		methodVisitor.visitVarInsn(ALOAD, listSlot);
 		methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/List", "size", "()I");
 		methodVisitor.visitMethodInsn(INVOKESPECIAL, "com/facebook/thrift/protocol/TList", "<init>", "(BI)V");
@@ -298,10 +307,12 @@ public class Serializer
 		methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/List", "iterator", "()Ljava/util/Iterator;");
 
 		generateWriteIteratorElements(methodVisitor, context, listType.getValueType());
-
+		
 		// protocol.writeListEnd()
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeListEnd", "()V");
+
+		context.release(listSlot);
 	}
 
 	private void generateWriteSet(MethodVisitor methodVisitor, MethodBuilderContext context, SetType setType)
@@ -315,7 +326,7 @@ public class Serializer
 
 		methodVisitor.visitTypeInsn(NEW, "com/facebook/thrift/protocol/TSet");
 		methodVisitor.visitInsn(DUP);
-		pushValue(methodVisitor, setType.getTType());
+		pushValue(methodVisitor, setType.getValueType().getTType());
 		methodVisitor.visitVarInsn(ALOAD, setSlot);
 		methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/Set", "size", "()I");
 		methodVisitor.visitMethodInsn(INVOKESPECIAL, "com/facebook/thrift/protocol/TSet", "<init>", "(BI)V");
@@ -333,6 +344,80 @@ public class Serializer
 		// protocol.writeSetEnd()
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeSetEnd", "()V");
+
+		context.release(setSlot);
+	}
+
+
+	private void generateWriteMap(MethodVisitor methodVisitor, MethodBuilderContext context, MapType mapType)
+	{
+		// top of stack is list we're serializing
+		int mapSlot = context.newAnonymousSlot();
+		methodVisitor.visitVarInsn(ASTORE, mapSlot);
+
+		// protocol.writeListBegin(new TList(ttype, object.size))
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
+
+		methodVisitor.visitTypeInsn(NEW, "com/facebook/thrift/protocol/TMap");
+		methodVisitor.visitInsn(DUP);
+		pushValue(methodVisitor, mapType.getKeyType().getTType());
+		pushValue(methodVisitor, mapType.getValueType().getTType());
+		methodVisitor.visitVarInsn(ALOAD, mapSlot);
+		methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/Map", "size", "()I");
+		methodVisitor.visitMethodInsn(INVOKESPECIAL, "com/facebook/thrift/protocol/TMap", "<init>", "(BBI)V");
+
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeMapBegin", "(Lcom/facebook/thrift/protocol/TMap;)V");
+
+		// at this point, stack is empty
+
+		// for (element : value), using a while (iterator.hasNext()) { ... } loop
+		methodVisitor.visitVarInsn(ALOAD, mapSlot);
+		methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/Map", "entrySet", "()Ljava/util/Set;");
+		methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;");
+
+		// TODO: generalize generateIterator method to take a callback to generate the code for processing each
+		// element
+		Label loopLabel = new Label();
+		Label doneLabel = new Label();
+
+		methodVisitor.visitLabel(loopLabel);
+		methodVisitor.visitInsn(DUP); // for iterator.hasNext()
+		methodVisitor.visitInsn(DUP); // for iterator.next()
+
+		// iterator.hasNext?
+		methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z");
+
+		methodVisitor.visitJumpInsn(IFEQ, doneLabel); // if hasNext returned false (0), we're done
+
+		methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;");
+		// element is Map.Entry
+
+		methodVisitor.visitInsn(DUP); // for entry.getKey
+
+		int entrySlot = context.newAnonymousSlot();
+		methodVisitor.visitVarInsn(ASTORE, entrySlot); // for entry.getValue
+
+		methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/Map$Entry", "getKey", "()Ljava/lang/Object;");
+		generateCast(methodVisitor, mapType.getKeyType());
+		generateWriteElement(methodVisitor, context, mapType.getKeyType());
+
+		methodVisitor.visitVarInsn(ALOAD, entrySlot);
+		methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/Map$Entry", "getValue", "()Ljava/lang/Object;");
+		generateCast(methodVisitor, mapType.getKeyType());
+		generateWriteElement(methodVisitor, context, mapType.getKeyType());
+
+		context.release(entrySlot);
+		
+		methodVisitor.visitJumpInsn(GOTO, loopLabel);
+
+		methodVisitor.visitLabel(doneLabel);
+		methodVisitor.visitInsn(POP); // lingering reference to iterator
+
+		// protocol.writeSetEnd()
+		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "writeMapEnd", "()V");
+		
+		context.release(mapSlot);
 	}
 
 	/**
@@ -367,6 +452,7 @@ public class Serializer
 		methodVisitor.visitJumpInsn(GOTO, loopLabel);
 
 		methodVisitor.visitLabel(doneLabel);
+		methodVisitor.visitInsn(POP); // lingering reference to iterator
 		methodVisitor.visitInsn(POP); // lingering reference to iterator
 	}
 
