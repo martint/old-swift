@@ -41,7 +41,7 @@ public class TestSerializeMap
 
 
 	@Test
-	public void testSerializeBoolean()
+	public void testBoolean()
 		throws Exception
 	{
 		for (final Boolean value : Arrays.asList(true, false)) {
@@ -61,7 +61,7 @@ public class TestSerializeMap
 	}
 
 	@Test
-	public void testSerializeByte()
+	public void testByte()
 		throws Exception
 	{
 //		for (Number value : Arrays.<Number>asList((byte) 0, (short) 0, (int) 0, (long) 0, BigInteger.ZERO, min, max)) {
@@ -82,7 +82,7 @@ public class TestSerializeMap
 	}
 
 	@Test
-	public void testSerializeI16()
+	public void testI16()
 		throws Exception
 	{
 
@@ -104,7 +104,7 @@ public class TestSerializeMap
 	}
 
 	@Test
-	public void testSerializeI32()
+	public void testI32()
 		throws Exception
 	{
 //		for (Number value : Arrays.<Number>asList((byte) 0, (short) 0, (int) 0, (long) 0, BigInteger.ZERO, min, max)) {
@@ -125,7 +125,7 @@ public class TestSerializeMap
 	}
 
 	@Test
-	public void testSerializeI64()
+	public void testI64()
 		throws Exception
 	{
 //		for (Number value : Arrays.<Number>asList((byte) 0, (short) 0, (int) 0, (long) 0, BigInteger.ZERO, min, max)) {
@@ -146,7 +146,7 @@ public class TestSerializeMap
 	}
 
 	@Test
-	public void testSerializeDouble()
+	public void testDouble()
 		throws Exception
 	{
 //		for (Number value : Arrays.<Number>asList((byte) 0, (short) 0, (int) 0, (long) 0, BigInteger.ZERO, min, max)) {
@@ -169,7 +169,7 @@ public class TestSerializeMap
 	}
 
 	@Test
-	public void testSerializeString()
+	public void testString()
 		throws Exception
 	{
 		final String value = "hello world";
@@ -188,7 +188,7 @@ public class TestSerializeMap
 	}
 
 	@Test
-	public void testSerializeBinary()
+	public void testBinary()
 		throws Exception
 	{
 		final byte[] value = "hello world".getBytes("UTF-8");

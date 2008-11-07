@@ -37,7 +37,7 @@ public class TestSerializeBean
 	// TODO: test composite structures
 	
 	@Test
-	public void testSerializeBoolean()
+	public void testBoolean()
 		throws Exception
 	{
 		Field field = BOOLEAN_FIELD;
@@ -61,7 +61,7 @@ public class TestSerializeBean
 	}
 
 	@Test
-	public void testSerializeByte()
+	public void testByte()
 		throws Exception
 	{
 		Field field = BYTE_FIELD;
@@ -85,7 +85,7 @@ public class TestSerializeBean
 	}
 
 	@Test
-	public void testSerializeShort()
+	public void testShort()
 		throws Exception
 	{
 		Field field = I16_FIELD;
@@ -109,7 +109,7 @@ public class TestSerializeBean
 	}
 
 	@Test
-	public void testSerializeI32()
+	public void testI32()
 		throws Exception
 	{
 		Field field = I32_FIELD;
@@ -134,7 +134,7 @@ public class TestSerializeBean
 
 
 	@Test
-	public void testSerializeI64()
+	public void testI64()
 		throws Exception
 	{
 		Field field = I64_FIELD;
@@ -158,7 +158,7 @@ public class TestSerializeBean
 	}
 
 	@Test
-	public void testSerializeDouble()
+	public void testDouble()
 		throws Exception
 	{
 		Field field = DOUBLE_FIELD;
@@ -184,7 +184,7 @@ public class TestSerializeBean
 	}
 
 	@Test
-	public void testSerializeBinary()
+	public void testBinary()
 		throws Exception
 	{
 		Field field = BINARY_FIELD;
@@ -209,7 +209,7 @@ public class TestSerializeBean
 	}
 
 	@Test
-	public void testSerializeString()
+	public void testString()
 		throws Exception
 	{
 		Field field = STRING_FIELD;
