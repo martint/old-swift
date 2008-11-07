@@ -9,3 +9,17 @@
 * One method? One method per field?
 
 * How to allow javabean & map as deserialization targets
+
+
+
+* Autoboxing support (setter/getters that accept Integer vs int, etc)
+* Type coercion & mechanism to report truncation/coercion errors
+* Annotation-based bindings?
+* Serializer
+
+* Figure out thread-safety story for serializer/deserializer
+
+* Ability to pass in instance of object to populate on deserialization (to avoid object creation)
+* Support required vs optional fields
+
+* Parser 
