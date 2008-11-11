@@ -2,3 +2,10 @@
 /target
 /test-output
 /m2
+.classpath
+.project
+.settings
+src/main/java/mt/swift/parser/Thrift.tokens
+src/main/java/mt/swift/parser/ThriftLexer.java
+src/main/java/mt/swift/parser/ThriftParser.java
+src/main/java/mt/swift/parser/Thrift__.g
