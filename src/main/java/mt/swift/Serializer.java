@@ -601,7 +601,11 @@ public class Serializer
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName, getter, "()Ljava/lang/String;");
 		}
 		else if (field.getType() instanceof StructureType) {
-			Class childClass = classes.get(((StructureType) field.getType()).getName());
+			final String name = ((StructureType) field.getType()).getName();
+            Class childClass = classes.get(name);
+			if (childClass == null) {
+		        throw new IllegalStateException(String.format("Type '%s' not bound to a class", name));
+		    }
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, targetClassName,
 			                              getter, "()L" + Util.getInternalName(childClass) + ";");
 		}
