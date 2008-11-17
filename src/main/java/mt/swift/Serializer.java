@@ -416,8 +416,8 @@ public class Serializer
 
 		methodVisitor.visitVarInsn(ALOAD, entrySlot);
 		methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/Map$Entry", "getValue", "()Ljava/lang/Object;");
-		generateCast(methodVisitor, mapType.getKeyType());
-		generateWriteElement(methodVisitor, context, mapType.getKeyType());
+		generateCast(methodVisitor, mapType.getValueType());
+		generateWriteElement(methodVisitor, context, mapType.getValueType());
 
 		context.release(entrySlot);
 		
