@@ -3,7 +3,7 @@
  *
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  */
-package mt.swift;
+package mt.serialization;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -14,10 +14,9 @@ import java.util.HashSet;
 import com.facebook.thrift.*;
 
 import com.facebook.thrift.protocol.*;
-import mt.swift.TNestedStruct;
+import com.facebook.thrift.transport.*;
 
-public class TTestStruct
-	implements TBase, java.io.Serializable {
+public class TTestStruct implements TBase, java.io.Serializable {
   public boolean booleanField;
   public static final int BOOLEANFIELD = 1;
   public byte byteField;
@@ -423,7 +422,7 @@ public class TTestStruct
   }
 
   public void write(TProtocol oprot) throws TException {
-    TStruct struct = new TStruct("TestStruct");
+    TStruct struct = new TStruct("TTestStruct");
     oprot.writeStructBegin(struct);
     TField field = new TField();
     field.name = "booleanField";
@@ -554,7 +553,7 @@ public class TTestStruct
   }
 
   public String toString() {
-    StringBuilder sb = new StringBuilder("TestStruct(");
+    StringBuilder sb = new StringBuilder("TTestStruct(");
     boolean first = true;
 
     if (!first) sb.append(", ");

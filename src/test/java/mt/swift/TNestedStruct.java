@@ -3,14 +3,17 @@
  *
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  */
-package mt.swift;
+package mt.serialization;
 
-import com.facebook.thrift.*;
+import com.facebook.thrift.TBase;
+import com.facebook.thrift.TException;
+import com.facebook.thrift.protocol.TField;
+import com.facebook.thrift.protocol.TProtocol;
+import com.facebook.thrift.protocol.TProtocolUtil;
+import com.facebook.thrift.protocol.TStruct;
+import com.facebook.thrift.protocol.TType;
 
-import com.facebook.thrift.protocol.*;
-
-public class TNestedStruct
-	implements TBase, java.io.Serializable {
+public class TNestedStruct implements TBase, java.io.Serializable {
   public String value;
   public static final int VALUE = 1;
 
@@ -87,7 +90,7 @@ public class TNestedStruct
   }
 
   public void write(TProtocol oprot) throws TException {
-    TStruct struct = new TStruct("NestedStruct");
+    TStruct struct = new TStruct("TNestedStruct");
     oprot.writeStructBegin(struct);
     TField field = new TField();
     if (this.value != null) {
@@ -103,7 +106,7 @@ public class TNestedStruct
   }
 
   public String toString() {
-    StringBuilder sb = new StringBuilder("NestedStruct(");
+    StringBuilder sb = new StringBuilder("TNestedStruct(");
     boolean first = true;
 
     if (!first) sb.append(", ");

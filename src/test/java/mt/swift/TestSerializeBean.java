@@ -297,7 +297,8 @@ public class TestSerializeBean
 		                                                 "mapOfIntsIntsField", false),
 		                                       new Field(nested, 12, "structField", false),
 		                                       new Field(new ListType(new ListType(BasicType.I32)), 13,
-		                                                 "nestedListOfIntsField", false));
+		                                                 "nestedListOfIntsField", false),
+		                                       Fields.MAP_OF_INTS_STRINGS_FIELD);
 
 		TestStruct data = new TestStruct();
 		data.setBooleanField(true);
@@ -321,6 +322,11 @@ public class TestSerializeBean
 		mapOfIntsInts.put(1, Integer.MIN_VALUE);
 		mapOfIntsInts.put(2, Integer.MAX_VALUE);
 		data.setMapOfIntsIntsField(mapOfIntsInts);
+
+		Map<Integer, String> mapOfIntsStrings = new LinkedHashMap<Integer, String>();
+		mapOfIntsStrings.put(1, "hello");
+		mapOfIntsStrings.put(2, "world");
+		data.setMapOfIntsStringsField(mapOfIntsStrings);
 
 		Serializer serializer = new Serializer();
 		serializer.bind(type, TestStruct.class);
@@ -364,6 +370,9 @@ public class TestSerializeBean
 
 		Assert.assertTrue(result.__isset.mapOfIntsIntsField);
 		Assert.assertEquals(result.mapOfIntsIntsField, data.getMapOfIntsIntsField());
+
+		Assert.assertTrue(result.__isset.mapOfIntsStringsField);
+		Assert.assertEquals(result.mapOfIntsStringsField, data.getMapOfIntsStringsField());
 
 		Assert.assertTrue(result.__isset.structField);
 		Assert.assertEquals(result.structField.value, nestedData.getValue());
