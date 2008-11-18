@@ -13,7 +13,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-namespace java mt.serialization
+namespace java mt.swift
 
 struct TNestedStruct
 {
@@ -33,6 +33,7 @@ struct TTestStruct
 	9:list<i32> listOfIntsField;
 	10:set<i32> setOfIntsField;
 	11:map<i32,i32> mapOfIntsIntsField;
-	12:NestedStruct structField;
+	12:TNestedStruct structField;
 	13:list<list<i32>> nestedListOfIntsField;
+	14:map<i32,string> mapOfIntsStringsField;
 }

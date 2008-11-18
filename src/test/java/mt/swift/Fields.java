@@ -39,4 +39,7 @@ public class Fields
 	public static final Field NESTED_LIST_OF_INTS_FIELD = new Field(new ListType(new ListType(BasicType.I32)), 13,
 	                                                          "nestedListOfIntsField",
 	                                                          false);
+	public static final Field MAP_OF_INTS_STRINGS_FIELD =
+		new Field(new MapType(BasicType.I32, BasicType.STRING), 14, "mapOfIntsStringsField",
+		          false);
 }

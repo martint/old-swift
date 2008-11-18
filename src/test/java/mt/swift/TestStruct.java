@@ -32,6 +32,7 @@ public class TestStruct
 	private List<Integer> listOfIntsField;
 	private Set<Integer> setOfIntsField;
 	private Map<Integer,Integer> mapOfIntsIntsField;
+	private Map<Integer,String> mapOfIntsStringsField;
 	private NestedStruct structField;
 	private List<List<Integer>> nestedListOfIntsField;
 
@@ -166,4 +167,13 @@ public class TestStruct
 	}
 
 
+	public void setMapOfIntsStringsField(Map<Integer, String> mapOfIntsStrings)
+	{
+		this.mapOfIntsStringsField = mapOfIntsStrings;
+	}
+
+	public Map<Integer, String> getMapOfIntsStringsField()
+	{
+		return mapOfIntsStringsField;
+	}
 }

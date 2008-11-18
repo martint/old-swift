@@ -267,7 +267,8 @@ public class TestSerializeMap
 		                                       Fields.SET_OF_INTS_FIELD,
 		                                       Fields.MAP_OF_INTS_INTS_FIELD,
 		                                       new Field(nested, 12, "structField", false),
-		                                       Fields.NESTED_LIST_OF_INTS_FIELD
+		                                       Fields.NESTED_LIST_OF_INTS_FIELD,
+		                                       Fields.MAP_OF_INTS_STRINGS_FIELD
 		);
 
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -293,6 +294,11 @@ public class TestSerializeMap
 		mapOfIntsInts.put(1, Integer.MIN_VALUE);
 		mapOfIntsInts.put(2, Integer.MAX_VALUE);
 		data.put(Fields.MAP_OF_INTS_INTS_FIELD.getName(), mapOfIntsInts);
+
+		Map<Integer, String> mapOfIntsStrings = new LinkedHashMap<Integer, String>();
+		mapOfIntsStrings.put(1, "hello");
+		mapOfIntsStrings.put(2, "world");
+		data.put(Fields.MAP_OF_INTS_STRINGS_FIELD.getName(), mapOfIntsStrings);
 
 		Serializer serializer = new Serializer();
 		serializer.bindToMap(type);
@@ -336,6 +342,9 @@ public class TestSerializeMap
 
 		Assert.assertTrue(result.__isset.mapOfIntsIntsField);
 		Assert.assertEquals(result.mapOfIntsIntsField, data.get(Fields.MAP_OF_INTS_INTS_FIELD.getName()));
+
+		Assert.assertTrue(result.__isset.mapOfIntsStringsField);
+		Assert.assertEquals(result.mapOfIntsStringsField, data.get(Fields.MAP_OF_INTS_STRINGS_FIELD.getName()));
 
 		Assert.assertTrue(result.__isset.structField);
 		Assert.assertEquals(result.structField.value, nestedData.get("value"));
