@@ -3,15 +3,18 @@
  *
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  */
-package mt.serialization;
+package mt.swift;
 
-import com.facebook.thrift.TBase;
-import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TField;
-import com.facebook.thrift.protocol.TProtocol;
-import com.facebook.thrift.protocol.TProtocolUtil;
-import com.facebook.thrift.protocol.TStruct;
-import com.facebook.thrift.protocol.TType;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
+import com.facebook.thrift.*;
+
+import com.facebook.thrift.protocol.*;
+import com.facebook.thrift.transport.*;
 
 public class TNestedStruct implements TBase, java.io.Serializable {
   public String value;

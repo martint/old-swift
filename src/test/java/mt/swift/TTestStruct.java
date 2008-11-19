@@ -3,7 +3,7 @@
  *
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  */
-package mt.serialization;
+package mt.swift;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -43,6 +43,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
   public static final int STRUCTFIELD = 12;
   public List<List<Integer>> nestedListOfIntsField;
   public static final int NESTEDLISTOFINTSFIELD = 13;
+  public Map<Integer,String> mapOfIntsStringsField;
+  public static final int MAPOFINTSSTRINGSFIELD = 14;
 
   public final Isset __isset = new Isset();
   public static final class Isset implements java.io.Serializable {
@@ -59,6 +61,7 @@ public class TTestStruct implements TBase, java.io.Serializable {
     public boolean mapOfIntsIntsField = false;
     public boolean structField = false;
     public boolean nestedListOfIntsField = false;
+    public boolean mapOfIntsStringsField = false;
   }
 
   public TTestStruct() {
@@ -77,7 +80,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
     Set<Integer> setOfIntsField,
     Map<Integer,Integer> mapOfIntsIntsField,
     TNestedStruct structField,
-    List<List<Integer>> nestedListOfIntsField)
+    List<List<Integer>> nestedListOfIntsField,
+    Map<Integer,String> mapOfIntsStringsField)
   {
     this();
     this.booleanField = booleanField;
@@ -106,6 +110,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
     this.__isset.structField = (structField != null);
     this.nestedListOfIntsField = nestedListOfIntsField;
     this.__isset.nestedListOfIntsField = (nestedListOfIntsField != null);
+    this.mapOfIntsStringsField = mapOfIntsStringsField;
+    this.__isset.mapOfIntsStringsField = (mapOfIntsStringsField != null);
   }
 
   public boolean equals(Object that) {
@@ -234,6 +240,15 @@ public class TTestStruct implements TBase, java.io.Serializable {
       if (!(this_present_nestedListOfIntsField && that_present_nestedListOfIntsField))
         return false;
       if (!this.nestedListOfIntsField.equals(that.nestedListOfIntsField))
+        return false;
+    }
+
+    boolean this_present_mapOfIntsStringsField = true && (this.mapOfIntsStringsField != null);
+    boolean that_present_mapOfIntsStringsField = true && (that.mapOfIntsStringsField != null);
+    if (this_present_mapOfIntsStringsField || that_present_mapOfIntsStringsField) {
+      if (!(this_present_mapOfIntsStringsField && that_present_mapOfIntsStringsField))
+        return false;
+      if (!this.mapOfIntsStringsField.equals(that.mapOfIntsStringsField))
         return false;
     }
 
@@ -412,6 +427,26 @@ public class TTestStruct implements TBase, java.io.Serializable {
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case MAPOFINTSSTRINGSFIELD:
+          if (field.type == TType.MAP) {
+            {
+              TMap _map16 = iprot.readMapBegin();
+              this.mapOfIntsStringsField = new HashMap<Integer,String>(2*_map16.size);
+              for (int _i17 = 0; _i17 < _map16.size; ++_i17)
+              {
+                int _key18;
+                String _val19;
+                _key18 = iprot.readI32();
+                _val19 = iprot.readString();
+                this.mapOfIntsStringsField.put(_key18, _val19);
+              }
+              iprot.readMapEnd();
+            }
+            this.__isset.mapOfIntsStringsField = true;
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -484,8 +519,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
       oprot.writeFieldBegin(field);
       {
         oprot.writeListBegin(new TList(TType.I32, this.listOfIntsField.size()));
-        for (int _iter16 : this.listOfIntsField)        {
-          oprot.writeI32(_iter16);
+        for (int _iter20 : this.listOfIntsField)        {
+          oprot.writeI32(_iter20);
         }
         oprot.writeListEnd();
       }
@@ -498,8 +533,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
       oprot.writeFieldBegin(field);
       {
         oprot.writeSetBegin(new TSet(TType.I32, this.setOfIntsField.size()));
-        for (int _iter17 : this.setOfIntsField)        {
-          oprot.writeI32(_iter17);
+        for (int _iter21 : this.setOfIntsField)        {
+          oprot.writeI32(_iter21);
         }
         oprot.writeSetEnd();
       }
@@ -512,9 +547,9 @@ public class TTestStruct implements TBase, java.io.Serializable {
       oprot.writeFieldBegin(field);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.I32, this.mapOfIntsIntsField.size()));
-        for (int _iter18 : this.mapOfIntsIntsField.keySet())        {
-          oprot.writeI32(_iter18);
-          oprot.writeI32(this.mapOfIntsIntsField.get(_iter18));
+        for (int _iter22 : this.mapOfIntsIntsField.keySet())        {
+          oprot.writeI32(_iter22);
+          oprot.writeI32(this.mapOfIntsIntsField.get(_iter22));
         }
         oprot.writeMapEnd();
       }
@@ -535,16 +570,31 @@ public class TTestStruct implements TBase, java.io.Serializable {
       oprot.writeFieldBegin(field);
       {
         oprot.writeListBegin(new TList(TType.LIST, this.nestedListOfIntsField.size()));
-        for (List<Integer> _iter19 : this.nestedListOfIntsField)        {
+        for (List<Integer> _iter23 : this.nestedListOfIntsField)        {
           {
-            oprot.writeListBegin(new TList(TType.I32, _iter19.size()));
-            for (int _iter20 : _iter19)            {
-              oprot.writeI32(_iter20);
+            oprot.writeListBegin(new TList(TType.I32, _iter23.size()));
+            for (int _iter24 : _iter23)            {
+              oprot.writeI32(_iter24);
             }
             oprot.writeListEnd();
           }
         }
         oprot.writeListEnd();
+      }
+      oprot.writeFieldEnd();
+    }
+    if (this.mapOfIntsStringsField != null) {
+      field.name = "mapOfIntsStringsField";
+      field.type = TType.MAP;
+      field.id = MAPOFINTSSTRINGSFIELD;
+      oprot.writeFieldBegin(field);
+      {
+        oprot.writeMapBegin(new TMap(TType.I32, TType.STRING, this.mapOfIntsStringsField.size()));
+        for (int _iter25 : this.mapOfIntsStringsField.keySet())        {
+          oprot.writeI32(_iter25);
+          oprot.writeString(this.mapOfIntsStringsField.get(_iter25));
+        }
+        oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -607,6 +657,10 @@ public class TTestStruct implements TBase, java.io.Serializable {
     if (!first) sb.append(", ");
     sb.append("nestedListOfIntsField:");
     sb.append(this.nestedListOfIntsField);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("mapOfIntsStringsField:");
+    sb.append(this.mapOfIntsStringsField);
     first = false;
     sb.append(")");
     return sb.toString();
