@@ -53,6 +53,7 @@
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
     <option name="MAXIMUM_HEAP_SIZE" value="128" />
   </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
@@ -65,32 +66,6 @@
       <profile version="1.0" is_locked="false">
         <option name="myName" value="Project Default" />
         <option name="myLocal" value="false" />
-        <inspection_tool class="HibernateMappingDatasourceDomInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="HibernateConfigDomInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="HibernateMappingDomInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="AbstractBeanReferencesInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="AutowiredDependenciesInspection" level="WARNING" enabled="false" />
-        <inspection_tool class="SpringBeanConstructorArgInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="DuplicatedBeanNamesInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringInjectionValueConsistencyInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="InjectionValueTypeInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringBeanLookupMethodInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringReplacedMethodsInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringBeanAutowiringInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringBeanDepedencyCheckInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringFactoryMethodInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringBeanInstantiationInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringBeanNameConventionInspection" level="WARNING" enabled="false" />
-        <inspection_tool class="SpringInjectionValueStyleInspection" level="WARNING" enabled="false" />
-        <inspection_tool class="SpringJamErrorInspection" level="WARNING" enabled="false" />
-        <inspection_tool class="SpringModelInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringScopesInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="UtilSchemaInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="ArgNamesErrorsInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="ArgNamesWarningsInspection" level="WARNING" enabled="false" />
-        <inspection_tool class="DeclareParentsInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringAopErrorsInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringAopWarningsInspection" level="WARNING" enabled="false" />
         <inspection_tool class="AntDuplicateTargetsInspection" level="ERROR" enabled="false" />
         <inspection_tool class="AntDuplicateImportedTargetsInspection" level="WARNING" enabled="false" />
         <inspection_tool class="AntMissingPropertiesFileInspection" level="ERROR" enabled="false" />
@@ -152,7 +127,6 @@
         <inspection_tool class="ELSpecValidationInJSP" level="WARNING" enabled="false" />
         <inspection_tool class="CheckDtdRefs" level="ERROR" enabled="false" />
         <inspection_tool class="CheckXmlFileWithXercesValidator" level="ERROR" enabled="false" />
-        <inspection_tool class="XmlWrongClosingTagName" level="ERROR" enabled="false" />
         <inspection_tool class="XmlWrongRootElement" level="ERROR" enabled="false" />
         <inspection_tool class="CheckTagEmptyBody" level="WARNING" enabled="false" />
       </profile>
@@ -312,13 +286,16 @@
       </item>
     </group>
   </component>
+  <component name="ProjectDetails">
+    <option name="projectName" value="serialization" />
+  </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/serialization.iml" filepath="$PROJECT_DIR$/serialization.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
   <component name="ResourceManagerContainer">
@@ -339,5 +316,8 @@
     <mapping directory="" vcs="Git" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
+  <UsedPathMacros>
+    <macro name="MAVEN_REPOSITORY" />
+  </UsedPathMacros>
 </project>
 

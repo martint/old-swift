@@ -41,6 +41,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * A dynamic deserializer for Thrift structures.
+ *
+ * This class is capable of deserializing a Thrift-serialized stream into a Map or Javabean, according to a
+ * user-specified Thrift schema definition.
+ *
+ */
 public class Deserializer
 {
 	private Map<String, StructureType> types = new ConcurrentHashMap<String, StructureType>();
@@ -55,18 +62,37 @@ public class Deserializer
 		this.debug = debug;
 	}
 
+	/**
+	 * Bind the given Thrift schema to the provided Javabean-compatible class
+	 *
+	 * @param type the thrift schema
+	 * @param clazz the class of the Javabean
+	 */
 	public void bind(StructureType type, Class clazz)
 	{
 		types.put(type.getName(), type);
 		classes.put(type.getName(), clazz);
 	}
 
+	/**
+	 * Bind the given Thrift schema to a generic Map.
+	 *
+	 * @param type the thrift schema
+	 */
 	public void bindToMap(StructureType type)
 	{
 		types.put(type.getName(), type);
 		classes.put(type.getName(), HashMap.class);
 	}
 
+	/**
+	 * Deserialize the specified structure from the given protocol
+	 *
+	 * @param name the name of the structure type to read from the protocol
+	 * @param protocol the protocol
+	 * @return a map or javabean corresponding to the deserialized object
+	 * @throws TException if an error occurs during deserialization
+	 */
 	public <T> T deserialize(String name, TProtocol protocol)
 		throws TException
 	{
@@ -74,6 +100,7 @@ public class Deserializer
 		Class<T> clazz = (Class<T>) classes.get(name);
 
 		if (clazz == null) {
+			// TODO: deserialize into Map<Integer, ?> as a last resort
 			throw new IllegalStateException(String.format("Type '%s' not bound to a class", name));
 		}
 		

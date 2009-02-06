@@ -1,0 +1,22 @@
+==== Usage
+
+1. Deserializing from TProtocol into a Map<String, ?>
+
+StructureType type = ...;
+TProtocol protocol = ...;
+
+Deserializer deserializer = new Deserializer();
+deserializer.bindToMap(type);
+
+Map<String, ?> map = deserializer.deserialize(type.getName(), protocol);
+
+
+2. Deserializing from TProtocol into a Javabean
+
+StructureType type = ...;
+TProtocol protocol = ...;
+
+Deserializer deserializer = new Deserializer();
+deserializer.bind(type, Bean.clas);
+
+Bean bean = deserializer.deserialize(type.getName(), protocol);
