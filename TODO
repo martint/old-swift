@@ -18,4 +18,4 @@
 
 * Better error handling
 
-* Streaming/filtering of events (e.g., to remove deprecated fields)
+* Streaming/filtering/splicing of events (e.g., to remove deprecated fields, create new serialized objects based on existing ones by just arraycp-ing bytes instead of deserialize-serialize)
