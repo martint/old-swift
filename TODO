@@ -17,3 +17,5 @@
 * Parser
 
 * Better error handling
+
+* Streaming/filtering of events (e.g., to remove deprecated fields)
