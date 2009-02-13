@@ -50,6 +50,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Deserializer
 {
+	private final SchemalessDeserializer schemalessDeserializer = new SchemalessDeserializer();
+	
 	private Map<String, StructureType> types = new ConcurrentHashMap<String, StructureType>();
 	private Map<String, Class<?>> classes = new ConcurrentHashMap<String, Class<?>>();
 
@@ -100,14 +102,12 @@ public class Deserializer
 		Class<T> clazz = (Class<T>) classes.get(name);
 
 		if (clazz == null) {
-			// TODO: deserialize into Map<Integer, ?> as a last resort
-			throw new IllegalStateException(String.format("Type '%s' not bound to a class", name));
+			deserializer = (StructureDeserializer<T>) schemalessDeserializer;
 		}
 		
-		StructureType type = types.get(name);
-
 		// construct deserializer
 		if (deserializer == null) {
+			StructureType type = types.get(name);
 			deserializer = compileDeserializer(type, clazz);
 			deserializers.put(name, deserializer);
 		}
