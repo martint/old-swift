@@ -15,12 +15,18 @@
     <orderEntry type="library" exported="" name="Maven: org.easymock:easymockclassextension:2.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.easymock:easymock:2.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: cglib:cglib-nodep:2.1_3" level="project" />
-    <orderEntry type="library" exported="" name="Maven: com.facebook.thrift:thrift:20080830" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.thrift:thrift:20090716" level="project" />
     <orderEntry type="library" exported="" name="Maven: asm:asm:3.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: asm:asm-util:3.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: asm:asm-tree:3.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: asm:asm-analysis:3.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.xerial.thirdparty:org.antlr.antlr3:3.1.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: log4j:log4j:1.2.15" level="project" />
+    <orderEntry type="library" exported="" name="Maven: javax.mail:mail:1.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: javax.activation:activation:1.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: javax.jms:jms:1.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.sun.jdmk:jmxtools:1.2.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.sun.jmx:jmxri:1.2.1" level="project" />
   </component>
 </module>
 

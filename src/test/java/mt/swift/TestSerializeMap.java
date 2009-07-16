@@ -15,10 +15,10 @@
  */
 package mt.swift;
 
-import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TBinaryProtocol;
-import com.facebook.thrift.protocol.TProtocol;
-import com.facebook.thrift.transport.TIOStreamTransport;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TIOStreamTransport;
 import static mt.swift.TestUtil.*;
 import mt.swift.model.BasicType;
 import mt.swift.model.Field;
@@ -57,8 +57,8 @@ public class TestSerializeMap
 			});
 
 			TTestStruct result = serializeAndRead(Fields.BOOLEAN_FIELD, value);
-			Assert.assertTrue(result.__isset.booleanField);
-			Assert.assertEquals(result.booleanField, value.booleanValue());
+			Assert.assertTrue(result.isSetBooleanField());
+			Assert.assertEquals(result.isBooleanField(), value.booleanValue());
 		}
 	}
 
@@ -78,8 +78,8 @@ public class TestSerializeMap
 			});
 
 			TTestStruct result = serializeAndRead(Fields.BYTE_FIELD, value);
-			Assert.assertTrue(result.__isset.byteField);
-			Assert.assertEquals(result.byteField, value.byteValue());
+			Assert.assertTrue(result.isSetByteField());
+			Assert.assertEquals(result.getByteField(), value.byteValue());
 		}
 	}
 
@@ -100,8 +100,8 @@ public class TestSerializeMap
 			});
 
 			TTestStruct result = serializeAndRead(Fields.I16_FIELD, value);
-			Assert.assertTrue(result.__isset.shortField);
-			Assert.assertEquals(result.shortField, value.shortValue());
+			Assert.assertTrue(result.isSetShortField());
+			Assert.assertEquals(result.getShortField(), value.shortValue());
 		}
 	}
 
@@ -121,8 +121,8 @@ public class TestSerializeMap
 			});
 
 			TTestStruct result = serializeAndRead(Fields.I32_FIELD, value);
-			Assert.assertTrue(result.__isset.intField);
-			Assert.assertEquals(result.intField, value.intValue());
+			Assert.assertTrue(result.isSetIntField());
+			Assert.assertEquals(result.getIntField(), value.intValue());
 		}
 	}
 
@@ -142,8 +142,8 @@ public class TestSerializeMap
 			});
 
 			TTestStruct result = serializeAndRead(Fields.I64_FIELD, value);
-			Assert.assertTrue(result.__isset.longField);
-			Assert.assertEquals(result.longField, value.longValue());
+			Assert.assertTrue(result.isSetLongField());
+			Assert.assertEquals(result.getLongField(), value.longValue());
 		}
 	}
 
@@ -165,8 +165,8 @@ public class TestSerializeMap
 			});
 
 			TTestStruct result = serializeAndRead(Fields.DOUBLE_FIELD, value);
-			Assert.assertTrue(result.__isset.doubleField);
-			Assert.assertEquals(result.doubleField, value.doubleValue());
+			Assert.assertTrue(result.isSetDoubleField());
+			Assert.assertEquals(result.getDoubleField(), value.doubleValue());
 		}
 	}
 
@@ -185,8 +185,8 @@ public class TestSerializeMap
 		});
 
 		TTestStruct result = serializeAndRead(Fields.STRING_FIELD, value);
-		Assert.assertTrue(result.__isset.stringField);
-		Assert.assertEquals(result.stringField, value);
+		Assert.assertTrue(result.isSetStringField());
+		Assert.assertEquals(result.getStringField(), value);
 	}
 
 	@Test
@@ -204,8 +204,8 @@ public class TestSerializeMap
 		});
 
 		TTestStruct result = serializeAndRead(Fields.BINARY_FIELD, value);
-		Assert.assertTrue(result.__isset.binaryField);
-		Assert.assertEquals(result.binaryField, value);
+		Assert.assertTrue(result.isSetBinaryField());
+		Assert.assertEquals(result.getBinaryField(), value);
 	}
 
 
@@ -310,46 +310,46 @@ public class TestSerializeMap
 
 		TTestStruct result = TestUtil.deserialize(out.toByteArray());
 
-		Assert.assertTrue(result.__isset.booleanField);
-		Assert.assertEquals(result.booleanField, ((Boolean) data.get(Fields.BOOLEAN_FIELD.getName())).booleanValue());
+		Assert.assertTrue(result.isBooleanField());
+		Assert.assertEquals(result.isBooleanField(), ((Boolean) data.get(Fields.BOOLEAN_FIELD.getName())).booleanValue());
 
-		Assert.assertTrue(result.__isset.byteField);
-		Assert.assertEquals(result.byteField, ((Byte) data.get(Fields.BYTE_FIELD.getName())).byteValue());
+		Assert.assertTrue(result.isSetByteField());
+		Assert.assertEquals(result.getByteField(), ((Byte) data.get(Fields.BYTE_FIELD.getName())).byteValue());
 
-		Assert.assertTrue(result.__isset.shortField);
-		Assert.assertEquals(result.shortField, ((Short) data.get(Fields.I16_FIELD.getName())).shortValue());
+		Assert.assertTrue(result.isSetShortField());
+		Assert.assertEquals(result.getShortField(), ((Short) data.get(Fields.I16_FIELD.getName())).shortValue());
 
-		Assert.assertTrue(result.__isset.intField);
-		Assert.assertEquals(result.intField, ((Integer) data.get(Fields.I32_FIELD.getName())).intValue());
+		Assert.assertTrue(result.isSetIntField());
+		Assert.assertEquals(result.getIntField(), ((Integer) data.get(Fields.I32_FIELD.getName())).intValue());
 
-		Assert.assertTrue(result.__isset.longField);
-		Assert.assertEquals(result.longField, ((Long) data.get(Fields.I64_FIELD.getName())).longValue());
+		Assert.assertTrue(result.isSetLongField());
+		Assert.assertEquals(result.getLongField(), ((Long) data.get(Fields.I64_FIELD.getName())).longValue());
 
-		Assert.assertTrue(result.__isset.doubleField);
-		Assert.assertEquals(result.doubleField, data.get(Fields.DOUBLE_FIELD.getName()));
+		Assert.assertTrue(result.isSetDoubleField());
+		Assert.assertEquals(result.getDoubleField(), data.get(Fields.DOUBLE_FIELD.getName()));
 
-		Assert.assertTrue(result.__isset.stringField);
-		Assert.assertEquals(result.stringField, data.get(Fields.STRING_FIELD.getName()));
+		Assert.assertTrue(result.isSetStringField());
+		Assert.assertEquals(result.getStringField(), data.get(Fields.STRING_FIELD.getName()));
 
-		Assert.assertTrue(result.__isset.binaryField);
-		Assert.assertTrue(Arrays.equals(result.binaryField, (byte[]) data.get(Fields.BINARY_FIELD.getName())));
+		Assert.assertTrue(result.isSetBinaryField());
+		Assert.assertTrue(Arrays.equals(result.getBinaryField(), (byte[]) data.get(Fields.BINARY_FIELD.getName())));
 
-		Assert.assertTrue(result.__isset.listOfIntsField);
-		Assert.assertEquals(result.listOfIntsField, (List) data.get(Fields.LIST_OF_INTS_FIELD.getName()));
+		Assert.assertTrue(result.isSetListOfIntsField());
+		Assert.assertEquals(result.getListOfIntsField(), (List) data.get(Fields.LIST_OF_INTS_FIELD.getName()));
 
-		Assert.assertTrue(result.__isset.setOfIntsField);
-		Assert.assertEquals(result.setOfIntsField, (Set) data.get(Fields.SET_OF_INTS_FIELD.getName()));
+		Assert.assertTrue(result.isSetSetOfIntsField());
+		Assert.assertEquals(result.getSetOfIntsField(), (Set) data.get(Fields.SET_OF_INTS_FIELD.getName()));
 
-		Assert.assertTrue(result.__isset.mapOfIntsIntsField);
-		Assert.assertEquals(result.mapOfIntsIntsField, data.get(Fields.MAP_OF_INTS_INTS_FIELD.getName()));
+		Assert.assertTrue(result.isSetMapOfIntsIntsField());
+		Assert.assertEquals(result.getMapOfIntsIntsField(), data.get(Fields.MAP_OF_INTS_INTS_FIELD.getName()));
 
-		Assert.assertTrue(result.__isset.mapOfIntsStringsField);
-		Assert.assertEquals(result.mapOfIntsStringsField, data.get(Fields.MAP_OF_INTS_STRINGS_FIELD.getName()));
+		Assert.assertTrue(result.isSetMapOfIntsStringsField());
+		Assert.assertEquals(result.getMapOfIntsStringsField(), data.get(Fields.MAP_OF_INTS_STRINGS_FIELD.getName()));
 
-		Assert.assertTrue(result.__isset.structField);
-		Assert.assertEquals(result.structField.value, nestedData.get("value"));
+		Assert.assertTrue(result.isSetStructField());
+		Assert.assertEquals(result.getStructField().getValue(), nestedData.get("value"));
 
-		Assert.assertTrue(result.__isset.nestedListOfIntsField);
-		Assert.assertEquals(result.nestedListOfIntsField, (List) data.get(Fields.NESTED_LIST_OF_INTS_FIELD.getName()));
+		Assert.assertTrue(result.isSetNestedListOfIntsField());
+		Assert.assertEquals(result.getNestedListOfIntsField(), (List) data.get(Fields.NESTED_LIST_OF_INTS_FIELD.getName()));
 	}
 }

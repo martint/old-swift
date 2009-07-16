@@ -15,8 +15,8 @@
  */
 package mt.swift;
 
-import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TProtocol;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TProtocol;
 import mt.swift.model.BasicType;
 import mt.swift.model.Field;
 import mt.swift.model.StructureType;
@@ -43,8 +43,7 @@ public class TestDeserializeBean
 
 		for (Boolean value : Arrays.asList(true, false)) {
 			TTestStruct data = new TTestStruct();
-			data.booleanField = value;
-			data.__isset.booleanField = true;
+			data.setBooleanField(value);
 
 			TestStruct result = deserialize(type, data);
 			Assert.assertEquals(result.isBooleanField(), value.booleanValue());
@@ -60,8 +59,7 @@ public class TestDeserializeBean
 
 		for (final Byte value : Arrays.asList((byte) 0, Byte.MIN_VALUE, Byte.MAX_VALUE)) {
 			TTestStruct data = new TTestStruct();
-			data.byteField = value;
-			data.__isset.byteField = true;
+			data.setByteField(value);
 
 			TestStruct result = deserialize(type, data);
 			Assert.assertEquals(result.getByteField(), value.byteValue());
@@ -78,8 +76,7 @@ public class TestDeserializeBean
 
 		for (final Short value : Arrays.asList((short) 0, Short.MIN_VALUE, Short.MAX_VALUE)) {
 			TTestStruct data = new TTestStruct();
-			data.shortField = value;
-			data.__isset.shortField = true;
+			data.setShortField(value);
 
 			TestStruct result = deserialize(type, data);
 			Assert.assertEquals(result.getShortField(), value.shortValue());
@@ -95,8 +92,7 @@ public class TestDeserializeBean
 
 		for (final Integer value : Arrays.asList(0, Integer.MIN_VALUE, Integer.MAX_VALUE)) {
 			TTestStruct data = new TTestStruct();
-			data.intField = value;
-			data.__isset.intField = true;
+			data.setIntField(value);
 
 			TestStruct result = deserialize(type, data);
 			Assert.assertEquals(result.getIntField(), value.intValue());
@@ -112,8 +108,7 @@ public class TestDeserializeBean
 
 		for (final Long value : Arrays.asList(0L, Long.MIN_VALUE, Long.MAX_VALUE)) {
 			TTestStruct data = new TTestStruct();
-			data.longField = value;
-			data.__isset.longField = true;
+			data.setLongField(value);
 
 			TestStruct result = deserialize(type, data);
 			Assert.assertEquals(result.getLongField(), value.longValue());
@@ -131,8 +126,7 @@ public class TestDeserializeBean
 		                                        Double.NEGATIVE_INFINITY,
 		                                        Double.POSITIVE_INFINITY)) {
 			TTestStruct data = new TTestStruct();
-			data.doubleField = value;
-			data.__isset.doubleField = true;
+			data.setDoubleField(value);
 
 			TestStruct result = deserialize(type, data);
 			Assert.assertEquals(result.getDoubleField(), value);
@@ -150,8 +144,7 @@ public class TestDeserializeBean
 		String value = "hello world";
 
 		TTestStruct data = new TTestStruct();
-		data.stringField = value;
-		data.__isset.stringField = true;
+		data.setStringField(value);
 
 		TestStruct result = deserialize(type, data);
 		Assert.assertEquals(result.getStringField(), value);
@@ -167,11 +160,10 @@ public class TestDeserializeBean
 		byte[] value = "hello world".getBytes("UTF-8");
 
 		TTestStruct data = new TTestStruct();
-		data.binaryField = value;
-		data.__isset.binaryField = true;
+		data.setBinaryField(value);
 
 		TestStruct result = deserialize(type, data);
-		Assert.assertTrue(Arrays.equals(result.getBinaryField(), data.binaryField));
+		Assert.assertTrue(Arrays.equals(result.getBinaryField(), data.getBinaryField()));
 	}
 
 	@Test
@@ -184,8 +176,7 @@ public class TestDeserializeBean
 		List<Integer> value = Arrays.asList(Integer.MAX_VALUE);
 
 		TTestStruct data = new TTestStruct();
-		data.listOfIntsField = value;
-		data.__isset.listOfIntsField = true;
+		data.setListOfIntsField(value);
 
 		TestStruct result = deserialize(type, data);
 		Assert.assertEquals(result.getListOfIntsField(), value);
@@ -201,8 +192,7 @@ public class TestDeserializeBean
 		Set<Integer> value = new HashSet<Integer>(Arrays.asList(Integer.MAX_VALUE));
 
 		TTestStruct data = new TTestStruct();
-		data.setOfIntsField = value;
-		data.__isset.setOfIntsField = true;
+		data.setSetOfIntsField(value);
 
 		TestStruct result = deserialize(type, data);
 		Assert.assertEquals(result.getSetOfIntsField(), value);
@@ -219,8 +209,7 @@ public class TestDeserializeBean
 		value.put(Integer.MAX_VALUE, Integer.MIN_VALUE);
 
 		TTestStruct data = new TTestStruct();
-		data.mapOfIntsIntsField = value;
-		data.__isset.mapOfIntsIntsField = true;
+		data.setMapOfIntsIntsField(value);
 
 		TestStruct result = deserialize(type, data);
 		Assert.assertEquals(result.getMapOfIntsIntsField(), value);
@@ -239,8 +228,7 @@ public class TestDeserializeBean
 		                                                 false));
 
 		TTestStruct data = new TTestStruct();
-		data.structField = new TNestedStruct("hello world");
-		data.__isset.structField = true;
+		data.setStructField(new TNestedStruct("hello world"));
 
 		TProtocol protocol = TestUtil.serialize(data);
 
@@ -250,7 +238,7 @@ public class TestDeserializeBean
 
 		TestStruct result = deserializer.deserialize(type.getName(), protocol);
 		Assert.assertNotNull(result.getStructField());
-		Assert.assertEquals(result.getStructField().getValue(), data.structField.value);
+		Assert.assertEquals(result.getStructField().getValue(), data.getStructField().getValue());
 	}
 
 
@@ -264,8 +252,7 @@ public class TestDeserializeBean
 		List<List<Integer>> value = Arrays.asList(Arrays.asList(Integer.MAX_VALUE));
 
 		TTestStruct data = new TTestStruct();
-		data.nestedListOfIntsField = value;
-		data.__isset.nestedListOfIntsField = true;
+		data.setNestedListOfIntsField(value);
 
 		TestStruct result = deserialize(type, data);
 		Assert.assertEquals(result.getNestedListOfIntsField(), value);
@@ -280,15 +267,13 @@ public class TestDeserializeBean
 		                                       Fields.LIST_OF_INTS_FIELD);
 
 		TTestStruct data = new TTestStruct();
-		data.setOfIntsField = new HashSet<Integer>(Arrays.asList(Integer.MAX_VALUE));
-		data.__isset.setOfIntsField = true;
+		data.setSetOfIntsField(new HashSet<Integer>(Arrays.asList(Integer.MAX_VALUE)));
 
-		data.listOfIntsField = Arrays.asList(Integer.MIN_VALUE);
-		data.__isset.listOfIntsField = true;
+		data.setListOfIntsField(Arrays.asList(Integer.MIN_VALUE));
 
 		TestStruct result = deserialize(type, data);
-		Assert.assertEquals(result.getSetOfIntsField(), data.setOfIntsField);
-		Assert.assertEquals(result.getListOfIntsField(), data.listOfIntsField);
+		Assert.assertEquals(result.getSetOfIntsField(), data.getSetOfIntsField());
+		Assert.assertEquals(result.getListOfIntsField(), data.getListOfIntsField());
 	}
 
 	private TestStruct deserialize(StructureType type, TTestStruct data)

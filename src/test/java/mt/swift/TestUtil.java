@@ -15,12 +15,12 @@
  */
 package mt.swift;
 
-import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TBinaryProtocol;
-import com.facebook.thrift.protocol.TField;
-import com.facebook.thrift.protocol.TStruct;
-import com.facebook.thrift.protocol.TProtocol;
-import com.facebook.thrift.transport.TIOStreamTransport;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TField;
+import org.apache.thrift.protocol.TStruct;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TIOStreamTransport;
 import mt.swift.model.Field;
 import mt.swift.model.StructureType;
 import static org.easymock.EasyMock.cmp;

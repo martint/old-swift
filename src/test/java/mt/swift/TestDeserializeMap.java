@@ -15,8 +15,8 @@
  */
 package mt.swift;
 
-import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TProtocol;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TProtocol;
 import mt.swift.model.BasicType;
 import mt.swift.model.Field;
 import mt.swift.model.StructureType;
@@ -43,8 +43,7 @@ public class TestDeserializeMap
 
 		for (Boolean value : Arrays.asList(true, false)) {
 			TTestStruct data = new TTestStruct();
-			data.booleanField = value;
-			data.__isset.booleanField = true;
+			data.setBooleanField(value);
 
 			Map<String, ?> result = deserialize(type, data);
 			Assert.assertEquals(result.size(), 1);
@@ -61,8 +60,7 @@ public class TestDeserializeMap
 
 		for (final Byte value : Arrays.asList((byte) 0, Byte.MIN_VALUE, Byte.MAX_VALUE)) {
 			TTestStruct data = new TTestStruct();
-			data.byteField = value;
-			data.__isset.byteField = true;
+			data.setByteField(value);
 
 			Map<String, ?> result = deserialize(type, data);
 			Assert.assertEquals(result.size(), 1);
@@ -80,8 +78,7 @@ public class TestDeserializeMap
 
 		for (final Short value : Arrays.asList((short) 0, Short.MIN_VALUE, Short.MAX_VALUE)) {
 			TTestStruct data = new TTestStruct();
-			data.shortField = value;
-			data.__isset.shortField = true;
+			data.setShortField(value);
 
 			Map<String, ?> result = deserialize(type, data);
 			Assert.assertEquals(result.size(), 1);
@@ -98,8 +95,7 @@ public class TestDeserializeMap
 
 		for (final Integer value : Arrays.asList(0, Integer.MIN_VALUE, Integer.MAX_VALUE)) {
 			TTestStruct data = new TTestStruct();
-			data.intField = value;
-			data.__isset.intField = true;
+			data.setIntField(value);
 
 			Map<String, ?> result = deserialize(type, data);
 			Assert.assertEquals(result.size(), 1);
@@ -116,8 +112,7 @@ public class TestDeserializeMap
 
 		for (final Long value : Arrays.asList(0L, Long.MIN_VALUE, Long.MAX_VALUE)) {
 			TTestStruct data = new TTestStruct();
-			data.longField = value;
-			data.__isset.longField = true;
+			data.setLongField(value);
 
 			Map<String, ?> result = deserialize(type, data);
 			Assert.assertEquals(result.size(), 1);
@@ -136,8 +131,7 @@ public class TestDeserializeMap
 		                                        Double.NEGATIVE_INFINITY,
 		                                        Double.POSITIVE_INFINITY)) {
 			TTestStruct data = new TTestStruct();
-			data.doubleField = value;
-			data.__isset.doubleField = true;
+			data.setDoubleField(value);
 
 			Map<String, ?> result = deserialize(type, data);
 			Assert.assertEquals(result.size(), 1);
@@ -156,8 +150,7 @@ public class TestDeserializeMap
 		String value = "hello world";
 
 		TTestStruct data = new TTestStruct();
-		data.stringField = value;
-		data.__isset.stringField = true;
+		data.setStringField(value);
 
 		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 1);
@@ -174,12 +167,11 @@ public class TestDeserializeMap
 		byte[] value = "hello world".getBytes("UTF-8");
 
 		TTestStruct data = new TTestStruct();
-		data.binaryField = value;
-		data.__isset.binaryField = true;
+		data.setBinaryField(value);
 
 		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 1);
-		Assert.assertTrue(Arrays.equals((byte[]) result.get(field.getName()), data.binaryField));
+		Assert.assertTrue(Arrays.equals((byte[]) result.get(field.getName()), value));
 	}
 
 	@Test
@@ -192,8 +184,7 @@ public class TestDeserializeMap
 		List<Integer> value = Arrays.asList(Integer.MAX_VALUE);
 
 		TTestStruct data = new TTestStruct();
-		data.listOfIntsField = value;
-		data.__isset.listOfIntsField = true;
+		data.setListOfIntsField(value);
 
 		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 1);
@@ -210,8 +201,7 @@ public class TestDeserializeMap
 		Set<Integer> value = new HashSet<Integer>(Arrays.asList(Integer.MAX_VALUE));
 
 		TTestStruct data = new TTestStruct();
-		data.setOfIntsField = value;
-		data.__isset.setOfIntsField = true;
+		data.setSetOfIntsField(value);
 
 		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 1);
@@ -229,8 +219,7 @@ public class TestDeserializeMap
 		value.put(Integer.MAX_VALUE, Integer.MIN_VALUE);
 
 		TTestStruct data = new TTestStruct();
-		data.mapOfIntsIntsField = value;
-		data.__isset.mapOfIntsIntsField = true;
+		data.setMapOfIntsIntsField(value);
 
 		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 1);
@@ -250,8 +239,7 @@ public class TestDeserializeMap
 		                                                 false));
 
 		TTestStruct data = new TTestStruct();
-		data.structField = new TNestedStruct("hello world");
-		data.__isset.structField = true;
+		data.setStructField(new TNestedStruct("hello world"));
 
 		TProtocol protocol = TestUtil.serialize(data);
 
@@ -263,7 +251,7 @@ public class TestDeserializeMap
 		Assert.assertEquals(result.size(), 1);
 
 		Map<String, String> expected = new LinkedHashMap<String, String>();
-		expected.put("value", data.structField.value);
+		expected.put("value", data.getStructField().getValue());
 		Assert.assertEquals(result.get("structField"), expected);
 	}
 
@@ -278,8 +266,7 @@ public class TestDeserializeMap
 		List<List<Integer>> value = Arrays.asList(Arrays.asList(Integer.MAX_VALUE));
 
 		TTestStruct data = new TTestStruct();
-		data.nestedListOfIntsField = value;
-		data.__isset.nestedListOfIntsField = true;
+		data.setNestedListOfIntsField(value);
 
 		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 1);
@@ -295,16 +282,14 @@ public class TestDeserializeMap
 		                                       Fields.LIST_OF_INTS_FIELD);
 
 		TTestStruct data = new TTestStruct();
-		data.setOfIntsField = new HashSet<Integer>(Arrays.asList(Integer.MAX_VALUE));
-		data.__isset.setOfIntsField = true;
+		data.setSetOfIntsField(new HashSet<Integer>(Arrays.asList(Integer.MAX_VALUE)));
 
-		data.listOfIntsField = Arrays.asList(Integer.MIN_VALUE);
-		data.__isset.listOfIntsField = true;
+		data.setListOfIntsField(Arrays.asList(Integer.MIN_VALUE));
 
 		Map<String, ?> result = deserialize(type, data);
 		Assert.assertEquals(result.size(), 2);
-		Assert.assertEquals(result.get(Fields.SET_OF_INTS_FIELD.getName()), data.setOfIntsField);
-		Assert.assertEquals(result.get(Fields.LIST_OF_INTS_FIELD.getName()), data.listOfIntsField);
+		Assert.assertEquals(result.get(Fields.SET_OF_INTS_FIELD.getName()), data.getSetOfIntsField());
+		Assert.assertEquals(result.get(Fields.LIST_OF_INTS_FIELD.getName()), data.getListOfIntsField());
 	}
 
 	private Map<String, ?> deserialize(StructureType type, TTestStruct data)

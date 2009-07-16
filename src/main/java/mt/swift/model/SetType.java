@@ -15,7 +15,7 @@
  */
 package mt.swift.model;
 
-import com.facebook.thrift.protocol.TType;
+import org.apache.thrift.protocol.TType;
 
 public class SetType
 	implements Type

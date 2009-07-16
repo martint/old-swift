@@ -15,8 +15,8 @@
  */
 package mt.swift.model;
 
-import com.facebook.thrift.protocol.TStruct;
-import com.facebook.thrift.protocol.TType;
+import org.apache.thrift.protocol.TStruct;
+import org.apache.thrift.protocol.TType;
 
 import java.util.Collection;
 import java.util.HashMap;

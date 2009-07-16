@@ -15,7 +15,7 @@
  */
 package mt.swift.model;
 
-import com.facebook.thrift.protocol.TField;
+import org.apache.thrift.protocol.TField;
 
 public class Field
 {

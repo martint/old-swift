@@ -11,57 +11,110 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
-import com.facebook.thrift.*;
+import java.util.Collections;
+import org.apache.log4j.Logger;
 
-import com.facebook.thrift.protocol.*;
-import com.facebook.thrift.transport.*;
+import org.apache.thrift.*;
+import org.apache.thrift.meta_data.*;
+import org.apache.thrift.protocol.*;
 
-public class TTestStruct implements TBase, java.io.Serializable {
-  public boolean booleanField;
+public class TTestStruct implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("TTestStruct");
+  private static final TField BOOLEAN_FIELD_FIELD_DESC = new TField("booleanField", TType.BOOL, (short)1);
+  private static final TField BYTE_FIELD_FIELD_DESC = new TField("byteField", TType.BYTE, (short)2);
+  private static final TField SHORT_FIELD_FIELD_DESC = new TField("shortField", TType.I16, (short)3);
+  private static final TField INT_FIELD_FIELD_DESC = new TField("intField", TType.I32, (short)4);
+  private static final TField LONG_FIELD_FIELD_DESC = new TField("longField", TType.I64, (short)5);
+  private static final TField DOUBLE_FIELD_FIELD_DESC = new TField("doubleField", TType.DOUBLE, (short)6);
+  private static final TField STRING_FIELD_FIELD_DESC = new TField("stringField", TType.STRING, (short)7);
+  private static final TField BINARY_FIELD_FIELD_DESC = new TField("binaryField", TType.STRING, (short)8);
+  private static final TField LIST_OF_INTS_FIELD_FIELD_DESC = new TField("listOfIntsField", TType.LIST, (short)9);
+  private static final TField SET_OF_INTS_FIELD_FIELD_DESC = new TField("setOfIntsField", TType.SET, (short)10);
+  private static final TField MAP_OF_INTS_INTS_FIELD_FIELD_DESC = new TField("mapOfIntsIntsField", TType.MAP, (short)11);
+  private static final TField STRUCT_FIELD_FIELD_DESC = new TField("structField", TType.STRUCT, (short)12);
+  private static final TField NESTED_LIST_OF_INTS_FIELD_FIELD_DESC = new TField("nestedListOfIntsField", TType.LIST, (short)13);
+  private static final TField MAP_OF_INTS_STRINGS_FIELD_FIELD_DESC = new TField("mapOfIntsStringsField", TType.MAP, (short)14);
+
+  private boolean booleanField;
   public static final int BOOLEANFIELD = 1;
-  public byte byteField;
+  private byte byteField;
   public static final int BYTEFIELD = 2;
-  public short shortField;
+  private short shortField;
   public static final int SHORTFIELD = 3;
-  public int intField;
+  private int intField;
   public static final int INTFIELD = 4;
-  public long longField;
+  private long longField;
   public static final int LONGFIELD = 5;
-  public double doubleField;
+  private double doubleField;
   public static final int DOUBLEFIELD = 6;
-  public String stringField;
+  private String stringField;
   public static final int STRINGFIELD = 7;
-  public byte[] binaryField;
+  private byte[] binaryField;
   public static final int BINARYFIELD = 8;
-  public List<Integer> listOfIntsField;
+  private List<Integer> listOfIntsField;
   public static final int LISTOFINTSFIELD = 9;
-  public Set<Integer> setOfIntsField;
+  private Set<Integer> setOfIntsField;
   public static final int SETOFINTSFIELD = 10;
-  public Map<Integer,Integer> mapOfIntsIntsField;
+  private Map<Integer,Integer> mapOfIntsIntsField;
   public static final int MAPOFINTSINTSFIELD = 11;
-  public TNestedStruct structField;
+  private TNestedStruct structField;
   public static final int STRUCTFIELD = 12;
-  public List<List<Integer>> nestedListOfIntsField;
+  private List<List<Integer>> nestedListOfIntsField;
   public static final int NESTEDLISTOFINTSFIELD = 13;
-  public Map<Integer,String> mapOfIntsStringsField;
+  private Map<Integer,String> mapOfIntsStringsField;
   public static final int MAPOFINTSSTRINGSFIELD = 14;
 
-  public final Isset __isset = new Isset();
-  public static final class Isset implements java.io.Serializable {
+  private final Isset __isset = new Isset();
+  private static final class Isset implements java.io.Serializable {
     public boolean booleanField = false;
     public boolean byteField = false;
     public boolean shortField = false;
     public boolean intField = false;
     public boolean longField = false;
     public boolean doubleField = false;
-    public boolean stringField = false;
-    public boolean binaryField = false;
-    public boolean listOfIntsField = false;
-    public boolean setOfIntsField = false;
-    public boolean mapOfIntsIntsField = false;
-    public boolean structField = false;
-    public boolean nestedListOfIntsField = false;
-    public boolean mapOfIntsStringsField = false;
+  }
+
+  public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+    put(BOOLEANFIELD, new FieldMetaData("booleanField", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
+    put(BYTEFIELD, new FieldMetaData("byteField", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BYTE)));
+    put(SHORTFIELD, new FieldMetaData("shortField", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I16)));
+    put(INTFIELD, new FieldMetaData("intField", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    put(LONGFIELD, new FieldMetaData("longField", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I64)));
+    put(DOUBLEFIELD, new FieldMetaData("doubleField", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.DOUBLE)));
+    put(STRINGFIELD, new FieldMetaData("stringField", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
+    put(BINARYFIELD, new FieldMetaData("binaryField", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
+    put(LISTOFINTSFIELD, new FieldMetaData("listOfIntsField", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.I32))));
+    put(SETOFINTSFIELD, new FieldMetaData("setOfIntsField", TFieldRequirementType.DEFAULT, 
+        new SetMetaData(TType.SET, 
+            new FieldValueMetaData(TType.I32))));
+    put(MAPOFINTSINTSFIELD, new FieldMetaData("mapOfIntsIntsField", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new FieldValueMetaData(TType.I32))));
+    put(STRUCTFIELD, new FieldMetaData("structField", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, TNestedStruct.class)));
+    put(NESTEDLISTOFINTSFIELD, new FieldMetaData("nestedListOfIntsField", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new ListMetaData(TType.LIST, 
+                new FieldValueMetaData(TType.I32)))));
+    put(MAPOFINTSSTRINGSFIELD, new FieldMetaData("mapOfIntsStringsField", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new FieldValueMetaData(TType.STRING))));
+  }});
+
+  static {
+    FieldMetaData.addStructMetaDataMap(TTestStruct.class, metaDataMap);
   }
 
   public TTestStruct() {
@@ -97,23 +150,619 @@ public class TTestStruct implements TBase, java.io.Serializable {
     this.doubleField = doubleField;
     this.__isset.doubleField = true;
     this.stringField = stringField;
-    this.__isset.stringField = (stringField != null);
     this.binaryField = binaryField;
-    this.__isset.binaryField = (binaryField != null);
     this.listOfIntsField = listOfIntsField;
-    this.__isset.listOfIntsField = (listOfIntsField != null);
     this.setOfIntsField = setOfIntsField;
-    this.__isset.setOfIntsField = (setOfIntsField != null);
     this.mapOfIntsIntsField = mapOfIntsIntsField;
-    this.__isset.mapOfIntsIntsField = (mapOfIntsIntsField != null);
     this.structField = structField;
-    this.__isset.structField = (structField != null);
     this.nestedListOfIntsField = nestedListOfIntsField;
-    this.__isset.nestedListOfIntsField = (nestedListOfIntsField != null);
     this.mapOfIntsStringsField = mapOfIntsStringsField;
-    this.__isset.mapOfIntsStringsField = (mapOfIntsStringsField != null);
   }
 
+  /**
+   * Performs a deep copy on <i>other</i>.
+   */
+  public TTestStruct(TTestStruct other) {
+    __isset.booleanField = other.__isset.booleanField;
+    this.booleanField = other.booleanField;
+    __isset.byteField = other.__isset.byteField;
+    this.byteField = other.byteField;
+    __isset.shortField = other.__isset.shortField;
+    this.shortField = other.shortField;
+    __isset.intField = other.__isset.intField;
+    this.intField = other.intField;
+    __isset.longField = other.__isset.longField;
+    this.longField = other.longField;
+    __isset.doubleField = other.__isset.doubleField;
+    this.doubleField = other.doubleField;
+    if (other.isSetStringField()) {
+      this.stringField = other.stringField;
+    }
+    if (other.isSetBinaryField()) {
+      this.binaryField = new byte[other.binaryField.length];
+      System.arraycopy(other.binaryField, 0, binaryField, 0, other.binaryField.length);
+    }
+    if (other.isSetListOfIntsField()) {
+      List<Integer> __this__listOfIntsField = new ArrayList<Integer>();
+      for (Integer other_element : other.listOfIntsField) {
+        __this__listOfIntsField.add(other_element);
+      }
+      this.listOfIntsField = __this__listOfIntsField;
+    }
+    if (other.isSetSetOfIntsField()) {
+      Set<Integer> __this__setOfIntsField = new HashSet<Integer>();
+      for (Integer other_element : other.setOfIntsField) {
+        __this__setOfIntsField.add(other_element);
+      }
+      this.setOfIntsField = __this__setOfIntsField;
+    }
+    if (other.isSetMapOfIntsIntsField()) {
+      Map<Integer,Integer> __this__mapOfIntsIntsField = new HashMap<Integer,Integer>();
+      for (Map.Entry<Integer, Integer> other_element : other.mapOfIntsIntsField.entrySet()) {
+
+        Integer other_element_key = other_element.getKey();
+        Integer other_element_value = other_element.getValue();
+
+        Integer __this__mapOfIntsIntsField_copy_key = other_element_key;
+
+        Integer __this__mapOfIntsIntsField_copy_value = other_element_value;
+
+        __this__mapOfIntsIntsField.put(__this__mapOfIntsIntsField_copy_key, __this__mapOfIntsIntsField_copy_value);
+      }
+      this.mapOfIntsIntsField = __this__mapOfIntsIntsField;
+    }
+    if (other.isSetStructField()) {
+      this.structField = new TNestedStruct(other.structField);
+    }
+    if (other.isSetNestedListOfIntsField()) {
+      List<List<Integer>> __this__nestedListOfIntsField = new ArrayList<List<Integer>>();
+      for (List<Integer> other_element : other.nestedListOfIntsField) {
+        List<Integer> __this__nestedListOfIntsField_copy = new ArrayList<Integer>();
+        for (Integer other_element_element : other_element) {
+          __this__nestedListOfIntsField_copy.add(other_element_element);
+        }
+        __this__nestedListOfIntsField.add(__this__nestedListOfIntsField_copy);
+      }
+      this.nestedListOfIntsField = __this__nestedListOfIntsField;
+    }
+    if (other.isSetMapOfIntsStringsField()) {
+      Map<Integer,String> __this__mapOfIntsStringsField = new HashMap<Integer,String>();
+      for (Map.Entry<Integer, String> other_element : other.mapOfIntsStringsField.entrySet()) {
+
+        Integer other_element_key = other_element.getKey();
+        String other_element_value = other_element.getValue();
+
+        Integer __this__mapOfIntsStringsField_copy_key = other_element_key;
+
+        String __this__mapOfIntsStringsField_copy_value = other_element_value;
+
+        __this__mapOfIntsStringsField.put(__this__mapOfIntsStringsField_copy_key, __this__mapOfIntsStringsField_copy_value);
+      }
+      this.mapOfIntsStringsField = __this__mapOfIntsStringsField;
+    }
+  }
+
+  @Override
+  public TTestStruct clone() {
+    return new TTestStruct(this);
+  }
+
+  public boolean isBooleanField() {
+    return this.booleanField;
+  }
+
+  public void setBooleanField(boolean booleanField) {
+    this.booleanField = booleanField;
+    this.__isset.booleanField = true;
+  }
+
+  public void unsetBooleanField() {
+    this.__isset.booleanField = false;
+  }
+
+  // Returns true if field booleanField is set (has been asigned a value) and false otherwise
+  public boolean isSetBooleanField() {
+    return this.__isset.booleanField;
+  }
+
+  public byte getByteField() {
+    return this.byteField;
+  }
+
+  public void setByteField(byte byteField) {
+    this.byteField = byteField;
+    this.__isset.byteField = true;
+  }
+
+  public void unsetByteField() {
+    this.__isset.byteField = false;
+  }
+
+  // Returns true if field byteField is set (has been asigned a value) and false otherwise
+  public boolean isSetByteField() {
+    return this.__isset.byteField;
+  }
+
+  public short getShortField() {
+    return this.shortField;
+  }
+
+  public void setShortField(short shortField) {
+    this.shortField = shortField;
+    this.__isset.shortField = true;
+  }
+
+  public void unsetShortField() {
+    this.__isset.shortField = false;
+  }
+
+  // Returns true if field shortField is set (has been asigned a value) and false otherwise
+  public boolean isSetShortField() {
+    return this.__isset.shortField;
+  }
+
+  public int getIntField() {
+    return this.intField;
+  }
+
+  public void setIntField(int intField) {
+    this.intField = intField;
+    this.__isset.intField = true;
+  }
+
+  public void unsetIntField() {
+    this.__isset.intField = false;
+  }
+
+  // Returns true if field intField is set (has been asigned a value) and false otherwise
+  public boolean isSetIntField() {
+    return this.__isset.intField;
+  }
+
+  public long getLongField() {
+    return this.longField;
+  }
+
+  public void setLongField(long longField) {
+    this.longField = longField;
+    this.__isset.longField = true;
+  }
+
+  public void unsetLongField() {
+    this.__isset.longField = false;
+  }
+
+  // Returns true if field longField is set (has been asigned a value) and false otherwise
+  public boolean isSetLongField() {
+    return this.__isset.longField;
+  }
+
+  public double getDoubleField() {
+    return this.doubleField;
+  }
+
+  public void setDoubleField(double doubleField) {
+    this.doubleField = doubleField;
+    this.__isset.doubleField = true;
+  }
+
+  public void unsetDoubleField() {
+    this.__isset.doubleField = false;
+  }
+
+  // Returns true if field doubleField is set (has been asigned a value) and false otherwise
+  public boolean isSetDoubleField() {
+    return this.__isset.doubleField;
+  }
+
+  public String getStringField() {
+    return this.stringField;
+  }
+
+  public void setStringField(String stringField) {
+    this.stringField = stringField;
+  }
+
+  public void unsetStringField() {
+    this.stringField = null;
+  }
+
+  // Returns true if field stringField is set (has been asigned a value) and false otherwise
+  public boolean isSetStringField() {
+    return this.stringField != null;
+  }
+
+  public byte[] getBinaryField() {
+    return this.binaryField;
+  }
+
+  public void setBinaryField(byte[] binaryField) {
+    this.binaryField = binaryField;
+  }
+
+  public void unsetBinaryField() {
+    this.binaryField = null;
+  }
+
+  // Returns true if field binaryField is set (has been asigned a value) and false otherwise
+  public boolean isSetBinaryField() {
+    return this.binaryField != null;
+  }
+
+  public int getListOfIntsFieldSize() {
+    return (this.listOfIntsField == null) ? 0 : this.listOfIntsField.size();
+  }
+
+  public java.util.Iterator<Integer> getListOfIntsFieldIterator() {
+    return (this.listOfIntsField == null) ? null : this.listOfIntsField.iterator();
+  }
+
+  public void addToListOfIntsField(int elem) {
+    if (this.listOfIntsField == null) {
+      this.listOfIntsField = new ArrayList<Integer>();
+    }
+    this.listOfIntsField.add(elem);
+  }
+
+  public List<Integer> getListOfIntsField() {
+    return this.listOfIntsField;
+  }
+
+  public void setListOfIntsField(List<Integer> listOfIntsField) {
+    this.listOfIntsField = listOfIntsField;
+  }
+
+  public void unsetListOfIntsField() {
+    this.listOfIntsField = null;
+  }
+
+  // Returns true if field listOfIntsField is set (has been asigned a value) and false otherwise
+  public boolean isSetListOfIntsField() {
+    return this.listOfIntsField != null;
+  }
+
+  public int getSetOfIntsFieldSize() {
+    return (this.setOfIntsField == null) ? 0 : this.setOfIntsField.size();
+  }
+
+  public java.util.Iterator<Integer> getSetOfIntsFieldIterator() {
+    return (this.setOfIntsField == null) ? null : this.setOfIntsField.iterator();
+  }
+
+  public void addToSetOfIntsField(int elem) {
+    if (this.setOfIntsField == null) {
+      this.setOfIntsField = new HashSet<Integer>();
+    }
+    this.setOfIntsField.add(elem);
+  }
+
+  public Set<Integer> getSetOfIntsField() {
+    return this.setOfIntsField;
+  }
+
+  public void setSetOfIntsField(Set<Integer> setOfIntsField) {
+    this.setOfIntsField = setOfIntsField;
+  }
+
+  public void unsetSetOfIntsField() {
+    this.setOfIntsField = null;
+  }
+
+  // Returns true if field setOfIntsField is set (has been asigned a value) and false otherwise
+  public boolean isSetSetOfIntsField() {
+    return this.setOfIntsField != null;
+  }
+
+  public int getMapOfIntsIntsFieldSize() {
+    return (this.mapOfIntsIntsField == null) ? 0 : this.mapOfIntsIntsField.size();
+  }
+
+  public void putToMapOfIntsIntsField(int key, int val) {
+    if (this.mapOfIntsIntsField == null) {
+      this.mapOfIntsIntsField = new HashMap<Integer,Integer>();
+    }
+    this.mapOfIntsIntsField.put(key, val);
+  }
+
+  public Map<Integer,Integer> getMapOfIntsIntsField() {
+    return this.mapOfIntsIntsField;
+  }
+
+  public void setMapOfIntsIntsField(Map<Integer,Integer> mapOfIntsIntsField) {
+    this.mapOfIntsIntsField = mapOfIntsIntsField;
+  }
+
+  public void unsetMapOfIntsIntsField() {
+    this.mapOfIntsIntsField = null;
+  }
+
+  // Returns true if field mapOfIntsIntsField is set (has been asigned a value) and false otherwise
+  public boolean isSetMapOfIntsIntsField() {
+    return this.mapOfIntsIntsField != null;
+  }
+
+  public TNestedStruct getStructField() {
+    return this.structField;
+  }
+
+  public void setStructField(TNestedStruct structField) {
+    this.structField = structField;
+  }
+
+  public void unsetStructField() {
+    this.structField = null;
+  }
+
+  // Returns true if field structField is set (has been asigned a value) and false otherwise
+  public boolean isSetStructField() {
+    return this.structField != null;
+  }
+
+  public int getNestedListOfIntsFieldSize() {
+    return (this.nestedListOfIntsField == null) ? 0 : this.nestedListOfIntsField.size();
+  }
+
+  public java.util.Iterator<List<Integer>> getNestedListOfIntsFieldIterator() {
+    return (this.nestedListOfIntsField == null) ? null : this.nestedListOfIntsField.iterator();
+  }
+
+  public void addToNestedListOfIntsField(List<Integer> elem) {
+    if (this.nestedListOfIntsField == null) {
+      this.nestedListOfIntsField = new ArrayList<List<Integer>>();
+    }
+    this.nestedListOfIntsField.add(elem);
+  }
+
+  public List<List<Integer>> getNestedListOfIntsField() {
+    return this.nestedListOfIntsField;
+  }
+
+  public void setNestedListOfIntsField(List<List<Integer>> nestedListOfIntsField) {
+    this.nestedListOfIntsField = nestedListOfIntsField;
+  }
+
+  public void unsetNestedListOfIntsField() {
+    this.nestedListOfIntsField = null;
+  }
+
+  // Returns true if field nestedListOfIntsField is set (has been asigned a value) and false otherwise
+  public boolean isSetNestedListOfIntsField() {
+    return this.nestedListOfIntsField != null;
+  }
+
+  public int getMapOfIntsStringsFieldSize() {
+    return (this.mapOfIntsStringsField == null) ? 0 : this.mapOfIntsStringsField.size();
+  }
+
+  public void putToMapOfIntsStringsField(int key, String val) {
+    if (this.mapOfIntsStringsField == null) {
+      this.mapOfIntsStringsField = new HashMap<Integer,String>();
+    }
+    this.mapOfIntsStringsField.put(key, val);
+  }
+
+  public Map<Integer,String> getMapOfIntsStringsField() {
+    return this.mapOfIntsStringsField;
+  }
+
+  public void setMapOfIntsStringsField(Map<Integer,String> mapOfIntsStringsField) {
+    this.mapOfIntsStringsField = mapOfIntsStringsField;
+  }
+
+  public void unsetMapOfIntsStringsField() {
+    this.mapOfIntsStringsField = null;
+  }
+
+  // Returns true if field mapOfIntsStringsField is set (has been asigned a value) and false otherwise
+  public boolean isSetMapOfIntsStringsField() {
+    return this.mapOfIntsStringsField != null;
+  }
+
+  public void setFieldValue(int fieldID, Object value) {
+    switch (fieldID) {
+    case BOOLEANFIELD:
+      if (value == null) {
+        unsetBooleanField();
+      } else {
+        setBooleanField((Boolean)value);
+      }
+      break;
+
+    case BYTEFIELD:
+      if (value == null) {
+        unsetByteField();
+      } else {
+        setByteField((Byte)value);
+      }
+      break;
+
+    case SHORTFIELD:
+      if (value == null) {
+        unsetShortField();
+      } else {
+        setShortField((Short)value);
+      }
+      break;
+
+    case INTFIELD:
+      if (value == null) {
+        unsetIntField();
+      } else {
+        setIntField((Integer)value);
+      }
+      break;
+
+    case LONGFIELD:
+      if (value == null) {
+        unsetLongField();
+      } else {
+        setLongField((Long)value);
+      }
+      break;
+
+    case DOUBLEFIELD:
+      if (value == null) {
+        unsetDoubleField();
+      } else {
+        setDoubleField((Double)value);
+      }
+      break;
+
+    case STRINGFIELD:
+      if (value == null) {
+        unsetStringField();
+      } else {
+        setStringField((String)value);
+      }
+      break;
+
+    case BINARYFIELD:
+      if (value == null) {
+        unsetBinaryField();
+      } else {
+        setBinaryField((byte[])value);
+      }
+      break;
+
+    case LISTOFINTSFIELD:
+      if (value == null) {
+        unsetListOfIntsField();
+      } else {
+        setListOfIntsField((List<Integer>)value);
+      }
+      break;
+
+    case SETOFINTSFIELD:
+      if (value == null) {
+        unsetSetOfIntsField();
+      } else {
+        setSetOfIntsField((Set<Integer>)value);
+      }
+      break;
+
+    case MAPOFINTSINTSFIELD:
+      if (value == null) {
+        unsetMapOfIntsIntsField();
+      } else {
+        setMapOfIntsIntsField((Map<Integer,Integer>)value);
+      }
+      break;
+
+    case STRUCTFIELD:
+      if (value == null) {
+        unsetStructField();
+      } else {
+        setStructField((TNestedStruct)value);
+      }
+      break;
+
+    case NESTEDLISTOFINTSFIELD:
+      if (value == null) {
+        unsetNestedListOfIntsField();
+      } else {
+        setNestedListOfIntsField((List<List<Integer>>)value);
+      }
+      break;
+
+    case MAPOFINTSSTRINGSFIELD:
+      if (value == null) {
+        unsetMapOfIntsStringsField();
+      } else {
+        setMapOfIntsStringsField((Map<Integer,String>)value);
+      }
+      break;
+
+    default:
+      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+    }
+  }
+
+  public Object getFieldValue(int fieldID) {
+    switch (fieldID) {
+    case BOOLEANFIELD:
+      return new Boolean(isBooleanField());
+
+    case BYTEFIELD:
+      return new Byte(getByteField());
+
+    case SHORTFIELD:
+      return new Short(getShortField());
+
+    case INTFIELD:
+      return new Integer(getIntField());
+
+    case LONGFIELD:
+      return new Long(getLongField());
+
+    case DOUBLEFIELD:
+      return new Double(getDoubleField());
+
+    case STRINGFIELD:
+      return getStringField();
+
+    case BINARYFIELD:
+      return getBinaryField();
+
+    case LISTOFINTSFIELD:
+      return getListOfIntsField();
+
+    case SETOFINTSFIELD:
+      return getSetOfIntsField();
+
+    case MAPOFINTSINTSFIELD:
+      return getMapOfIntsIntsField();
+
+    case STRUCTFIELD:
+      return getStructField();
+
+    case NESTEDLISTOFINTSFIELD:
+      return getNestedListOfIntsField();
+
+    case MAPOFINTSSTRINGSFIELD:
+      return getMapOfIntsStringsField();
+
+    default:
+      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+    }
+  }
+
+  // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
+  public boolean isSet(int fieldID) {
+    switch (fieldID) {
+    case BOOLEANFIELD:
+      return isSetBooleanField();
+    case BYTEFIELD:
+      return isSetByteField();
+    case SHORTFIELD:
+      return isSetShortField();
+    case INTFIELD:
+      return isSetIntField();
+    case LONGFIELD:
+      return isSetLongField();
+    case DOUBLEFIELD:
+      return isSetDoubleField();
+    case STRINGFIELD:
+      return isSetStringField();
+    case BINARYFIELD:
+      return isSetBinaryField();
+    case LISTOFINTSFIELD:
+      return isSetListOfIntsField();
+    case SETOFINTSFIELD:
+      return isSetSetOfIntsField();
+    case MAPOFINTSINTSFIELD:
+      return isSetMapOfIntsIntsField();
+    case STRUCTFIELD:
+      return isSetStructField();
+    case NESTEDLISTOFINTSFIELD:
+      return isSetNestedListOfIntsField();
+    case MAPOFINTSSTRINGSFIELD:
+      return isSetMapOfIntsStringsField();
+    default:
+      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+    }
+  }
+
+  @Override
   public boolean equals(Object that) {
     if (that == null)
       return false;
@@ -180,8 +829,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
         return false;
     }
 
-    boolean this_present_stringField = true && (this.stringField != null);
-    boolean that_present_stringField = true && (that.stringField != null);
+    boolean this_present_stringField = true && this.isSetStringField();
+    boolean that_present_stringField = true && that.isSetStringField();
     if (this_present_stringField || that_present_stringField) {
       if (!(this_present_stringField && that_present_stringField))
         return false;
@@ -189,8 +838,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
         return false;
     }
 
-    boolean this_present_binaryField = true && (this.binaryField != null);
-    boolean that_present_binaryField = true && (that.binaryField != null);
+    boolean this_present_binaryField = true && this.isSetBinaryField();
+    boolean that_present_binaryField = true && that.isSetBinaryField();
     if (this_present_binaryField || that_present_binaryField) {
       if (!(this_present_binaryField && that_present_binaryField))
         return false;
@@ -198,8 +847,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
         return false;
     }
 
-    boolean this_present_listOfIntsField = true && (this.listOfIntsField != null);
-    boolean that_present_listOfIntsField = true && (that.listOfIntsField != null);
+    boolean this_present_listOfIntsField = true && this.isSetListOfIntsField();
+    boolean that_present_listOfIntsField = true && that.isSetListOfIntsField();
     if (this_present_listOfIntsField || that_present_listOfIntsField) {
       if (!(this_present_listOfIntsField && that_present_listOfIntsField))
         return false;
@@ -207,8 +856,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
         return false;
     }
 
-    boolean this_present_setOfIntsField = true && (this.setOfIntsField != null);
-    boolean that_present_setOfIntsField = true && (that.setOfIntsField != null);
+    boolean this_present_setOfIntsField = true && this.isSetSetOfIntsField();
+    boolean that_present_setOfIntsField = true && that.isSetSetOfIntsField();
     if (this_present_setOfIntsField || that_present_setOfIntsField) {
       if (!(this_present_setOfIntsField && that_present_setOfIntsField))
         return false;
@@ -216,8 +865,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
         return false;
     }
 
-    boolean this_present_mapOfIntsIntsField = true && (this.mapOfIntsIntsField != null);
-    boolean that_present_mapOfIntsIntsField = true && (that.mapOfIntsIntsField != null);
+    boolean this_present_mapOfIntsIntsField = true && this.isSetMapOfIntsIntsField();
+    boolean that_present_mapOfIntsIntsField = true && that.isSetMapOfIntsIntsField();
     if (this_present_mapOfIntsIntsField || that_present_mapOfIntsIntsField) {
       if (!(this_present_mapOfIntsIntsField && that_present_mapOfIntsIntsField))
         return false;
@@ -225,8 +874,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
         return false;
     }
 
-    boolean this_present_structField = true && (this.structField != null);
-    boolean that_present_structField = true && (that.structField != null);
+    boolean this_present_structField = true && this.isSetStructField();
+    boolean that_present_structField = true && that.isSetStructField();
     if (this_present_structField || that_present_structField) {
       if (!(this_present_structField && that_present_structField))
         return false;
@@ -234,8 +883,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
         return false;
     }
 
-    boolean this_present_nestedListOfIntsField = true && (this.nestedListOfIntsField != null);
-    boolean that_present_nestedListOfIntsField = true && (that.nestedListOfIntsField != null);
+    boolean this_present_nestedListOfIntsField = true && this.isSetNestedListOfIntsField();
+    boolean that_present_nestedListOfIntsField = true && that.isSetNestedListOfIntsField();
     if (this_present_nestedListOfIntsField || that_present_nestedListOfIntsField) {
       if (!(this_present_nestedListOfIntsField && that_present_nestedListOfIntsField))
         return false;
@@ -243,8 +892,8 @@ public class TTestStruct implements TBase, java.io.Serializable {
         return false;
     }
 
-    boolean this_present_mapOfIntsStringsField = true && (this.mapOfIntsStringsField != null);
-    boolean that_present_mapOfIntsStringsField = true && (that.mapOfIntsStringsField != null);
+    boolean this_present_mapOfIntsStringsField = true && this.isSetMapOfIntsStringsField();
+    boolean that_present_mapOfIntsStringsField = true && that.isSetMapOfIntsStringsField();
     if (this_present_mapOfIntsStringsField || that_present_mapOfIntsStringsField) {
       if (!(this_present_mapOfIntsStringsField && that_present_mapOfIntsStringsField))
         return false;
@@ -255,6 +904,7 @@ public class TTestStruct implements TBase, java.io.Serializable {
     return true;
   }
 
+  @Override
   public int hashCode() {
     return 0;
   }
@@ -321,7 +971,6 @@ public class TTestStruct implements TBase, java.io.Serializable {
         case STRINGFIELD:
           if (field.type == TType.STRING) {
             this.stringField = iprot.readString();
-            this.__isset.stringField = true;
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -329,7 +978,6 @@ public class TTestStruct implements TBase, java.io.Serializable {
         case BINARYFIELD:
           if (field.type == TType.STRING) {
             this.binaryField = iprot.readBinary();
-            this.__isset.binaryField = true;
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -341,13 +989,12 @@ public class TTestStruct implements TBase, java.io.Serializable {
               this.listOfIntsField = new ArrayList<Integer>(_list0.size);
               for (int _i1 = 0; _i1 < _list0.size; ++_i1)
               {
-                int _elem2 = 0;
+                int _elem2;
                 _elem2 = iprot.readI32();
                 this.listOfIntsField.add(_elem2);
               }
               iprot.readListEnd();
             }
-            this.__isset.listOfIntsField = true;
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -365,7 +1012,6 @@ public class TTestStruct implements TBase, java.io.Serializable {
               }
               iprot.readSetEnd();
             }
-            this.__isset.setOfIntsField = true;
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -385,7 +1031,6 @@ public class TTestStruct implements TBase, java.io.Serializable {
               }
               iprot.readMapEnd();
             }
-            this.__isset.mapOfIntsIntsField = true;
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -394,7 +1039,6 @@ public class TTestStruct implements TBase, java.io.Serializable {
           if (field.type == TType.STRUCT) {
             this.structField = new TNestedStruct();
             this.structField.read(iprot);
-            this.__isset.structField = true;
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -406,13 +1050,13 @@ public class TTestStruct implements TBase, java.io.Serializable {
               this.nestedListOfIntsField = new ArrayList<List<Integer>>(_list10.size);
               for (int _i11 = 0; _i11 < _list10.size; ++_i11)
               {
-                List<Integer> _elem12 = new ArrayList<Integer>();
+                List<Integer> _elem12;
                 {
                   TList _list13 = iprot.readListBegin();
                   _elem12 = new ArrayList<Integer>(_list13.size);
                   for (int _i14 = 0; _i14 < _list13.size; ++_i14)
                   {
-                    int _elem15 = 0;
+                    int _elem15;
                     _elem15 = iprot.readI32();
                     _elem12.add(_elem15);
                   }
@@ -422,7 +1066,6 @@ public class TTestStruct implements TBase, java.io.Serializable {
               }
               iprot.readListEnd();
             }
-            this.__isset.nestedListOfIntsField = true;
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -442,7 +1085,6 @@ public class TTestStruct implements TBase, java.io.Serializable {
               }
               iprot.readMapEnd();
             }
-            this.__isset.mapOfIntsStringsField = true;
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -454,69 +1096,44 @@ public class TTestStruct implements TBase, java.io.Serializable {
       iprot.readFieldEnd();
     }
     iprot.readStructEnd();
+
+    validate();
   }
 
   public void write(TProtocol oprot) throws TException {
-    TStruct struct = new TStruct("TTestStruct");
-    oprot.writeStructBegin(struct);
-    TField field = new TField();
-    field.name = "booleanField";
-    field.type = TType.BOOL;
-    field.id = BOOLEANFIELD;
-    oprot.writeFieldBegin(field);
+    validate();
+
+    oprot.writeStructBegin(STRUCT_DESC);
+    oprot.writeFieldBegin(BOOLEAN_FIELD_FIELD_DESC);
     oprot.writeBool(this.booleanField);
     oprot.writeFieldEnd();
-    field.name = "byteField";
-    field.type = TType.BYTE;
-    field.id = BYTEFIELD;
-    oprot.writeFieldBegin(field);
+    oprot.writeFieldBegin(BYTE_FIELD_FIELD_DESC);
     oprot.writeByte(this.byteField);
     oprot.writeFieldEnd();
-    field.name = "shortField";
-    field.type = TType.I16;
-    field.id = SHORTFIELD;
-    oprot.writeFieldBegin(field);
+    oprot.writeFieldBegin(SHORT_FIELD_FIELD_DESC);
     oprot.writeI16(this.shortField);
     oprot.writeFieldEnd();
-    field.name = "intField";
-    field.type = TType.I32;
-    field.id = INTFIELD;
-    oprot.writeFieldBegin(field);
+    oprot.writeFieldBegin(INT_FIELD_FIELD_DESC);
     oprot.writeI32(this.intField);
     oprot.writeFieldEnd();
-    field.name = "longField";
-    field.type = TType.I64;
-    field.id = LONGFIELD;
-    oprot.writeFieldBegin(field);
+    oprot.writeFieldBegin(LONG_FIELD_FIELD_DESC);
     oprot.writeI64(this.longField);
     oprot.writeFieldEnd();
-    field.name = "doubleField";
-    field.type = TType.DOUBLE;
-    field.id = DOUBLEFIELD;
-    oprot.writeFieldBegin(field);
+    oprot.writeFieldBegin(DOUBLE_FIELD_FIELD_DESC);
     oprot.writeDouble(this.doubleField);
     oprot.writeFieldEnd();
     if (this.stringField != null) {
-      field.name = "stringField";
-      field.type = TType.STRING;
-      field.id = STRINGFIELD;
-      oprot.writeFieldBegin(field);
+      oprot.writeFieldBegin(STRING_FIELD_FIELD_DESC);
       oprot.writeString(this.stringField);
       oprot.writeFieldEnd();
     }
     if (this.binaryField != null) {
-      field.name = "binaryField";
-      field.type = TType.STRING;
-      field.id = BINARYFIELD;
-      oprot.writeFieldBegin(field);
+      oprot.writeFieldBegin(BINARY_FIELD_FIELD_DESC);
       oprot.writeBinary(this.binaryField);
       oprot.writeFieldEnd();
     }
     if (this.listOfIntsField != null) {
-      field.name = "listOfIntsField";
-      field.type = TType.LIST;
-      field.id = LISTOFINTSFIELD;
-      oprot.writeFieldBegin(field);
+      oprot.writeFieldBegin(LIST_OF_INTS_FIELD_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.listOfIntsField.size()));
         for (int _iter20 : this.listOfIntsField)        {
@@ -527,10 +1144,7 @@ public class TTestStruct implements TBase, java.io.Serializable {
       oprot.writeFieldEnd();
     }
     if (this.setOfIntsField != null) {
-      field.name = "setOfIntsField";
-      field.type = TType.SET;
-      field.id = SETOFINTSFIELD;
-      oprot.writeFieldBegin(field);
+      oprot.writeFieldBegin(SET_OF_INTS_FIELD_FIELD_DESC);
       {
         oprot.writeSetBegin(new TSet(TType.I32, this.setOfIntsField.size()));
         for (int _iter21 : this.setOfIntsField)        {
@@ -541,33 +1155,24 @@ public class TTestStruct implements TBase, java.io.Serializable {
       oprot.writeFieldEnd();
     }
     if (this.mapOfIntsIntsField != null) {
-      field.name = "mapOfIntsIntsField";
-      field.type = TType.MAP;
-      field.id = MAPOFINTSINTSFIELD;
-      oprot.writeFieldBegin(field);
+      oprot.writeFieldBegin(MAP_OF_INTS_INTS_FIELD_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.I32, this.mapOfIntsIntsField.size()));
-        for (int _iter22 : this.mapOfIntsIntsField.keySet())        {
-          oprot.writeI32(_iter22);
-          oprot.writeI32(this.mapOfIntsIntsField.get(_iter22));
+        for (Map.Entry<Integer, Integer> _iter22 : this.mapOfIntsIntsField.entrySet())        {
+          oprot.writeI32(_iter22.getKey());
+          oprot.writeI32(_iter22.getValue());
         }
         oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
     }
     if (this.structField != null) {
-      field.name = "structField";
-      field.type = TType.STRUCT;
-      field.id = STRUCTFIELD;
-      oprot.writeFieldBegin(field);
+      oprot.writeFieldBegin(STRUCT_FIELD_FIELD_DESC);
       this.structField.write(oprot);
       oprot.writeFieldEnd();
     }
     if (this.nestedListOfIntsField != null) {
-      field.name = "nestedListOfIntsField";
-      field.type = TType.LIST;
-      field.id = NESTEDLISTOFINTSFIELD;
-      oprot.writeFieldBegin(field);
+      oprot.writeFieldBegin(NESTED_LIST_OF_INTS_FIELD_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.LIST, this.nestedListOfIntsField.size()));
         for (List<Integer> _iter23 : this.nestedListOfIntsField)        {
@@ -584,15 +1189,12 @@ public class TTestStruct implements TBase, java.io.Serializable {
       oprot.writeFieldEnd();
     }
     if (this.mapOfIntsStringsField != null) {
-      field.name = "mapOfIntsStringsField";
-      field.type = TType.MAP;
-      field.id = MAPOFINTSSTRINGSFIELD;
-      oprot.writeFieldBegin(field);
+      oprot.writeFieldBegin(MAP_OF_INTS_STRINGS_FIELD_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRING, this.mapOfIntsStringsField.size()));
-        for (int _iter25 : this.mapOfIntsStringsField.keySet())        {
-          oprot.writeI32(_iter25);
-          oprot.writeString(this.mapOfIntsStringsField.get(_iter25));
+        for (Map.Entry<Integer, String> _iter25 : this.mapOfIntsStringsField.entrySet())        {
+          oprot.writeI32(_iter25.getKey());
+          oprot.writeString(_iter25.getValue());
         }
         oprot.writeMapEnd();
       }
@@ -602,11 +1204,11 @@ public class TTestStruct implements TBase, java.io.Serializable {
     oprot.writeStructEnd();
   }
 
+  @Override
   public String toString() {
     StringBuilder sb = new StringBuilder("TTestStruct(");
     boolean first = true;
 
-    if (!first) sb.append(", ");
     sb.append("booleanField:");
     sb.append(this.booleanField);
     first = false;
@@ -632,38 +1234,80 @@ public class TTestStruct implements TBase, java.io.Serializable {
     first = false;
     if (!first) sb.append(", ");
     sb.append("stringField:");
-    sb.append(this.stringField);
+    if (this.stringField == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.stringField);
+    }
     first = false;
     if (!first) sb.append(", ");
     sb.append("binaryField:");
-    sb.append(this.binaryField);
+    if (this.binaryField == null) {
+      sb.append("null");
+    } else {
+        int __binaryField_size = Math.min(this.binaryField.length, 128);
+        for (int i = 0; i < __binaryField_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this.binaryField[i]).length() > 1 ? Integer.toHexString(this.binaryField[i]).substring(Integer.toHexString(this.binaryField[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.binaryField[i]).toUpperCase());
+        }
+        if (this.binaryField.length > 128) sb.append(" ...");
+    }
     first = false;
     if (!first) sb.append(", ");
     sb.append("listOfIntsField:");
-    sb.append(this.listOfIntsField);
+    if (this.listOfIntsField == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.listOfIntsField);
+    }
     first = false;
     if (!first) sb.append(", ");
     sb.append("setOfIntsField:");
-    sb.append(this.setOfIntsField);
+    if (this.setOfIntsField == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.setOfIntsField);
+    }
     first = false;
     if (!first) sb.append(", ");
     sb.append("mapOfIntsIntsField:");
-    sb.append(this.mapOfIntsIntsField);
+    if (this.mapOfIntsIntsField == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.mapOfIntsIntsField);
+    }
     first = false;
     if (!first) sb.append(", ");
     sb.append("structField:");
-    sb.append(this.structField);
+    if (this.structField == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.structField);
+    }
     first = false;
     if (!first) sb.append(", ");
     sb.append("nestedListOfIntsField:");
-    sb.append(this.nestedListOfIntsField);
+    if (this.nestedListOfIntsField == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.nestedListOfIntsField);
+    }
     first = false;
     if (!first) sb.append(", ");
     sb.append("mapOfIntsStringsField:");
-    sb.append(this.mapOfIntsStringsField);
+    if (this.mapOfIntsStringsField == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.mapOfIntsStringsField);
+    }
     first = false;
     sb.append(")");
     return sb.toString();
+  }
+
+  public void validate() throws TException {
+    // check for required fields
+    // check that fields of type enum have valid values
   }
 
 }

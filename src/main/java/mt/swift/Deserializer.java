@@ -15,8 +15,8 @@
  */
 package mt.swift;
 
-import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TProtocol;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TProtocol;
 import mt.swift.model.BasicType;
 import mt.swift.model.Field;
 import mt.swift.model.ListType;
@@ -171,9 +171,9 @@ public class Deserializer
 		                                                          "(L" + org.objectweb.asm.Type
 			                                                          .getInternalName(Deserializer.class)
 		                                                          +
-		                                                          ";Lcom/facebook/thrift/protocol/TProtocol;)Ljava/lang/Object;",
+		                                                          ";Lorg/apache/thrift/protocol/TProtocol;)Ljava/lang/Object;",
 		                                                          null,
-		                                                          new String[] { "com/facebook/thrift/TException" });
+		                                                          new String[] { "org/apache/thrift/TException" });
 		syntheticMethodVisitor.visitCode();
 		syntheticMethodVisitor.visitVarInsn(ALOAD, 0);
 		syntheticMethodVisitor.visitVarInsn(ALOAD, 1);
@@ -181,7 +181,7 @@ public class Deserializer
 		syntheticMethodVisitor.visitMethodInsn(INVOKEVIRTUAL, deserializerClassName,
 		                                       "deserialize",
 		                                       "(L" + Util.getInternalName(Deserializer.class)
-		                                       + ";Lcom/facebook/thrift/protocol/TProtocol;)L" + targetClassName + ";");
+		                                       + ";Lorg/apache/thrift/protocol/TProtocol;)L" + targetClassName + ";");
 		syntheticMethodVisitor.visitInsn(ARETURN);
 		syntheticMethodVisitor.visitMaxs(3, 3);
 		syntheticMethodVisitor.visitEnd();
@@ -192,9 +192,9 @@ public class Deserializer
 		MethodVisitor methodVisitor = writer.visitMethod(ACC_PUBLIC, "deserialize",
 		                                                 "(L" +
 		                                                 Util.getInternalName(Deserializer.class)
-		                                                 + ";Lcom/facebook/thrift/protocol/TProtocol;)L"
+		                                                 + ";Lorg/apache/thrift/protocol/TProtocol;)L"
 		                                                 + targetClassName + ";",
-		                                                 null, new String[] { "com/facebook/thrift/TException" });
+		                                                 null, new String[] { "org/apache/thrift/TException" });
 
 		FrameRegisterManager context = new FrameRegisterManager();
 		context.bindSlot("this", 0);
@@ -213,8 +213,8 @@ public class Deserializer
 
 		// protocol.readStructBegin()
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readStructBegin",
-		                              "()Lcom/facebook/thrift/protocol/TStruct;");
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readStructBegin",
+		                              "()Lorg/apache/thrift/protocol/TStruct;");
 		methodVisitor.visitInsn(POP); // discard return value
 
 		// while (true)
@@ -223,15 +223,15 @@ public class Deserializer
 
 		// TField tfield = protocol.readFieldBegin()
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readFieldBegin",
-		                              "()Lcom/facebook/thrift/protocol/TField;");
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readFieldBegin",
+		                              "()Lorg/apache/thrift/protocol/TField;");
 		methodVisitor.visitVarInsn(ASTORE, context.getSlot("tfield"));
 
 		// tfield.type
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("tfield"));
-		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TField", "type", "B");
+		methodVisitor.visitFieldInsn(GETFIELD, "org/apache/thrift/protocol/TField", "type", "B");
 
-		methodVisitor.visitFieldInsn(GETSTATIC, "com/facebook/thrift/protocol/TType", "STOP", "B");
+		methodVisitor.visitFieldInsn(GETSTATIC, "org/apache/thrift/protocol/TType", "STOP", "B");
 
 		// if (tfield.type == TType.STOP) { break; }
 		Label endWhile = new Label();
@@ -239,7 +239,7 @@ public class Deserializer
 
 		// tfield.id
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("tfield"));
-		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TField", "id", "S");
+		methodVisitor.visitFieldInsn(GETFIELD, "org/apache/thrift/protocol/TField", "id", "S");
 
 		List<Field> fields = new ArrayList<Field>(type.getFields());
 		int[] ids = new int[fields.size()];
@@ -260,7 +260,7 @@ public class Deserializer
 
 			// if (tfield.type == ###)
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("tfield"));
-			methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TField", "type", "B");
+			methodVisitor.visitFieldInsn(GETFIELD, "org/apache/thrift/protocol/TField", "type", "B");
 			methodVisitor.visitIntInsn(BIPUSH, field.getType().getTType());
 			methodVisitor.visitJumpInsn(IF_ICMPNE, fieldSkipped);
 
@@ -281,9 +281,9 @@ public class Deserializer
 		methodVisitor.visitLabel(fieldSkipped);
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("tfield"));
-		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TField", "type", "B");
-		methodVisitor.visitMethodInsn(INVOKESTATIC, "com/facebook/thrift/protocol/TProtocolUtil", "skip",
-		                              "(Lcom/facebook/thrift/protocol/TProtocol;B)V");
+		methodVisitor.visitFieldInsn(GETFIELD, "org/apache/thrift/protocol/TField", "type", "B");
+		methodVisitor.visitMethodInsn(INVOKESTATIC, "org/apache/thrift/protocol/TProtocolUtil", "skip",
+		                              "(Lorg/apache/thrift/protocol/TProtocol;B)V");
 
 		// end while
 		methodVisitor.visitJumpInsn(GOTO, whileLabel);
@@ -292,7 +292,7 @@ public class Deserializer
 
 		// protocol.readStructEnd()
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readStructEnd", "()V");
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readStructEnd", "()V");
 
 		// return result
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("target"));
@@ -384,9 +384,9 @@ public class Deserializer
 		int loopCounterLocal = context.newAnonymousSlot();
 
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readListBegin",
-		                              "()Lcom/facebook/thrift/protocol/TList;");
-		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TList", "size", "I");
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readListBegin",
+		                              "()Lorg/apache/thrift/protocol/TList;");
+		methodVisitor.visitFieldInsn(GETFIELD, "org/apache/thrift/protocol/TList", "size", "I");
 		methodVisitor.visitVarInsn(ISTORE, tlistSizeLocal);
 
 		// result = new ArrayList(tlist.size)
@@ -420,7 +420,7 @@ public class Deserializer
 
 		methodVisitor.visitLabel(done);
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readListEnd", "()V");
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readListEnd", "()V");
 
 		context.release(tlistSizeLocal);
 		context.release(loopCounterLocal);
@@ -452,36 +452,36 @@ public class Deserializer
 	{
 		if (type == BasicType.BOOLEAN) {
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readBool", "()Z");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readBool", "()Z");
 		}
 		else if (type == BasicType.BYTE) {
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readByte", "()B");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readByte", "()B");
 		}
 		else if (type == BasicType.I16) {
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readI16", "()S");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readI16", "()S");
 		}
 		else if (type == BasicType.I32) {
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readI32", "()I");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readI32", "()I");
 		}
 		else if (type == BasicType.I64) {
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readI64", "()J");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readI64", "()J");
 		}
 		else if (type == BasicType.DOUBLE) {
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readDouble", "()D");
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readDouble", "()D");
 		}
 		else if (type == BasicType.BINARY) {
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readBinary",
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readBinary",
 			                              "()[B");
 		}
 		else if (type == BasicType.STRING) {
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readString",
+			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readString",
 			                              "()Ljava/lang/String;");
 		}
 		else if (type instanceof StructureType) {
@@ -492,7 +492,7 @@ public class Deserializer
 			methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
 			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, Util.getInternalName(Deserializer.class),
 			                              "deserialize",
-			                              "(Ljava/lang/String;Lcom/facebook/thrift/protocol/TProtocol;)Ljava/lang/Object;");
+			                              "(Ljava/lang/String;Lorg/apache/thrift/protocol/TProtocol;)Ljava/lang/Object;");
 		}
 		else if (type instanceof ListType) {
 			ListType listType = (ListType) type;
@@ -515,9 +515,9 @@ public class Deserializer
 		int loopCounterLocal = context.newAnonymousSlot();
 
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readSetBegin",
-		                              "()Lcom/facebook/thrift/protocol/TSet;");
-		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TSet", "size", "I");
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readSetBegin",
+		                              "()Lorg/apache/thrift/protocol/TSet;");
+		methodVisitor.visitFieldInsn(GETFIELD, "org/apache/thrift/protocol/TSet", "size", "I");
 		methodVisitor.visitVarInsn(ISTORE, tsetSizeLocal);
 
 		// result = new ArrayList(tlist.size)
@@ -551,7 +551,7 @@ public class Deserializer
 
 		methodVisitor.visitLabel(done);
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readSetEnd", "()V");
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readSetEnd", "()V");
 
 		context.release(tsetSizeLocal);
 		context.release(loopCounterLocal);
@@ -564,9 +564,9 @@ public class Deserializer
 		int loopCounterLocal = context.newAnonymousSlot();
 
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readMapBegin",
-		                              "()Lcom/facebook/thrift/protocol/TMap;");
-		methodVisitor.visitFieldInsn(GETFIELD, "com/facebook/thrift/protocol/TMap", "size", "I");
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readMapBegin",
+		                              "()Lorg/apache/thrift/protocol/TMap;");
+		methodVisitor.visitFieldInsn(GETFIELD, "org/apache/thrift/protocol/TMap", "size", "I");
 		methodVisitor.visitVarInsn(ISTORE, tmapSizeLocal);
 
 		// result = new ArrayList(tlist.size)
@@ -604,7 +604,7 @@ public class Deserializer
 
 		methodVisitor.visitLabel(done);
 		methodVisitor.visitVarInsn(ALOAD, context.getSlot("protocol"));
-		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "com/facebook/thrift/protocol/TProtocol", "readMapEnd", "()V");
+		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/apache/thrift/protocol/TProtocol", "readMapEnd", "()V");
 
 		context.release(tmapSizeLocal);
 		context.release(loopCounterLocal);

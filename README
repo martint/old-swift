@@ -20,3 +20,10 @@ Deserializer deserializer = new Deserializer();
 deserializer.bind(type, Bean.clas);
 
 Bean bean = deserializer.deserialize(type.getName(), protocol);
+
+
+==== Building
+
+Before building, install thrift into your local maven repository:
+
+mvn install:install-file -Dfile=lib/thrift-20090716.jar -DgroupId=org.apache.thrift -DartifactId=thrift -Dversion=20090716 -Dpackaging=jar

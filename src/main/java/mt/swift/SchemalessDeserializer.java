@@ -1,12 +1,12 @@
 package mt.swift;
 
-import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TField;
-import com.facebook.thrift.protocol.TList;
-import com.facebook.thrift.protocol.TMap;
-import com.facebook.thrift.protocol.TProtocol;
-import com.facebook.thrift.protocol.TSet;
-import com.facebook.thrift.protocol.TType;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TField;
+import org.apache.thrift.protocol.TList;
+import org.apache.thrift.protocol.TMap;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.protocol.TSet;
+import org.apache.thrift.protocol.TType;
 
 import java.util.ArrayList;
 import java.util.HashMap;

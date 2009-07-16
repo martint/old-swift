@@ -17,10 +17,10 @@ package mt.swift;
 
 import static mt.swift.TestUtil.*;
 
-import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TBinaryProtocol;
-import com.facebook.thrift.protocol.TProtocol;
-import com.facebook.thrift.transport.TIOStreamTransport;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TIOStreamTransport;
 import mt.swift.model.BasicType;
 import mt.swift.model.Field;
 import mt.swift.model.ListType;
@@ -61,8 +61,8 @@ public class TestSerializeBean
 			});
 
 			TTestStruct result = serializeAndReadWithThrift(field, bean);
-			Assert.assertTrue(result.__isset.booleanField);
-			Assert.assertEquals(result.booleanField, value.booleanValue());
+			Assert.assertTrue(result.isSetBooleanField());
+			Assert.assertEquals(result.isBooleanField(), value.booleanValue());
 		}
 	}
 
@@ -85,8 +85,8 @@ public class TestSerializeBean
 			});
 
 			TTestStruct result = serializeAndReadWithThrift(field, bean);
-			Assert.assertTrue(result.__isset.byteField);
-			Assert.assertEquals(result.byteField, value.byteValue());
+			Assert.assertTrue(result.isSetByteField());
+			Assert.assertEquals(result.getByteField(), value.byteValue());
 		}
 	}
 
@@ -109,8 +109,8 @@ public class TestSerializeBean
 			});
 
 			TTestStruct result = serializeAndReadWithThrift(field, bean);
-			Assert.assertTrue(result.__isset.shortField);
-			Assert.assertEquals(result.shortField, value.shortValue());
+			Assert.assertTrue(result.isSetShortField());
+			Assert.assertEquals(result.getShortField(), value.shortValue());
 		}
 	}
 
@@ -133,8 +133,8 @@ public class TestSerializeBean
 			});
 
 			TTestStruct result = serializeAndReadWithThrift(field, bean);
-			Assert.assertTrue(result.__isset.intField);
-			Assert.assertEquals(result.intField, value.intValue());
+			Assert.assertTrue(result.isSetIntField());
+			Assert.assertEquals(result.getIntField(), value.intValue());
 		}
 	}
 
@@ -158,8 +158,8 @@ public class TestSerializeBean
 			});
 
 			TTestStruct result = serializeAndReadWithThrift(field, bean);
-			Assert.assertTrue(result.__isset.longField);
-			Assert.assertEquals(result.longField, value.longValue());
+			Assert.assertTrue(result.isSetLongField());
+			Assert.assertEquals(result.getLongField(), value.longValue());
 		}
 	}
 
@@ -184,8 +184,8 @@ public class TestSerializeBean
 			});
 
 			TTestStruct result = serializeAndReadWithThrift(field, bean);
-			Assert.assertTrue(result.__isset.doubleField);
-			Assert.assertEquals(result.doubleField, value.doubleValue());
+			Assert.assertTrue(result.isSetDoubleField());
+			Assert.assertEquals(result.getDoubleField(), value.doubleValue());
 		}
 	}
 
@@ -210,8 +210,8 @@ public class TestSerializeBean
 		});
 
 		TTestStruct result = serializeAndReadWithThrift(field, bean);
-		Assert.assertTrue(result.__isset.binaryField);
-		Assert.assertEquals(result.binaryField, value);
+		Assert.assertTrue(result.isSetBinaryField());
+		Assert.assertEquals(result.getBinaryField(), value);
 	}
 
 	@Test
@@ -235,8 +235,8 @@ public class TestSerializeBean
 		});
 
 		TTestStruct result = serializeAndReadWithThrift(field, bean);
-		Assert.assertTrue(result.__isset.stringField);
-		Assert.assertEquals(result.stringField, value);
+		Assert.assertTrue(result.isSetStringField());
+		Assert.assertEquals(result.getStringField(), value);
 	}
 
 	private TTestStruct serializeAndReadWithThrift(Field field, TestStruct object)
@@ -338,46 +338,46 @@ public class TestSerializeBean
 
 		TTestStruct result = TestUtil.deserialize(out.toByteArray());
 
-		Assert.assertTrue(result.__isset.booleanField);
-		Assert.assertEquals(result.booleanField, data.isBooleanField());
+		Assert.assertTrue(result.isSetBooleanField());
+		Assert.assertEquals(result.isBooleanField(), data.isBooleanField());
 
-		Assert.assertTrue(result.__isset.byteField);
-		Assert.assertEquals(result.byteField, data.getByteField());
+		Assert.assertTrue(result.isSetByteField());
+		Assert.assertEquals(result.getByteField(), data.getByteField());
 
-		Assert.assertTrue(result.__isset.shortField);
-		Assert.assertEquals(result.shortField, data.getShortField());
+		Assert.assertTrue(result.isSetShortField());
+		Assert.assertEquals(result.getShortField(), data.getShortField());
 
-		Assert.assertTrue(result.__isset.intField);
-		Assert.assertEquals(result.intField, data.getIntField());
+		Assert.assertTrue(result.isSetIntField());
+		Assert.assertEquals(result.getIntField(), data.getIntField());
 
-		Assert.assertTrue(result.__isset.longField);
-		Assert.assertEquals(result.longField, data.getLongField());
+		Assert.assertTrue(result.isSetLongField());
+		Assert.assertEquals(result.getLongField(), data.getLongField());
 
-		Assert.assertTrue(result.__isset.doubleField);
-		Assert.assertEquals(result.doubleField, data.getDoubleField());
+		Assert.assertTrue(result.isSetDoubleField());
+		Assert.assertEquals(result.getDoubleField(), data.getDoubleField());
 
-		Assert.assertTrue(result.__isset.stringField);
-		Assert.assertEquals(result.stringField, data.getStringField());
+		Assert.assertTrue(result.isSetStringField());
+		Assert.assertEquals(result.getStringField(), data.getStringField());
 
-		Assert.assertTrue(result.__isset.binaryField);
-		Assert.assertTrue(Arrays.equals(result.binaryField, data.getBinaryField()));
+		Assert.assertTrue(result.isSetBinaryField());
+		Assert.assertTrue(Arrays.equals(result.getBinaryField(), data.getBinaryField()));
 
-		Assert.assertTrue(result.__isset.listOfIntsField);
-		Assert.assertEquals(result.listOfIntsField, data.getListOfIntsField());
+		Assert.assertTrue(result.isSetListOfIntsField());
+		Assert.assertEquals(result.getListOfIntsField(), data.getListOfIntsField());
 
-		Assert.assertTrue(result.__isset.setOfIntsField);
-		Assert.assertEquals(result.setOfIntsField, data.getSetOfIntsField());
+		Assert.assertTrue(result.isSetSetOfIntsField());
+		Assert.assertEquals(result.getSetOfIntsField(), data.getSetOfIntsField());
 
-		Assert.assertTrue(result.__isset.mapOfIntsIntsField);
-		Assert.assertEquals(result.mapOfIntsIntsField, data.getMapOfIntsIntsField());
+		Assert.assertTrue(result.isSetMapOfIntsIntsField());
+		Assert.assertEquals(result.getMapOfIntsIntsField(), data.getMapOfIntsIntsField());
 
-		Assert.assertTrue(result.__isset.mapOfIntsStringsField);
-		Assert.assertEquals(result.mapOfIntsStringsField, data.getMapOfIntsStringsField());
+		Assert.assertTrue(result.isSetMapOfIntsStringsField());
+		Assert.assertEquals(result.getMapOfIntsStringsField(), data.getMapOfIntsStringsField());
 
-		Assert.assertTrue(result.__isset.structField);
-		Assert.assertEquals(result.structField.value, nestedData.getValue());
+		Assert.assertTrue(result.isSetStructField());
+		Assert.assertEquals(result.getStructField().getValue(), nestedData.getValue());
 
-		Assert.assertTrue(result.__isset.nestedListOfIntsField);
-		Assert.assertEquals(result.nestedListOfIntsField, data.getNestedListOfIntsField());
+		Assert.assertTrue(result.isSetNestedListOfIntsField());
+		Assert.assertEquals(result.getNestedListOfIntsField(), data.getNestedListOfIntsField());
 	}
 }

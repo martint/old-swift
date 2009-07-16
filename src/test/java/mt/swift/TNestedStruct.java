@@ -11,18 +11,31 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
-import com.facebook.thrift.*;
+import java.util.Collections;
+import org.apache.log4j.Logger;
 
-import com.facebook.thrift.protocol.*;
-import com.facebook.thrift.transport.*;
+import org.apache.thrift.*;
+import org.apache.thrift.meta_data.*;
+import org.apache.thrift.protocol.*;
 
-public class TNestedStruct implements TBase, java.io.Serializable {
-  public String value;
+public class TNestedStruct implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("TNestedStruct");
+  private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)1);
+
+  private String value;
   public static final int VALUE = 1;
 
-  public final Isset __isset = new Isset();
-  public static final class Isset implements java.io.Serializable {
-    public boolean value = false;
+  private final Isset __isset = new Isset();
+  private static final class Isset implements java.io.Serializable {
+  }
+
+  public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+    put(VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
+  }});
+
+  static {
+    FieldMetaData.addStructMetaDataMap(TNestedStruct.class, metaDataMap);
   }
 
   public TNestedStruct() {
@@ -33,9 +46,75 @@ public class TNestedStruct implements TBase, java.io.Serializable {
   {
     this();
     this.value = value;
-    this.__isset.value = (value != null);
   }
 
+  /**
+   * Performs a deep copy on <i>other</i>.
+   */
+  public TNestedStruct(TNestedStruct other) {
+    if (other.isSetValue()) {
+      this.value = other.value;
+    }
+  }
+
+  @Override
+  public TNestedStruct clone() {
+    return new TNestedStruct(this);
+  }
+
+  public String getValue() {
+    return this.value;
+  }
+
+  public void setValue(String value) {
+    this.value = value;
+  }
+
+  public void unsetValue() {
+    this.value = null;
+  }
+
+  // Returns true if field value is set (has been asigned a value) and false otherwise
+  public boolean isSetValue() {
+    return this.value != null;
+  }
+
+  public void setFieldValue(int fieldID, Object value) {
+    switch (fieldID) {
+    case VALUE:
+      if (value == null) {
+        unsetValue();
+      } else {
+        setValue((String)value);
+      }
+      break;
+
+    default:
+      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+    }
+  }
+
+  public Object getFieldValue(int fieldID) {
+    switch (fieldID) {
+    case VALUE:
+      return getValue();
+
+    default:
+      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+    }
+  }
+
+  // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
+  public boolean isSet(int fieldID) {
+    switch (fieldID) {
+    case VALUE:
+      return isSetValue();
+    default:
+      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+    }
+  }
+
+  @Override
   public boolean equals(Object that) {
     if (that == null)
       return false;
@@ -48,8 +127,8 @@ public class TNestedStruct implements TBase, java.io.Serializable {
     if (that == null)
       return false;
 
-    boolean this_present_value = true && (this.value != null);
-    boolean that_present_value = true && (that.value != null);
+    boolean this_present_value = true && this.isSetValue();
+    boolean that_present_value = true && that.isSetValue();
     if (this_present_value || that_present_value) {
       if (!(this_present_value && that_present_value))
         return false;
@@ -60,6 +139,7 @@ public class TNestedStruct implements TBase, java.io.Serializable {
     return true;
   }
 
+  @Override
   public int hashCode() {
     return 0;
   }
@@ -78,7 +158,6 @@ public class TNestedStruct implements TBase, java.io.Serializable {
         case VALUE:
           if (field.type == TType.STRING) {
             this.value = iprot.readString();
-            this.__isset.value = true;
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -90,17 +169,16 @@ public class TNestedStruct implements TBase, java.io.Serializable {
       iprot.readFieldEnd();
     }
     iprot.readStructEnd();
+
+    validate();
   }
 
   public void write(TProtocol oprot) throws TException {
-    TStruct struct = new TStruct("TNestedStruct");
-    oprot.writeStructBegin(struct);
-    TField field = new TField();
+    validate();
+
+    oprot.writeStructBegin(STRUCT_DESC);
     if (this.value != null) {
-      field.name = "value";
-      field.type = TType.STRING;
-      field.id = VALUE;
-      oprot.writeFieldBegin(field);
+      oprot.writeFieldBegin(VALUE_FIELD_DESC);
       oprot.writeString(this.value);
       oprot.writeFieldEnd();
     }
@@ -108,16 +186,25 @@ public class TNestedStruct implements TBase, java.io.Serializable {
     oprot.writeStructEnd();
   }
 
+  @Override
   public String toString() {
     StringBuilder sb = new StringBuilder("TNestedStruct(");
     boolean first = true;
 
-    if (!first) sb.append(", ");
     sb.append("value:");
-    sb.append(this.value);
+    if (this.value == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.value);
+    }
     first = false;
     sb.append(")");
     return sb.toString();
+  }
+
+  public void validate() throws TException {
+    // check for required fields
+    // check that fields of type enum have valid values
   }
 
 }

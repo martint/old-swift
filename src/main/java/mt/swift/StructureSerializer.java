@@ -15,8 +15,8 @@
  */
 package mt.swift;
 
-import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TProtocol;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TProtocol;
 
 public interface StructureSerializer
 {
