@@ -15,29 +15,17 @@
  */
 package mt.swift.model;
 
-import org.apache.thrift.protocol.TStruct;
 import org.apache.thrift.protocol.TType;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class StructureType
 	implements Type<Map<String, ?>>
 {
-	private String name;
-	private Map<Short, Field> fields = new HashMap<Short, Field>();
-
-	@Deprecated
-	private final TStruct tstruct;
-
-
-	@Deprecated
-	public StructureType(String name, List<Field> fields)
-	{
-		this(name, fields.toArray(new Field[0]));
-	}
+	private final String name;
+	private final Map<Short, Field> fields = new HashMap<Short, Field>();
 
 	public StructureType(String name, Field... fields)
 	{
@@ -48,19 +36,11 @@ public class StructureType
 			}
 			this.fields.put(field.getId(), field);
 		}
-
-		tstruct = new TStruct(name);
 	}
 
 	public Collection<Field> getFields()
 	{
 		return fields.values();
-	}
-
-	@Deprecated
-	public TStruct toTStruct()
-	{
-		return tstruct;
 	}
 
 	public String getName()

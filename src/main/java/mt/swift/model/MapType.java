@@ -20,8 +20,8 @@ import org.apache.thrift.protocol.TType;
 public class MapType
 	implements Type
 {
-	private Type keyType;
-	private Type valueType;
+	private final Type keyType;
+	private final Type valueType;
 
 	public MapType(Type keyType, Type valueType)
 	{

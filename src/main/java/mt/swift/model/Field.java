@@ -15,16 +15,12 @@
  */
 package mt.swift.model;
 
-import org.apache.thrift.protocol.TField;
-
 public class Field
 {
-	private Type type;
-	private short id;
-	private String name;
-	private boolean required;
-
-	private final TField tfield;
+	private final Type type;
+	private final short id;
+	private final String name;
+	private final boolean required;
 
 	public Field(Type type, int id, String name, boolean required)
 	{
@@ -37,8 +33,6 @@ public class Field
 		this.id = id;
 		this.name = name;
 		this.required = required;
-
-		tfield = new TField(name, type.getTType(), id);
 	}
 
 	public short getId()
@@ -60,11 +54,4 @@ public class Field
 	{
 		return type;
 	}
-
-	@Deprecated
-	public TField toTField()
-	{
-		return tfield;
-	}
-
 }

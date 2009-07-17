@@ -20,7 +20,7 @@ import org.apache.thrift.protocol.TType;
 public class SetType
 	implements Type
 {
-	private Type valueType;
+	private final Type valueType;
 
 	public SetType(Type valueType)
 	{

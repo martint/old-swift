@@ -16,10 +16,7 @@
 package mt.swift;
 
 import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TList;
-import org.apache.thrift.protocol.TMap;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.protocol.TSet;
+import org.apache.thrift.protocol.*;
 import mt.swift.model.BasicType;
 import mt.swift.model.Field;
 import mt.swift.model.ListType;
@@ -52,7 +49,7 @@ class MapSerializer
 			throws TException
 	{
 		StructureType structure = structures.get(structName);
-		protocol.writeStructBegin(structure.toTStruct());
+		protocol.writeStructBegin(new TStruct(structName));
 		for (Field field : structure.getFields()) {
 			Object value = map.get(field.getName());
 
@@ -63,7 +60,7 @@ class MapSerializer
 				continue;
 			}
 
-			protocol.writeFieldBegin(field.toTField());
+			protocol.writeFieldBegin(new TField(field.getName(), field.getType().getTType(), field.getId()));
 			write(protocol, value, field.getType(), field);
 			protocol.writeFieldEnd();
 		}
