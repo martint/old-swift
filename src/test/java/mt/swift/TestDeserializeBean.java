@@ -233,8 +233,8 @@ public class TestDeserializeBean
 		TProtocol protocol = TestUtil.serialize(data);
 
 		Deserializer deserializer = new Deserializer();
+        deserializer.bind(nested, NestedStruct.class);
 		deserializer.bind(type, TestStruct.class);
-		deserializer.bind(nested, NestedStruct.class);
 
 		TestStruct result = deserializer.deserialize(type.getName(), protocol);
 		Assert.assertNotNull(result.getStructField());

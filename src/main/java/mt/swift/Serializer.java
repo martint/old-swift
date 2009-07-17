@@ -15,58 +15,52 @@
  */
 package mt.swift;
 
+import mt.swift.model.*;
+import mt.swift.model.Type;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TProtocol;
-import mt.swift.model.BasicType;
-import mt.swift.model.Field;
-import mt.swift.model.ListType;
-import mt.swift.model.MapType;
-import mt.swift.model.SetType;
-import mt.swift.model.StructureType;
-import mt.swift.model.Type;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.*;
 import static org.objectweb.asm.Opcodes.*;
-import org.objectweb.asm.util.TraceClassVisitor;
 import org.objectweb.asm.util.CheckClassAdapter;
+import org.objectweb.asm.util.TraceClassVisitor;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * A dynamic serializer for Thrift structures.
+ * <p/>
+ * This class is capable of serializing a Map or Javabean via a Thrift protocol object according to a
+ * user-specified Thrift schema definition.
+ * <p/>
+ * Instances of this class are not thread-safe, but they are immutable after they are constructed and all bindings
+ * taken care of. As long as references are published in a thread-safe manner, serialize() can be called without
+ * additional synchronization:
+ *
+ */
 public class Serializer
 {
-	private Map<String, StructureType> types = new ConcurrentHashMap<String, StructureType>();
-	private Map<String, Class<?>> classes = new ConcurrentHashMap<String, Class<?>>();
+	private final Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
+	private final Map<String, StructureSerializer> serializers = new HashMap<String, StructureSerializer>();
 
-	private Map<String, StructureSerializer> serializers = new HashMap<String, StructureSerializer>();
+	private int sequence = 0;
 
-	private AtomicInteger sequence = new AtomicInteger();
-
-	private boolean debug;
-
-	public void setDebug(boolean debug)
-	{
-		this.debug = debug;
-	}
+	private final static boolean debug = false;
 
 	public void bind(StructureType type, Class clazz)
 	{
-		types.put(type.getName(), type);
 		classes.put(type.getName(), clazz);
+
+        StructureSerializer serializer = compileSerializer(type, clazz);
+        serializers.put(type.getName(), serializer);
 	}
 
 	public void bindToMap(StructureType type)
 	{
-		types.put(type.getName(), type);
-		classes.put(type.getName(), HashMap.class);
+        bind(type, HashMap.class);
 	}
 
 
@@ -78,14 +72,6 @@ public class Serializer
 
 		if (clazz == null) {
 			throw new IllegalStateException(String.format("Type '%s' not bound to a class", name));
-		}
-
-		StructureType type = types.get(name);
-
-		// construct deserializer
-		if (serializer == null) {
-			serializer = compileSerializer(type, clazz);
-			serializers.put(name, serializer);
 		}
 
 		serializer.serialize(object, this, protocol);
@@ -104,7 +90,7 @@ public class Serializer
 
 		String targetClassName = Util.getInternalName(clazz);
 		String serializerClassName =
-			"mt/swift/generated/Serializer" + clazz.getSimpleName() + "_" + sequence.incrementAndGet();
+			"mt/swift/generated/Serializer" + clazz.getSimpleName() + "_" + sequence++;
 
 		// class metadata
 		writer.visit(V1_6, ACC_PUBLIC + ACC_SUPER, serializerClassName, null, "java/lang/Object",

@@ -329,8 +329,8 @@ public class TestSerializeBean
 		data.setMapOfIntsStringsField(mapOfIntsStrings);
 
 		Serializer serializer = new Serializer();
-		serializer.bind(type, TestStruct.class);
 		serializer.bind(nested, NestedStruct.class);
+        serializer.bind(type, TestStruct.class);
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		TProtocol protocol = new TBinaryProtocol(new TIOStreamTransport(out));

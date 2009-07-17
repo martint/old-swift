@@ -36,7 +36,7 @@ public class StructureType
 	@Deprecated
 	public StructureType(String name, List<Field> fields)
 	{
-		this(name, fields.toArray(new Field[0]));	
+		this(name, fields.toArray(new Field[0]));
 	}
 
 	public StructureType(String name, Field... fields)
